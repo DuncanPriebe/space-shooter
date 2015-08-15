@@ -1,0 +1,36 @@
+[
+    {    
+        "name": "Tyrian Orbital Platform",    
+        "backgroundColor": "#000010",
+        "tileset": "space",
+        "enemies": [
+            {
+                "model": "scout",
+                "level": 1,
+                "static": "false"
+            },
+            {
+                "model": "fighter",
+                "level": 2,
+                "static": "true"
+            }
+        ]
+    },
+    {    
+        "name": "Tyrian Planet Core",    
+        "backgroundColor": "#100000",
+        "tileset": "space",
+        "enemies": [
+            {
+                "model": "fighter",
+                "level": 2,
+                "static": "true"
+            },
+            {
+                "model": "scout",
+                "level": 1,
+                "static": "false"
+            }
+        ]
+    }
+]

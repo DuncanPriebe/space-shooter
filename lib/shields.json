@@ -1,0 +1,10 @@
+[
+	{
+		"name": "Plasma Shield",
+		"capacity": 10
+	},
+	{
+		"name": "Ion Shield",
+		"capacity": 15
+	}
+]
