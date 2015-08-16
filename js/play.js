@@ -6,7 +6,7 @@ var playState = {
     // Accept parameters from menu selection and store them in play state
     init: function(_mission) {
         mission = _mission;
-    }, 
+    },
 
     create: function() {
         game.time.desiredFps = 60;
@@ -39,6 +39,7 @@ var playState = {
         
         cursors = game.input.keyboard.createCursorKeys();
         fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+        escapeButton = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
 
         //sfx = game.add.audio('sfx');
         sfxLaser = game.add.audio('sfx-laser');
@@ -49,7 +50,7 @@ var playState = {
         music.volume = game.settings.musicVolume;
         music.loop = true;
         music.play();
-        muteFlag = false;        
+        muteFlag = false;
 
         muteButton = game.add.button(795, 595, 'button', this.muteToggle, this);
         muteButton.anchor.set(1);
@@ -85,8 +86,12 @@ var playState = {
             player.body.velocity.x = 250;
         }
         
-        if (fireButton.isDown) {
+        if (fireButton.isDown) {            
             this.fireprojectile();
+        }
+
+        if (escapeButton.isDown) {            
+            game.state.start('dock', true, false, game.currentDock);
         }
 
         this.makeStars();

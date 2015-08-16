@@ -1,0 +1,17 @@
+[
+	{
+		"name": "TYRIAN STATION",
+		"vendors": [
+			{
+				"name": "STEVE",
+				"type": "weapon",
+				"level": 1
+			},
+			{
+				"name": "BRAD",
+				"type": "shield",
+				"level": 1
+			}
+		]
+	}
+]
