@@ -1,0 +1,12 @@
+[
+	{
+	    "name": "Zyrian Fighter MK I",
+	    "sprite": "ship.png",
+	    "cost": 1000
+	},
+	{
+	    "name": "Zyrian Bomber MK I",
+	    "sprite": "ship.png",
+	    "cost": 1500
+	}
+]

@@ -1,6 +1,6 @@
 [
     {    
-        "name": "TYRIAN ORBITAL PLATFORM",    
+        "name": "ZYRIAN ORBITAL PLATFORM",    
         "backgroundColor": "#000010",
         "tileset": "space",
         "enemies": [
@@ -17,7 +17,7 @@
         ]
     },
     {    
-        "name": "TYRIAN PLANET CORE",    
+        "name": "ZYRIAN PLANET CORE",    
         "backgroundColor": "#100000",
         "tileset": "space",
         "enemies": [

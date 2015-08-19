@@ -1,0 +1,16 @@
+[
+	{
+	    "name": "Plasma Core",
+	    "sprite": "laser-blue-5.png",
+	    "capacity": 100,
+	    "rate": 1,
+		"cost": 500
+	},
+	{
+	    "name": "Ion Core",
+	    "sprite": "laser-blue-5.png",
+	    "capacity": 50,
+	    "rate": 2,
+		"cost": 750
+	}
+]

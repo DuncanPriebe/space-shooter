@@ -1,10 +1,14 @@
 [
 	{
 		"name": "Plasma Shield",
-		"capacity": 10
+		"sprite": "laser-blue-5.png",
+		"capacity": 10,
+		"cost": 500
 	},
 	{
 		"name": "Ion Shield",
-		"capacity": 15
+		"sprite": "laser-blue-5.png",
+		"capacity": 15,
+		"cost": 750
 	}
 ]

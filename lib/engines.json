@@ -1,0 +1,18 @@
+[
+	{
+		"name": "Plasma Engine",
+		"yMaxSpeed": 5,
+		"xMaxSpeed": 10,
+		"yAcceleration": 2.5,
+		"xAcceleration": 5,
+		"cost": 500		
+	},
+	{
+		"name": "Ion Engine",
+		"yMaxSpeed": 10,
+		"xMaxSpeed": 5,
+		"yAcceleration": 5,
+		"xAcceleration": 2.5,
+		"cost": 750
+	}
+]

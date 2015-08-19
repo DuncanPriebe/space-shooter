@@ -11,7 +11,7 @@ var dockState = {
                     missions.addChild(new node(game.missions[i].name));
                 }
             mainMenu.addChild(new node("VIEW SHIP"));
-            mainMenu.addChild(vendors = new node("VENDORS"));                
+            mainMenu.addChild(vendors = new node("VENDORS", "vendor"));
                 for (var i in game.currentDock.vendors) {                    
                     vendors.addChild(new node(game.currentDock.vendors[i].name));
                 }
@@ -52,6 +52,7 @@ var dockState = {
     },
 
     moveSelection: function(key) {
+        console.log(key.keyCode);
         switch (key.keyCode) {
             case 38: // Up arrow pressed
                 selectedMenu = selectedMenu.getPreviousSibling();
@@ -65,7 +66,7 @@ var dockState = {
                 break;
             case 8: // Backspace pressed
             case 27: //Escape pressed
-                if (typeof currentMenu.parent != 'undefined') { // If the current menu has a parent menu, display it
+                if (typeof currentMenu.parent !== "undefined") { // If the current menu has a parent menu, display it
                     currentMenu = currentMenu.parent;
                     for (i in currentMenu.children) {
                         if (currentMenu.children[i].selected) {
@@ -90,12 +91,12 @@ var dockState = {
     },
 
     // Load and display mission options
-    menuExecute: function() {
+    menuExecute: function() {        
         switch(selectedMenu.name) {
-            case "TYRIAN ORBITAL PLATFORM":
+            case "ZYRIAN ORBITAL PLATFORM":                
                 game.state.start('play', true, false, game.missions[0]); // Start the game
                 break;
-            case "TYRIAN PLANET CORE":
+            case "ZYRIAN PLANET CORE":
                 game.state.start('play', true, false, game.missions[1]); // Start the game
                 break;
             case "QUIT": 
@@ -114,10 +115,20 @@ var dockState = {
         // If the selected menu has children, display them
         if (currentMenu.children.length > 0) {
             menuText.push(game.add.text(80, 150, currentMenu.name, {font: mainMenu.titleFont, fontStyle: mainMenu.titleFontStyle, fontWeight: mainMenu.titleFontWeight, fill: mainMenu.titleFontColor})); // Add the current menu name
-            for (var i in currentMenu.children)  {                
+            for (var i in currentMenu.children)  {
                 menuColor = (currentMenu.children[i].selected) ? mainMenu.selectedFontColor : mainMenu.defaultFontColor;
                 menuText.push(game.add.text(80, i * 30 + 200, currentMenu.children[i].name, {font: mainMenu.font, fontStyle: mainMenu.fontStyle, fontWeight: mainMenu.fontWeight, fill: menuColor})); // Add menu children names
             }
         }
-    }    
+    },
+
+    // Save game data in local storage, maybe offer the player a chance to back up data
+    saveData: function() {
+        localStorage.setItem('zyrian', JSON.stringify(zyrian));
+    },
+
+    // Generate inventory of items based on vendor
+    getInventory: function(vendor) {
+        // Return array of items so that the menu can display them
+    }
 };

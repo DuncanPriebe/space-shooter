@@ -6,7 +6,8 @@
 	    "distance": 100,
 	    "timer": 100,
 	    "damage": 1,
-	    "rate": 0.5
+	    "rate": 0.5,
+	    "cost": 500
 	},
 	{
 	    "name": "Missile",
@@ -15,6 +16,7 @@
 	    "distance": 200,
 	    "timer": null,
 	    "damage": 2,
-	    "rate": 1
+	    "rate": 1,
+	    "cost": 750
 	}
 ]

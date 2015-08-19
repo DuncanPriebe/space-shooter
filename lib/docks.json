@@ -3,13 +3,23 @@
 		"name": "TYRIAN STATION",
 		"vendors": [
 			{
-				"name": "STEVE",
+				"name": "MATTHEW",
 				"type": "weapon",
 				"level": 1
 			},
 			{
-				"name": "BRAD",
+				"name": "MARK",
 				"type": "shield",
+				"level": 1
+			},
+			{
+				"name": "LUKE",
+				"type": "generator",
+				"level": 1
+			},
+			{
+				"name": "JOHN",
+				"type": "junk",
 				"level": 1
 			}
 		]

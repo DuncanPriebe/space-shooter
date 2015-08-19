@@ -1,7 +1,5 @@
 // Game state and functions
 var playState = {
-    missionTime: 0,
-    mission: {},
 
     // Accept parameters from menu selection and store them in play state
     init: function(_mission) {
@@ -9,19 +7,19 @@ var playState = {
     },
 
     create: function() {
-        game.time.desiredFps = 60;
+        player = zyrian; // Gotta figure out how to organize game/player data...
 
         // Load and setup mission
         game.stage.backgroundColor = mission.backgroundColor; // Set background color
-        missionTime = game.time.now + mission.timer; // Reset mission timer
+        //missionTime = game.time.now + mission.timer; // Reset mission timer
 
-        // Setup player's ship
-        player = game.add.sprite(game.world.width / 2, game.world.height - 100, 'ship');
-        player.anchor.setTo(0.5, 0.5);
-        game.physics.enable(player, Phaser.Physics.ARCADE);
-        player.body.collideWorldBounds = true;
-        player.animations.add('fly', [ 0, 1], 20, true);
-        player.play('fly');
+        // Setup player.sprite's ship
+        player.sprite = game.add.sprite(game.world.width / 2, game.world.height - 100, 'ship');
+        player.sprite.anchor.setTo(0.5, 0.5);
+        game.physics.enable(player.sprite, Phaser.Physics.ARCADE);
+        player.sprite.body.collideWorldBounds = true;
+        player.sprite.animations.add('fly', [ 0, 1], 20, true);
+        player.sprite.play('fly');
 
         // Setup projectiles
         projectiles = game.add.group();
@@ -36,10 +34,25 @@ var playState = {
         // Setup stars
         stars = game.add.group();
         stars.enableBody = true;
+
+        // Use emitter to create stars
+        var emitter = game.add.emitter(game.world.centerX, 0, 300);
+        emitter.width = game.world.width;
+        emitter.makeParticles(['star-blue', 'star-red']);
+        emitter.minParticleScale = 0.2;
+        emitter.maxParticleScale = 0.4;
+        emitter.setYSpeed(25, 50);
+        emitter.gravity = 0;
+        emitter.setXSpeed(0, 0);
+        emitter.minRotation = 0;
+        emitter.maxRotation = 0;
+        emitter.start(false, 24000, 100, 0);
         
         cursors = game.input.keyboard.createCursorKeys();
         fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         escapeButton = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+        muteKey = game.input.keyboard.addKey(Phaser.Keyboard.M);
+        muteKey.onDown.add(this.muteToggle, this);
 
         //sfx = game.add.audio('sfx');
         sfxLaser = game.add.audio('sfx-laser');
@@ -50,7 +63,7 @@ var playState = {
         music.volume = game.settings.musicVolume;
         music.loop = true;
         music.play();
-        muteFlag = false;
+        game.mute = false;
 
         muteButton = game.add.button(795, 595, 'button', this.muteToggle, this);
         muteButton.anchor.set(1);
@@ -59,31 +72,33 @@ var playState = {
     },
 
     muteToggle: function(button) {
-        if (muteFlag) {
-            muteFlag = false;
+        if (game.mute) {
+            game.mute = false;
             music.resume();
             muteButtonText.text = 'Mute';
         } else {
-            muteFlag = true;
+            game.mute = true;
             music.pause();
             muteButtonText.text = 'Unmute';
         }        
     },
 
     update: function() {
+        /*
         // Check if the mission time has expired
         if (game.time.now > missionTime) {
             music.stop();
             game.state.start('win');
         }
+        */
 
-        // Stop the player's movement
-        player.body.velocity.x = 0;
+        // Stop the player.sprite's movement
+        player.sprite.body.velocity.x = 0;
 
         if (cursors.left.isDown) {
-            player.body.velocity.x = -250;
+            player.sprite.body.velocity.x = -250;
         } else if (cursors.right.isDown) {
-            player.body.velocity.x = 250;
+            player.sprite.body.velocity.x = 250;
         }
         
         if (fireButton.isDown) {            
@@ -94,11 +109,17 @@ var playState = {
             game.state.start('dock', true, false, game.currentDock);
         }
 
-        this.makeStars();
+        // Make sure player and projectiles are above background sprites
+        player.sprite.bringToTop();
+        game.world.bringToTop(projectiles);
+
+        //this.makeStars();
     },
 
     render: function() {
-        game.debug.text(game.time.suggestedFps, 32, 32); // Display debug text
+        game.debug.text("FPS: " + game.time.suggestedFps, 5, 15); // Display debug text
+
+        game.debug.text("MONEY: " + (zyrian.money).monify(), 5, 590); // Display debug text
     },
 
     makeStars: function() {
@@ -153,9 +174,6 @@ var playState = {
                 }
             }
 
-            player.bringToTop();        
-            game.world.bringToTop(projectiles);         
-
             starTime = game.time.now + game.rnd.integerInRange(starMinDelay, starMaxDelay);
         }
     },
@@ -170,11 +188,11 @@ var playState = {
             if (projectile)
             {
                 //  And fire it
-                projectile.reset(player.x, player.y - 25);
+                projectile.reset(player.sprite.x, player.sprite.y - 25);
                 projectile.body.velocity.y = -projectileSpeed;
                 projectileTimer = game.time.now + 100;
-                if (!muteFlag) {
-                    sfxLaser.play();                    
+                if (!game.mute) {
+                    sfxLaser.play();
                 }                
             }
         }
@@ -184,7 +202,7 @@ var playState = {
         projectile.kill();
         game.add.tween(target).to( { alpha: 0 }, 100, Phaser.Easing.Linear.None, true);
         target.kill();
-        if (!muteFlag) {
+        if (!game.mute) {
             sfxExplosion.play();
         }
         //this.win();
