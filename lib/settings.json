@@ -1,4 +1,11 @@
 {
-	"sfxVolume": 0.0,
-	"musicVolume": 0.0
+	"version": "0.1",
+	"webStorageName": "Zyrian",
+	"dockSfxVolume": 0.2,
+	"dockMusicVolume": 0.2,
+	"sfxVolume": 0.2,
+	"musicVolume": 0.2,
+	"audioPath": "aud/",
+	"imagePath": "img/",
+	"startingMoney": 1000
 }

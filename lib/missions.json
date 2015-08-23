@@ -3,34 +3,29 @@
         "name": "ZYRIAN ORBITAL PLATFORM",    
         "backgroundColor": "#000010",
         "tileset": "space",
+        "music": "music",
+        "random": false,
         "enemies": [
             {
-                "model": "scout",
+                "type" : "fighter",
+                "sprite": "ship",
                 "level": 1,
                 "static": "false"
             },
             {
-                "model": "fighter",
+                "sprite": "ship",
                 "level": 2,
                 "static": "true"
             }
         ]
     },
     {    
-        "name": "ZYRIAN PLANET CORE",    
+        "name": "ZYRIAN PLANET CORE",
         "backgroundColor": "#100000",
         "tileset": "space",
+        "music": "music.mp3",
+        "random": true,
         "enemies": [
-            {
-                "model": "fighter",
-                "level": 2,
-                "static": "true"
-            },
-            {
-                "model": "scout",
-                "level": 1,
-                "static": "false"
-            }
         ]
     }
 ]

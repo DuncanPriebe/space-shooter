@@ -1,6 +1,7 @@
 [
 	{
 		"name": "Plasma Engine",
+		"sprite": "laser-blue-5.png",
 		"yMaxSpeed": 5,
 		"xMaxSpeed": 10,
 		"yAcceleration": 2.5,
@@ -9,6 +10,7 @@
 	},
 	{
 		"name": "Ion Engine",
+		"sprite": "laser-blue-5.png",
 		"yMaxSpeed": 10,
 		"xMaxSpeed": 5,
 		"yAcceleration": 5,

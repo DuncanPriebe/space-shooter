@@ -1,22 +1,32 @@
 [
 	{
 	    "name": "Plasma Laser",
-	    "model": "laser-blue-5.png",
-	    "sound": "aud/laser.mp3",
-	    "distance": 100,
-	    "timer": 100,
-	    "damage": 1,
-	    "rate": 0.5,
-	    "cost": 500
+	    "sprite": "laser-blue",
+	    "fireSound": "laser",
+	    "impactSound": "laser",
+	    "type": "laser",
+	    "shieldDamage": 2,
+	    "armorDamage": 1,
+	    "delay": 100,
+	    "cost": 500,
+	    "duration": 1,
+	    "maxDistance": 200,
+	    "maxSpeed": 500,
+	    "acceleration": 10
 	},
 	{
 	    "name": "Missile",
-	    "model": "missile-2.png",
-	    "sound": "aud/explosion.mp3",
-	    "distance": 200,
-	    "timer": null,
-	    "damage": 2,
-	    "rate": 1,
-	    "cost": 750
+	    "sprite": "missile-2",
+	    "fireSound": "explosion",
+	    "impactSound": "explosion",
+	    "type": "missile",
+	    "shieldDamage": 1,
+	    "armorDamage": 2,
+	    "delay": 400,
+	    "cost": 750,
+	    "duration": 1,
+	    "maxDistance": 500,
+	    "maxSpeed": 300,
+	    "acceleration": 3
 	}
 ]

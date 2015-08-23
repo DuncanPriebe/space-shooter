@@ -1,0 +1,101 @@
+{
+	"menu": [
+		{
+			"sprites": [
+				{
+					"key": "derp",
+					"file": "ship.png"
+				}
+			],
+			"audio": [
+				{
+					"key": "music",
+					"file": "music.mp3"
+				},
+				{
+					"key": "explosion",
+					"file": "explosion.mp3"
+				},
+				{
+					"key": "explosion2",
+					"file": "explosion2.mp3"
+				},
+				{
+					"key": "laser",
+					"file": "laser.mp3"
+				}
+			]
+		}
+	],
+	"dock": [
+		{
+			"sprites": [
+				{
+					"key": "derp",
+					"file": "ship.png"
+				}
+			],
+			"audio": [
+				{
+					"key": "music",
+					"file": "music.mp3"
+				},
+				{
+					"key": "move",
+					"file": "explosion2.mp3"
+				},
+				{
+					"key": "accept",
+					"file": "explosion.mp3"
+				},
+				{
+					"key": "back",
+					"file": "laser.mp3"
+				}
+			]
+		}
+	],
+	"play": [
+		{
+			"sprites": [
+				{
+					"key": "ship",
+					"file": "ship.png",
+					"sheet": true,
+					"width": 51,
+					"height": 60
+				},
+				{
+					"key": "laser-blue",
+					"file": "laser-blue-5.png"
+				},
+				{
+					"key": "missile-2",
+					"file": "missile-2.png"
+				},
+				{
+					"key": "star-red",
+					"file": "star-red.png"
+				},
+				{
+					"key": "star-blue",
+					"file": "star-blue.png"
+				},
+				{
+					"key": "label-blue",
+					"file": "label-blue.png"
+				}
+			],
+			"audio": [
+				{
+					"key": "laser",
+					"file": "laser.mp3"
+				},
+				{
+					"key": "explosion",
+					"file": "explosion.mp3"
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,14 @@
+[
+	{
+		"name": "Damage Booster",
+		"sprite": "laser-blue-5.png",
+		"type": "damage",
+		"cost": 500
+	},
+	{
+		"name": "Shield Booster",
+		"sprite": "laser-blue-5.png",
+		"type": "shield",
+		"cost": 750
+	}
+]

@@ -2,11 +2,13 @@
 	{
 	    "name": "Zyrian Fighter MK I",
 	    "sprite": "ship.png",
-	    "cost": 1000
+	    "cost": 1000,
+	    "weight": 1
 	},
 	{
 	    "name": "Zyrian Bomber MK I",
 	    "sprite": "ship.png",
-	    "cost": 1500
+	    "cost": 1500,
+	    "weight": 1
 	}
 ]

@@ -1,0 +1,37 @@
+{
+	"title": "ZYRIAN",
+	"fonts": {
+		"title": {
+			"font": "50px Courier",
+			"fill": "#bdaf89",
+			"fontStyle": "normal",
+			"fontWeight": "bold"
+		},
+		"menu": {
+			"font": "24px Courier",
+			"fill": "#e2892e",
+			"fontStyle": "normal",
+			"fontWeight": "bold"
+		},
+		"selected": {
+			"font": "20px Courier",
+			"fill": "#ae81ff",
+			"fontStyle": "normal",
+			"fontWeight": "bold"
+		},
+		"unselected": {
+			"font": "20px Courier",
+			"fill": "#f8f8f2",
+			"fontStyle": "normal",
+			"fontWeight": "bold"
+		}
+	},
+	"audio": {
+		"sfxVolume": 0.1,
+		"musicVolume": 0.1,
+		"music": "music",
+		"moveSound": "laser",
+		"acceptSound": "explosion",
+		"backSound": "explosion2"
+	}
+}
