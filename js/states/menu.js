@@ -38,7 +38,7 @@ var menuState = {
         GameSystem.game.menu.audio.accept = GameSystem.game.add.audio(GameSystem.game.menu.audio.acceptSound, GameSystem.game.menu.audio.sfxVolume);
         GameSystem.game.menu.audio.back = GameSystem.game.add.audio(GameSystem.game.menu.audio.backSound, GameSystem.game.menu.audio.sfxVolume);
 
-        //GameSystem.game.menu.audio.music.play(); // Start music
+        // GameSystem.game.menu.audio.music.play(); // Start music
 
         // Add menu control keys
         var upKey = GameSystem.game.input.keyboard.addKey(Phaser.Keyboard.UP);

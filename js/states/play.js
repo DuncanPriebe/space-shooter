@@ -34,7 +34,7 @@ var playState = {
         GameSystem.game.player.sprite.body.collideWorldBounds = true;
         
         // Add animation to player's ship
-        GameSystem.game.player.sprite.animations.add('fly', [ 0, 1], 20, true);
+        GameSystem.game.player.sprite.animations.add('fly', [0, 1], 20, true);
         GameSystem.game.player.sprite.play('fly');
 
         // Add controls
@@ -47,9 +47,14 @@ var playState = {
         muteKey.onDown.add(this.muteToggle, this);
 
         // Set default player weapon for testing
-        GameSystem.game.player.primaryWeapons[0] = GameSystem.game.weapons[0];
+        //GameSystem.game.player.primaryWeapons[0] = GameSystem.game.weapons[0];
         //GameSystem.game.player.primaryWeapons[1] = GameSystem.game.weapons[1];
-        GameSystem.game.player.secondaryWeapons[0] = GameSystem.game.weapons[1];
+        //GameSystem.game.player.secondaryWeapons[0] = GameSystem.game.weapons[1];
+
+        GameSystem.game.player.primaryWeapons.push(new GameSystem.weapon({level: 10}));
+        //GameSystem.game.player.primaryWeapons.push(new GameSystem.weapon({level: 10}));
+        GameSystem.game.player.secondaryWeapons.push(new GameSystem.weapon({level: 10}));
+        //GameSystem.game.player.secondaryWeapons.push(new GameSystem.weapon({level: 10}));
 
         /*
         // Setup projectiles
@@ -130,11 +135,11 @@ var playState = {
             GameSystem.game.player.sprite.body.velocity.x = 250;
         }
         
-        if (firePrimaryButton.isDown) {
+        if (firePrimaryButton.isDown && !fireSecondaryButton.isDown) {
             GameSystem.firePrimary(GameSystem.game.player);
         }
 
-        if (fireSecondaryButton.isDown) {
+        if (fireSecondaryButton.isDown && !firePrimaryButton.isDown) {
             GameSystem.fireSecondary(GameSystem.game.player);
         }
 

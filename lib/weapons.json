@@ -1,32 +1,102 @@
 [
 	{
-	    "name": "Plasma Laser",
-	    "sprite": "laser-blue",
-	    "fireSound": "laser",
-	    "impactSound": "laser",
-	    "type": "laser",
-	    "shieldDamage": 2,
-	    "armorDamage": 1,
-	    "delay": 100,
-	    "cost": 500,
-	    "duration": 1,
-	    "maxDistance": 200,
-	    "maxSpeed": 500,
-	    "acceleration": 10
+		"name": "Laser",
+		"type": "laser",
+		"sprite": "star-red",
+		"fireSound": "laser",
+		"impactSound": "laser",
+		"shieldDamage": 70,
+		"armorDamage": 30,
+		"rateOfFire": 80,
+		"maxSpeed": 80,
+		"acceleration": 80,
+		"size": 20,
+		"blastRadius": 0,
+		"specials": [
+			"Charging",
+			"Draining",
+			"Leeching",
+			"Piercing"
+		]
 	},
 	{
-	    "name": "Missile",
-	    "sprite": "missile-2",
-	    "fireSound": "explosion",
-	    "impactSound": "explosion",
-	    "type": "missile",
-	    "shieldDamage": 1,
-	    "armorDamage": 2,
-	    "delay": 400,
-	    "cost": 750,
-	    "duration": 1,
-	    "maxDistance": 500,
-	    "maxSpeed": 300,
-	    "acceleration": 3
+		"name": "Cannon",
+		"type": "cannon",
+		"sprite": "star-blue",
+		"fireSound": "laser",
+		"impactSound": "explosion",
+		"shieldDamage": 40,
+		"armorDamage": 60,
+		"rateOfFire": 60,
+		"maxSpeed": 70,
+		"acceleration": 60,
+		"size": 30,
+		"blastRadius": 20,
+		"specials": [
+			"Charging",
+			"Draining",
+			"Leeching",
+			"Piercing"
+		]
+	},
+	{
+		"name": "Beam",
+		"type": "beam",
+		"sprite": "laser-blue",
+		"fireSound": "laser",
+		"impactSound": "laser",
+		"shieldDamage": 60,
+		"armorDamage": 40,
+		"rateOfFire": 100,
+		"maxSpeed": 100,
+		"acceleration": 100,
+		"size": 20,
+		"blastRadius": 0,
+		"specials": [
+			"Charging",
+			"Draining",
+			"Leeching",
+			"Piercing"
+		]
+	},
+	{
+		"name": "Missile",
+		"type": "missile",
+		"sprite": "missile-2",
+		"fireSound": "explosion",
+		"impactSound": "explosion",
+		"shieldDamage": 40,
+		"armorDamage": 70,
+		"rateOfFire": 40,
+		"maxSpeed": 50,
+		"acceleration": 40,
+		"size": 50,
+		"blastRadius": 40,
+		"specials": [
+			"Charging",
+			"Draining",
+			"Leeching",
+			"Piercing"
+		]
+	},
+	{
+		"name": "Bomb",
+		"type": "bomb",
+		"sprite": "missile",
+		"fireSound": "explosion2",
+		"impactSound": "explosion2",
+		"shieldDamage": 30,
+		"armorDamage": 80,
+		"rateOfFire": 30,
+		"maxSpeed": 30,
+		"acceleration": 30,
+		"size": 70,
+		"blastRadius": 80,
+		"specials": [
+			"Charging",
+			"Draining",
+			"Leeching",
+			"Piercing"
+		]
 	}
 ]

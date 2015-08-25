@@ -70,6 +70,10 @@
 					"file": "laser-blue-5.png"
 				},
 				{
+					"key": "missile",
+					"file": "missile.png"
+				},
+				{
 					"key": "missile-2",
 					"file": "missile-2.png"
 				},
@@ -94,6 +98,10 @@
 				{
 					"key": "explosion",
 					"file": "explosion.mp3"
+				},
+				{
+					"key": "explosion2",
+					"file": "explosion2.mp3"
 				}
 			]
 		}

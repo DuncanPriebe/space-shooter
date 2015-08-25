@@ -3,7 +3,7 @@
 var dockState = {
     init: function(dock) {
         // Load current dock, otherwise load first dock
-        GameSystem.game.player.dock = dock || GameSystem.game.docks[0];
+        GameSystem.game.dock = dock || GameSystem.game.docks[0];
     },
 
     preload: function() {
@@ -12,7 +12,7 @@ var dockState = {
     },
 
     create: function() {
-        GameSystem.game.add.text(80, 80, GameSystem.game.player.dock.name, GameSystem.game.menu.fonts.title);
+        GameSystem.game.add.text(80, 80, GameSystem.game.dock.name, GameSystem.game.menu.fonts.title);
 
         // Create menu structure
         var mainMenu = new GameSystem.node("SPACE DOCK", "root");
@@ -21,8 +21,8 @@ var dockState = {
                     missionMenu.addChild(GameSystem.game.missions[i].name, "mission");
                 }
             var vendorMenu = mainMenu.addChild("VENDORS");
-                for (var i in GameSystem.game.player.dock.vendors) {
-                    vendorMenu.addChild(GameSystem.game.player.dock.vendors[i].name, "vendor");
+                for (var i in GameSystem.game.dock.vendors) {
+                    vendorMenu.addChild(GameSystem.game.dock.vendors[i].name, "vendor");
                 }
             mainMenu.addChild("SAVE GAME");
             mainMenu.addChild("RESET GAME");
@@ -34,10 +34,10 @@ var dockState = {
         GameSystem.game.menu.selected.update(); // Print the menu
 
         // Store assets in game variables
-        GameSystem.game.menu.audio.music = GameSystem.game.add.audio('music', GameSystem.game.menu.audio.musicVolume);
-        GameSystem.game.menu.audio.move = GameSystem.game.add.audio('move', GameSystem.game.menu.audio.sfxVolume);
-        GameSystem.game.menu.audio.accept = GameSystem.game.add.audio('accept', GameSystem.game.menu.audio.sfxVolume);
-        GameSystem.game.menu.audio.back = GameSystem.game.add.audio('back', GameSystem.game.menu.audio.sfxVolume);
+        GameSystem.game.menu.audio.music = GameSystem.game.add.audio(GameSystem.game.menu.audio.music, GameSystem.game.menu.audio.musicVolume);
+        GameSystem.game.menu.audio.move = GameSystem.game.add.audio(GameSystem.game.menu.audio.moveSound, GameSystem.game.menu.audio.sfxVolume);
+        GameSystem.game.menu.audio.accept = GameSystem.game.add.audio(GameSystem.game.menu.audio.acceptSound, GameSystem.game.menu.audio.sfxVolume);
+        GameSystem.game.menu.audio.back = GameSystem.game.add.audio(GameSystem.game.menu.audio.backSound, GameSystem.game.menu.audio.sfxVolume);
 
         // GameSystem.game.menu.audio.music.play(); // Start music
 

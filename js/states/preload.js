@@ -10,6 +10,7 @@ var preloadState = {
         GameSystem.game.load.json('menu', 'lib/menu.json', true);
         GameSystem.game.load.json('docks', 'lib/docks.json', true);
         GameSystem.game.load.json('missions', 'lib/missions.json', true);
+        GameSystem.game.load.json('rarities', 'lib/rarities.json', true);
         GameSystem.game.load.json('ships', 'lib/ships.json', true);
         GameSystem.game.load.json('weapons', 'lib/weapons.json', true);
         GameSystem.game.load.json('shields', 'lib/shields.json', true);
@@ -19,7 +20,7 @@ var preloadState = {
     },
 
     create: function() {
-        //GameSystem.game.cache.destroy(); // Remove existing cache (may be needed for testing or to save memory)
+        //GameSystem.game.cache.destroy(); // Remove existing assets from cache (may be needed for testing)
         
         // Store JSON data in memory
         GameSystem.game.settings = GameSystem.game.cache.getJSON('settings');
@@ -27,6 +28,7 @@ var preloadState = {
         GameSystem.game.menu = GameSystem.game.cache.getJSON('menu');
         GameSystem.game.docks = GameSystem.game.cache.getJSON('docks');
         GameSystem.game.missions = GameSystem.game.cache.getJSON('missions');
+        GameSystem.game.rarities = GameSystem.game.cache.getJSON('rarities');
         GameSystem.game.ships = GameSystem.game.cache.getJSON('ships');
         GameSystem.game.weapons = GameSystem.game.cache.getJSON('weapons');
         GameSystem.game.shields = GameSystem.game.cache.getJSON('shields');
@@ -34,6 +36,6 @@ var preloadState = {
         GameSystem.game.engines = GameSystem.game.cache.getJSON('engines');
         GameSystem.game.modules = GameSystem.game.cache.getJSON('modules');
 
-        GameObject.state.start('menu');
+        GameSystem.game.state.start('menu');
     }
 };

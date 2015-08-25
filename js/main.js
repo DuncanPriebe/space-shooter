@@ -23,16 +23,161 @@ GameSystem.game.player = {};
 GameSystem.enemy = function(mission) {
     // Create a random enemy from the available enemies in the mission
     var enemy = {};
+
     var random = GameSystem.game.rnd.integerInRange(0, mission.enemies.length - 1);
+
     enemy.level = mission.enemies[random].level;
     enemy.sprite = GameSystem.game.add.sprite(GameSystem.game.world.width / 2, 100, mission.enemies[random].sprite);
+    enemy.player.sprite.anchor.setTo(0.5, 0.5);
+    enemy.physics.enable(enemy.sprite, Phaser.Physics.ARCADE);
+    enemy.player.sprite.body.collideWorldBounds = true;
 
+    // Check if it's a random enemy or preset enemy
     // Set enemy ship, weapons, shields, etc., based on mission level and tileset
 
     return enemy;
 }
 
-// Store all game projectiles (can't be done be fore state is loaded?)
+// Determine item rarity
+GameSystem.getRarity = function(source) {
+    var chances = [];
+
+    // Load rarity chances
+    for (var i in GameSystem.game.rarities) {
+        // Determine chance based on item rarity and source level
+        var chance = source.level * GameSystem.game.rarities[i].dropChanceMultiplier + GameSystem.game.rarities[i].baseDropChance;
+        chances.push[chance];
+    }
+    
+    // Roll the dice
+    var random = GameSystem.game.rnd.integerInRange(0, 100);
+
+    // Check if we have a rare item
+    for (var i in chances) {
+        if (random < chances[i]) {
+            return GameSystem.game.rarities[i]; // Return the rarity
+        }
+    }
+
+    // Return most common rarity by default
+    return GameSystem.game.rarities[GameSystem.game.rarities.length - 1];
+}
+
+// Create a weapon
+GameSystem.weapon = function(source) {
+
+    // Determine item rarity and multiplier
+    var rarity = GameSystem.getRarity(source);
+
+    // Determine weapon type
+    var random = GameSystem.game.rnd.integerInRange(0, GameSystem.game.weapons.length - 1);
+    
+    // Copy weapon template by value
+    var weapon = JSON.parse(JSON.stringify(GameSystem.game.weapons[random]));
+
+    // Set weapon level
+    weapon.level = source.level;
+
+    // Save weapon rarity
+    weapon.rarity = rarity.name;
+    weapon.fontColor = rarity.fontColor;
+
+    // Determine if we have a bonus stat
+    random = GameSystem.game.rnd.integerInRange(0, 100);
+
+    // Bonus stat details
+    var bonus = [
+        {
+            stat: weapon.shieldDamage,
+            name: "Energized"
+        },
+        {
+            stat: weapon.armorDamage,
+            name: "Lethal"
+        },
+        {
+            stat: weapon.rateOfFire,
+            name: "Rapid"
+        },
+        {
+            stat: weapon.maxSpeed,
+            name: "Quick"
+        },
+        {
+            stat: weapon.acceleration,
+            name: "Accelerated"
+        },
+        {
+            stat: weapon.size,
+            name: "Big"
+        },
+        {
+            stat: weapon.blastRadius,
+            name: "Explosive"
+        }
+    ];
+
+
+    if (random < rarity.bonusChance) {
+        random = GameSystem.game.rnd.integerInRange(0, bonus.length - 1);
+        for (var i in bonus) {
+            if (random == i) {
+                bonus[i].amount = GameSystem.game.rnd.integerInRange(0, rarity.statBonus) + 1; 
+                weapon.bonus = bonus[i].name + ", " + bonus[i].amount;
+            } else {
+                bonus[i].amount = 0;
+            }
+        }
+    } else {
+        for (var i in bonus) {
+            bonus[i].amount = 0;
+        }
+        weapon.bonus = null;
+    }
+
+    // Determine if the weapon has a special
+    random = GameSystem.game.rnd.integerInRange(0, 100);
+
+    if (random < rarity.specialChance) {
+        weapon.special = weapon.specials[GameSystem.game.rnd.integerInRange(0, weapon.specials.length - 1)];
+    } else {
+        weapon.special = null;
+    }
+
+    // Store game height
+    var height = GameSystem.game.world.height;
+
+    // Set weapon stats based on level, rarity, and adjustments to game world
+    weapon.shieldDamage = weapon.shieldDamage * 0.1 * GameSystem.game.rnd.integerInRange(1.0, rarity.statMultiplier) + bonus[0].amount + source.level * 0.1 + 1;
+    weapon.armorDamage = weapon.armorDamage * 0.1 * GameSystem.game.rnd.integerInRange(1.0, rarity.statMultiplier) + bonus[1].amount + source.level * 0.1 + 1;
+    weapon.rateOfFire = 5000 / (source.level * 0.1 + 1) / (GameSystem.game.rnd.integerInRange(1.0, rarity.statMultiplier) * (weapon.rateOfFire - bonus[2].amount) * 0.1);
+    weapon.maxSpeed = weapon.maxSpeed * 0.1 * GameSystem.game.rnd.integerInRange(1.0, rarity.statMultiplier) * height * 0.075 + bonus[3].amount + source.level * 0.75 + 1;
+    weapon.acceleration = weapon.acceleration * 0.1 * GameSystem.game.rnd.integerInRange(1.0, rarity.statMultiplier) * height * 0.005 + bonus[4].amount + source.level * 0.1 + 1;
+    weapon.size = weapon.size * 0.1 * GameSystem.game.rnd.integerInRange(1.0, rarity.statMultiplier) * height * 0.05 + bonus[5].amount + source.level * 0.1 + 1;
+    weapon.blastRadius = weapon.blastRadius * 0.1 * GameSystem.game.rnd.integerInRange(1.0, rarity.statMultiplier) * height * 0.01 + bonus[6].amount + source.level * 0.1;
+
+    // Set weapon value based on level, rarity, and stats
+    var bonusValue = 0;
+    var specialValue = 0;
+
+    for (var i in bonus) {
+        if (bonus[i].amount > 0) {
+            bonusValue = 100 + 50 * bonus[i].amount + 50 * source.level;
+        }
+    }
+
+    if (weapon.special != null) {
+        specialValue = 1000 + 50 * source.level;
+    }
+
+    weapon.value = 1000 + 100 * source.level * rarity.statMultiplier + bonusValue + specialValue;
+
+    console.log(weapon);
+    
+    return weapon;
+}
+
+// Store all game projectiles (can't be done before state is loaded?)
 GameSystem.createProjectiles = function() {
     GameSystem.projectiles = GameSystem.game.add.group();
 }
@@ -55,11 +200,12 @@ GameSystem.projectile = function(weapon, x, y) {
     projectile.type = weapon.type;
     projectile.shieldDamage = weapon.shieldDamage;
     projectile.armorDamage = weapon.armorDamage;
-    projectile.duration = weapon.duration;
-    projectile.maxDistance = weapon.maxDistance;
+    //projectile.duration = weapon.duration;
+    //projectile.maxDistance = weapon.maxDistance;
     projectile.maxSpeed = weapon.maxSpeed;
     projectile.acceleration = weapon.acceleration;
-    //projectile.body.velocity.y = -projectile.maxSpeed;
+    //projectile.body.velocity.y = -projectile.maxmaxSpeed;
+    return projectile;
 }
 
 GameSystem.updateProjectiles = function() {
@@ -97,7 +243,7 @@ GameSystem.checkProjectileDistance = function(projectile) {
 
 GameSystem.checkProjectileReady = function(weapon) {
     if (GameSystem.game.time.now > weapon.time || typeof weapon.time == "undefined") {
-        weapon.time = GameSystem.game.time.now + weapon.delay;
+        weapon.time = GameSystem.game.time.now + weapon.rateOfFire;
         return true;
     }
     return false;
@@ -106,7 +252,7 @@ GameSystem.checkProjectileReady = function(weapon) {
 // Fire primary weapons
 GameSystem.firePrimary = function(shooter) {
     for (var i in shooter.primaryWeapons) {
-        if (GameSystem.checkProjectileReady(shooter.primaryWeapons[i])) { // Check if weapon is ready for firing
+       if (GameSystem.checkProjectileReady(shooter.primaryWeapons[i])) { // Check if weapon is ready for firing
             GameSystem.projectile(shooter.primaryWeapons[i], shooter.sprite.x, shooter.sprite.y - shooter.sprite.height * .5);
         }
     }

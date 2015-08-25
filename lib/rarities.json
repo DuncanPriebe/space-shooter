@@ -1,0 +1,52 @@
+[
+	{
+		"name": "Legendary",
+		"baseDropChance": 3,
+		"dropChanceMultiplier": 0.2,
+		"statMultiplier": 1.4,
+		"statBonus": 12,
+		"bonusChance": 100,
+		"specialChance": 50,
+		"fontColor": "ae81ff"
+	},
+	{
+		"name": "Elite",
+		"baseDropChance": 6,
+		"dropChanceMultiplier": 0.2,
+		"statMultiplier": 1.3,
+		"statBonus": 9,
+		"bonusChance": 80,
+		"specialChance": 40,
+		"fontColor": "efd950"
+	},
+	{
+		"name": "Remarkable",
+		"baseDropChance": 9,
+		"dropChanceMultiplier": 0.3,
+		"statMultiplier": 1.2,
+		"statBonus": 6,
+		"bonusChance": 60,
+		"specialChance": 30,
+		"fontColor": "89e22e"
+	},
+	{
+		"name": "Superior",
+		"baseDropChance": 12,
+		"dropChanceMultiplier": 0.4,
+		"statMultiplier": 1.1,
+		"statBonus": 3,
+		"bonusChance": 40,
+		"specialChance": 20,
+		"fontColor": "50d9ef"
+	},
+	{
+		"name": "Normal",
+		"baseDropChance": 100,
+		"dropChanceMultiplier": 0.0,
+		"statMultiplier": 1.0,
+		"statBonus": 1,
+		"bonusChance": 20,
+		"specialChance": 10,
+		"fontColor": "c8c8c8"
+	}
+]
