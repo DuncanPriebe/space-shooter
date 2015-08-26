@@ -1,0 +1,530 @@
+[
+	{
+		"key": "empire",
+		"name": "The Empire",
+		"color": "ae81ff",
+		"worlds": [
+			{
+				"name": "Lorium",
+				"surface": "forest",
+				"level": 1
+			},
+			{
+				"name": "Genoa",
+				"surface": "ocean",
+				"level": 10
+			},
+			{
+				"name": "Corinth",
+				"surface": "city",
+				"level": 20
+			},
+			{
+				"name": "Tarsus",
+				"surface": "ocean",
+				"level": 30
+			},
+			{
+				"name": "Athens",
+				"surface": "city",
+				"level": 40
+			},
+			{
+				"name": "Ephesus",
+				"surface": "forest",
+				"level": 50
+			},
+			{
+				"name": "Pergamum",
+				"surface": "desert",
+				"level": 60
+			},
+			{
+				"name": "Carthage",
+				"surface": "ice",
+				"level": 70
+			},
+			{
+				"name": "Antioch",
+				"surface": "lava",
+				"level": 80
+			},
+			{
+				"name": "Alexandria",
+				"surface": "city",
+				"level": 90
+			},
+			{
+				"name": "Rome",
+				"surface": "city",
+				"level": 100
+			}
+		],
+		"firstNames": [
+			"Alba",
+			"Albus",
+			"Balbina",
+			"Balbus",
+			"Camilla",
+			"Caius",
+			"Deimca",
+			"Decimus",
+			"Egnatius",
+			"Faustus",
+			"Gaius",
+			"Herminia",
+			"Herminius",
+			"Iovanius",
+			"Julius",
+			"Lucia",
+			"Lucious",
+			"Maria",
+			"Marius",
+			"Nerva",
+			"Naevius",
+			"Plinia",
+			"Quintus",
+			"Rufinus",
+			"Septiumus",
+			"Tiberius",
+			"Vinicia",
+			"Vinicius"
+		],
+		"firstNames": [
+			"Aelius",
+			"Cassius",
+			"Claudius",
+			"Domitius",
+			"Drusus",
+			"Fabius",
+			"Flavius",
+			"Gallus",
+			"Horarious",
+			"Livius",
+			"Lucretia",
+			"Mercellus",
+			"Maximus",
+			"Octavius",
+			"Petronius",
+			"Pontius",
+			"Severus",
+			"Tatius",
+			"Valerius"
+		],
+		"weaponBonus": {
+			"name": "Plasma",
+			"shieldDamage": 0,
+			"armorDamage": 0,
+			"rateOfFire": 0,
+			"projectileSpeed": 0,
+			"acceleration": 0,
+			"blastRadius": 0,
+			"efficiency": 0
+		},
+		"currency": {
+			"name": "Credits",
+			"value": 1
+		}
+	},
+	{		
+		"key": "revolt",
+		"name": "The Revolt",
+		"color": "efd950",
+		"worlds": [
+			{
+				"name": "Kal Orda",
+				"surface": "desert",
+				"level": 1
+			},
+			{
+				"name": "Kal Orfa",
+				"surface": "ice",
+				"level": 10
+			},
+			{
+				"name": "Kal Orga",
+				"surface": "lava",
+				"level": 20
+			},
+			{
+				"name": "Kal Orja",
+				"surface": "city",
+				"level": 30
+			},
+			{
+				"name": "Kal Orka",
+				"surface": "desert",
+				"level": 40
+			},
+			{
+				"name": "Kal Orma",
+				"surface": "city",
+				"level": 50
+			},			
+			{
+				"name": "Kal Orna",
+				"surface": "forest",
+				"level": 60
+			},
+			{
+				"name": "Kal Orta",
+				"surface": "ocean",
+				"level": 70
+			},
+			{
+				"name": "Kal Orva",
+				"surface": "forest",
+				"level": 80
+			},
+			{
+				"name": "Kal Orza",
+				"surface": "desert",
+				"level": 100
+			}
+		],
+		"firstNames": [
+			"El",
+			"Eld",
+			"Tir",
+			"Nef",
+			"Eth",
+			"Ith",
+			"Tal",
+			"Ral",
+			"Ort",
+			"Thul",
+			"Amn",
+			"Sol",
+			"Shael",
+			"Dol",
+			"Hel",
+			"Io",
+			"Lum",
+			"Ko",
+			"Fal",
+			"Lem",
+			"Pul",
+			"Um",
+			"Mal",
+			"Ist",
+			"Gul",
+			"Vex",
+			"Ohm",
+			"Lo",
+			"Sur",
+			"Ber",
+			"Jah",
+			"Cham",
+			"Zod"
+		],
+		"firstNames": [
+			"Orda",
+			"Orfa",
+			"Orga",
+			"Orja",
+			"Orka",
+			"Orma",
+			"Orna",
+			"Orta",
+			"Orva",
+			"Orza"
+		],
+		"weaponBonus": {
+			"name": "Photon",
+			"shieldDamage": 0,
+			"armorDamage": 0,
+			"rateOfFire": 0,
+			"projectileSpeed": 0,
+			"acceleration": 0,
+			"blastRadius": 0,
+			"efficiency": 0
+		},
+		"currency": {
+			"name": "Crystal",
+			"value": 5
+		}
+	},
+	{
+		"key": "preserver",
+		"name": "The Preservers",
+		"color": "89e22e",
+		"worlds": [
+			{
+				"name": "Mrrr'Pa Ta",
+				"surface": "forest",
+				"level": 1
+			},
+			{
+				"name": "Mrrr'Pa Zo",
+				"surface": "ocean",
+				"level": 10
+			},
+			{
+				"name": "Brrr'Ko Ta",
+				"surface": "forest",
+				"level": 20
+			},
+			{
+				"name": "Brrr'Ko Zot",
+				"surface": "desert",
+				"level": 30
+			},
+			{
+				"name": "Krrr'Po Ta",
+				"surface": "forest",
+				"level": 40
+			},
+			{
+				"name": "Trrr'Ta Jot",
+				"surface": "ice",
+				"level": 50
+			},
+			{
+				"name": "Trrr'Ta Zo",
+				"surface": "ocean",
+				"level": 60
+			},
+			{
+				"name": "Lrrr'Po Ta",
+				"surface": "forest",
+				"level": 70
+			},
+			{
+				"name": "Lrrr'Po Jo",
+				"surface": "lava",
+				"level": 80
+			},
+			{
+				"name": "Zrrr'Ka Zot",
+				"surface": "desert",
+				"level": 90
+			},
+			{
+				"name": "Zrrr'Ka Ta",
+				"surface": "forest",
+				"level": 100
+			}
+		],
+		"firstNames": [
+			"Kzzz'Et",
+			"Pzzz'Et",
+			"Rzzz'Et",
+			"Tzzz'Et",
+			"Kzzz'Ak",
+			"Pzzz'Ak",
+			"Rzzz'Ak",
+			"Tzzz'Ak",
+			"Kzzz'Ot",
+			"Pzzz'Ot",
+			"Rzzz'Ot",
+			"Tzzz'Ot"
+			
+		],
+		"lastNames": [
+			"Do'Ta",
+			"Do'Zo",
+			"Do'Zot",
+			"Do'Jo",
+			"Do'Jot"
+		],
+		"weaponBonus": {
+			"name": "Aurora",
+			"shieldDamage": 0,
+			"armorDamage": 0,
+			"rateOfFire": 0,
+			"projectileSpeed": 0,
+			"acceleration": 0,
+			"blastRadius": 0,
+			"efficiency": 0
+		},
+		"currency": {
+			"name": "Honor",
+			"value": 10
+		}
+	},
+	{
+		"key": "freelancer",
+		"name": "The Freelancers",
+		"fontColor": "ffffff",
+		"worlds": [
+			{
+				"name": "Hub #9913",
+				"surface": "city",
+				"level": 1
+			},
+			{
+				"name": "Hub #8771",
+				"surface": "city",
+				"level": 10
+			},
+			{
+				"name": "Hub #7290",
+				"surface": "city",
+				"level": 20
+			},
+			{
+				"name": "Hub #6834",
+				"surface": "city",
+				"level": 30
+			},
+			{
+				"name": "Hub #5525",
+				"surface": "city",
+				"level": 40
+			},
+			{
+				"name": "Hub #4918",
+				"surface": "city",
+				"level": 50
+			},
+			{
+				"name": "Hub #3039",
+				"surface": "city",
+				"level": 60
+			},
+			{
+				"name": "Hub #2471",
+				"surface": "city",
+				"level": 70
+			},
+			{
+				"name": "Hub #1665",
+				"surface": "city",
+				"level": 80
+			},
+			{
+				"name": "Hub #240",
+				"surface": "city",
+				"level": 90
+			},
+			{
+				"name": "Hub #1",
+				"surface": "city",
+				"level": 100
+			}
+
+		],
+		"firstNames": [
+			"Doot"
+		],
+		"lastNames": [
+			"Boot"
+		],
+		"weaponBonus": {
+			"name": "Ion",
+			"shieldDamage": 0,
+			"armorDamage": 0,
+			"rateOfFire": 0,
+			"projectileSpeed": 0,
+			"acceleration": 0,
+			"blastRadius": 0,
+			"efficiency": 0
+		},
+		"currency": {
+			"name": "Anything",
+			"value": 0
+		}
+	},
+	{
+		"key": "eclipse",
+		"name": "The Eclipse",
+		"color": "000000",
+		"worlds": [
+			{
+				"name": "Skin",
+				"surface": "lava",
+				"level": 1
+			},
+			{
+				"name": "Finger",
+				"surface": "desert",
+				"level": 10
+			},
+			{
+				"name": "Tooth",
+				"surface": "ice",
+				"level": 20
+			},
+			{
+				"name": "Ear",
+				"surface": "lava",
+				"level": 30
+			},
+			{
+				"name": "Eye",
+				"surface": "desert",
+				"level": 40
+			},
+			{
+				"name": "Arm",
+				"surface": "lava",
+				"level": 50
+			},
+			{
+				"name": "Spine",
+				"surface": "ice",
+				"level": 60
+			},
+			{
+				"name": "Tongue",
+				"surface": "lava",
+				"level": 70
+			},
+			{
+				"name": "Bone",
+				"surface": "desert",
+				"level": 80
+			},
+			{
+				"name": "Brain",
+				"surface": "ice",
+				"level": 90
+			},
+			{
+				"name": "Heart",
+				"surface": "lava",
+				"level": 100
+			}
+		],
+		"firstNames": [
+			"Barga",
+			"Bim",
+			"Gorm",			
+			"Gorga",
+			"Mosh",
+			"Morgo",
+			"Targa",
+			"Sog",
+			"Zom",
+			"Zosh"
+			
+		],
+		"lastNames": [
+			"Voidbringer",
+			"Conqueror",
+			"Thunderer",
+			"Crusher",
+			"Devourer",
+			"Harbinger",
+			"Destroyer",
+			"Ravager",
+			"Annihilator",
+			"Shatterer",
+			"Exterminator"
+		],
+		"weaponBonus": {
+			"name": "Void",
+			"shieldDamage": 0,
+			"armorDamage": 0,
+			"rateOfFire": 0,
+			"projectileSpeed": 0,
+			"acceleration": 0,
+			"blastRadius": 0,
+			"efficiency": 0
+		},
+		"currency": {
+			"name": "Blood",
+			"value": 50
+		}
+	}
+]

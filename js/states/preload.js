@@ -8,6 +8,7 @@ var preloadState = {
         GameSystem.game.load.json('settings', 'lib/settings.json', true);
         GameSystem.game.load.json('assets', 'lib/assets.json', true);
         GameSystem.game.load.json('menu', 'lib/menu.json', true);
+        GameSystem.game.load.json('factions', 'lib/factions.json', true);
         GameSystem.game.load.json('docks', 'lib/docks.json', true);
         GameSystem.game.load.json('missions', 'lib/missions.json', true);
         GameSystem.game.load.json('rarities', 'lib/rarities.json', true);
@@ -26,6 +27,7 @@ var preloadState = {
         GameSystem.game.settings = GameSystem.game.cache.getJSON('settings');
         GameSystem.game.assets = GameSystem.game.cache.getJSON('assets');
         GameSystem.game.menu = GameSystem.game.cache.getJSON('menu');
+        GameSystem.game.factions = GameSystem.game.cache.getJSON('factions');
         GameSystem.game.docks = GameSystem.game.cache.getJSON('docks');
         GameSystem.game.missions = GameSystem.game.cache.getJSON('missions');
         GameSystem.game.rarities = GameSystem.game.cache.getJSON('rarities');

@@ -1,102 +1,96 @@
-[
-	{
-		"name": "Laser",
-		"type": "laser",
-		"sprite": "star-red",
-		"fireSound": "laser",
-		"impactSound": "laser",
-		"shieldDamage": 70,
-		"armorDamage": 30,
-		"rateOfFire": 80,
-		"maxSpeed": 80,
-		"acceleration": 80,
-		"size": 20,
-		"blastRadius": 0,
-		"specials": [
-			"Charging",
-			"Draining",
-			"Leeching",
-			"Piercing"
-		]
-	},
-	{
-		"name": "Cannon",
-		"type": "cannon",
-		"sprite": "star-blue",
-		"fireSound": "laser",
-		"impactSound": "explosion",
-		"shieldDamage": 40,
-		"armorDamage": 60,
-		"rateOfFire": 60,
-		"maxSpeed": 70,
-		"acceleration": 60,
-		"size": 30,
-		"blastRadius": 20,
-		"specials": [
-			"Charging",
-			"Draining",
-			"Leeching",
-			"Piercing"
-		]
-	},
-	{
-		"name": "Beam",
-		"type": "beam",
-		"sprite": "laser-blue",
-		"fireSound": "laser",
-		"impactSound": "laser",
-		"shieldDamage": 60,
-		"armorDamage": 40,
-		"rateOfFire": 100,
-		"maxSpeed": 100,
-		"acceleration": 100,
-		"size": 20,
-		"blastRadius": 0,
-		"specials": [
-			"Charging",
-			"Draining",
-			"Leeching",
-			"Piercing"
-		]
-	},
-	{
-		"name": "Missile",
-		"type": "missile",
-		"sprite": "missile-2",
-		"fireSound": "explosion",
-		"impactSound": "explosion",
-		"shieldDamage": 40,
-		"armorDamage": 70,
-		"rateOfFire": 40,
-		"maxSpeed": 50,
-		"acceleration": 40,
-		"size": 50,
-		"blastRadius": 40,
-		"specials": [
-			"Charging",
-			"Draining",
-			"Leeching",
-			"Piercing"
-		]
-	},
-	{
-		"name": "Bomb",
-		"type": "bomb",
-		"sprite": "missile",
-		"fireSound": "explosion2",
-		"impactSound": "explosion2",
-		"shieldDamage": 30,
-		"armorDamage": 80,
-		"rateOfFire": 30,
-		"maxSpeed": 30,
-		"acceleration": 30,
-		"size": 70,
-		"blastRadius": 80,
-		"specials": [
-			"Charging",
-			"Draining",
-			"Leeching",
-			"Piercing"
-		]
-	}
-]
+{
+	"types": [
+		{
+			"type": "laser",
+			"name": "Laser",
+			"sprite": "star-blue",
+			"fireSound": "laser",
+			"impactSound": "laser",
+			"shieldDamage": 70,
+			"armorDamage": 40,
+			"rateOfFire": 60,
+			"projectileSpeed": 70,
+			"acceleration": 70,
+			"projectileSize": 20,
+			"blastRadius": 10,
+			"efficiency": 80
+		},
+		{
+			"type": "cannon",
+			"name": "Cannon",
+			"sprite": "star-blue",
+			"fireSound": "laser",
+			"impactSound": "explosion",
+			"shieldDamage": 55,
+			"armorDamage": 65,
+			"rateOfFire": 45,
+			"projectileSpeed": 55,
+			"acceleration": 55,
+			"projectileSize": 40,
+			"blastRadius": 30,
+			"efficiency": 50
+		},
+		{
+			"type": "beam",
+			"name": "Beam",
+			"sprite": "laser-blue",
+			"fireSound": "laser",
+			"impactSound": "laser",
+			"shieldDamage": 35,
+			"armorDamage": 25,
+			"rateOfFire": 100,
+			"projectileSpeed": 100,
+			"acceleration": 100,
+			"projectileSize": 30,
+			"blastRadius": 0,
+			"efficiency": 15
+		},
+		{
+			"type": "missile",
+			"name": "Missile",
+			"sprite": "missile-2",
+			"fireSound": "explosion",
+			"impactSound": "explosion",
+			"shieldDamage": 45,
+			"armorDamage": 75,
+			"rateOfFire": 35,
+			"projectileSpeed": 45,
+			"acceleration": 45,
+			"projectileSize": 50,
+			"blastRadius": 50,
+			"efficiency": 35
+		},
+		{
+			"type": "bomb",
+			"name": "Bomb",
+			"sprite": "missile",
+			"fireSound": "explosion2",
+			"impactSound": "explosion2",
+			"shieldDamage": 60,
+			"armorDamage": 100,
+			"rateOfFire": 15,
+			"projectileSpeed": 25,
+			"acceleration": 25,
+			"projectileSize": 20,
+			"blastRadius": 70,
+			"efficiency": 25
+		}
+	],
+	"bonuses": [
+		"Energized",
+		"Lethal",
+		"Swift",
+		"Pressurized",
+		"Accelerated",
+		"Enormous",
+		"Explosive",
+		"Economical"
+	],
+	"specials": [
+		"Charging",
+		"Draining",
+		"Leeching",
+		"Piercing",
+		"Homing"
+	]
+}

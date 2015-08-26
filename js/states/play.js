@@ -47,13 +47,15 @@ var playState = {
         muteKey.onDown.add(this.muteToggle, this);
 
         // Set default player weapon for testing
-        //GameSystem.game.player.primaryWeapons[0] = GameSystem.game.weapons[0];
-        //GameSystem.game.player.primaryWeapons[1] = GameSystem.game.weapons[1];
-        //GameSystem.game.player.secondaryWeapons[0] = GameSystem.game.weapons[1];
-
-        GameSystem.game.player.primaryWeapons.push(new GameSystem.weapon({level: 10}));
+        GameSystem.game.player.primaryWeapons.push(new GameSystem.weapon({
+            level: 100,
+            faction: GameSystem.game.factions[0]
+        }));
         //GameSystem.game.player.primaryWeapons.push(new GameSystem.weapon({level: 10}));
-        GameSystem.game.player.secondaryWeapons.push(new GameSystem.weapon({level: 10}));
+        GameSystem.game.player.secondaryWeapons.push(new GameSystem.weapon({
+            level: 1,
+            faction: GameSystem.game.factions[1]
+        }));
         //GameSystem.game.player.secondaryWeapons.push(new GameSystem.weapon({level: 10}));
 
         /*
