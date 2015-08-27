@@ -111,6 +111,9 @@
 			"Tatius",
 			"Valerius"
 		],
+		"shipBonus": {
+			"name": "The Empire's"
+		},
 		"weaponBonus": {
 			"name": "Plasma",
 			"shieldDamage": 0,
@@ -120,6 +123,18 @@
 			"acceleration": 0,
 			"blastRadius": 0,
 			"efficiency": 0
+		},
+		"shieldBonus": {
+			"name": "Plasma"
+		},
+		"engineBonus": {
+			"name": "Plasma"
+		},
+		"generatorBonus": {
+			"name": "Plasma"
+		},
+		"moduleBonus": {
+			"name": "Plasma"
 		},
 		"currency": {
 			"name": "Credits",
@@ -229,6 +244,9 @@
 			"Orva",
 			"Orza"
 		],
+		"shipBonus": {
+			"name": "The Revolt's"
+		},
 		"weaponBonus": {
 			"name": "Photon",
 			"shieldDamage": 0,
@@ -238,6 +256,18 @@
 			"acceleration": 0,
 			"blastRadius": 0,
 			"efficiency": 0
+		},
+		"shieldBonus": {
+			"name": "Photon"
+		},
+		"engineBonus": {
+			"name": "Photon"
+		},
+		"generatorBonus": {
+			"name": "Photon"
+		},
+		"moduleBonus": {
+			"name": "Photon"
 		},
 		"currency": {
 			"name": "Crystal",
@@ -327,6 +357,9 @@
 			"Do'Jo",
 			"Do'Jot"
 		],
+		"shipBonus": {
+			"name": "Preserver's"
+		},
 		"weaponBonus": {
 			"name": "Aurora",
 			"shieldDamage": 0,
@@ -336,6 +369,18 @@
 			"acceleration": 0,
 			"blastRadius": 0,
 			"efficiency": 0
+		},
+		"shieldBonus": {
+			"name": "Aurora"
+		},
+		"engineBonus": {
+			"name": "Aurora"
+		},
+		"generatorBonus": {
+			"name": "Aurora"
+		},
+		"moduleBonus": {
+			"name": "Aurora"
 		},
 		"currency": {
 			"name": "Honor",
@@ -410,6 +455,9 @@
 		"lastNames": [
 			"Boot"
 		],
+		"shipBonus": {
+			"name": "Freelancer's"
+		},
 		"weaponBonus": {
 			"name": "Ion",
 			"shieldDamage": 0,
@@ -419,6 +467,18 @@
 			"acceleration": 0,
 			"blastRadius": 0,
 			"efficiency": 0
+		},
+		"shieldBonus": {
+			"name": "Ion"
+		},
+		"engineBonus": {
+			"name": "Ion"
+		},
+		"generatorBonus": {
+			"name": "Ion"
+		},
+		"moduleBonus": {
+			"name": "Ion"
 		},
 		"currency": {
 			"name": "Anything",
@@ -512,6 +572,9 @@
 			"Shatterer",
 			"Exterminator"
 		],
+		"shipBonus": {
+			"name": "Eclipse"
+		},
 		"weaponBonus": {
 			"name": "Void",
 			"shieldDamage": 0,
@@ -521,6 +584,18 @@
 			"acceleration": 0,
 			"blastRadius": 0,
 			"efficiency": 0
+		},
+		"shieldBonus": {
+			"name": "Void"
+		},
+		"engineBonus": {
+			"name": "Void"
+		},
+		"generatorBonus": {
+			"name": "Void"
+		},
+		"moduleBonus": {
+			"name": "Void"
 		},
 		"currency": {
 			"name": "Blood",

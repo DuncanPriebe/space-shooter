@@ -17,7 +17,7 @@ var playState = {
         GameSystem.loadStateAssets(this.key);
 
         // Create pool of projectiles
-        GameSystem.createProjectiles();
+        GameSystem.initialize();
     },
 
     create: function() {
@@ -47,6 +47,17 @@ var playState = {
         muteKey.onDown.add(this.muteToggle, this);
 
         // Set default player weapon for testing
+        GameSystem.game.player.primaryWeapons.push(new GameSystem.item({
+                level: 10,
+                faction: GameSystem.game.factions[0]
+        }, "weapon"));
+
+        GameSystem.game.player.secondaryWeapons.push(new GameSystem.item({
+                level: 10,
+                faction: GameSystem.game.factions[0]
+        }, "weapon"));
+
+        /*
         GameSystem.game.player.primaryWeapons.push(new GameSystem.weapon({
             level: 100,
             faction: GameSystem.game.factions[0]
@@ -56,6 +67,8 @@ var playState = {
             level: 1,
             faction: GameSystem.game.factions[1]
         }));
+        */
+
         //GameSystem.game.player.secondaryWeapons.push(new GameSystem.weapon({level: 10}));
 
         /*

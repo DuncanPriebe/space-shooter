@@ -1,20 +1,96 @@
-[
-	{
-		"name": "Plasma Engine",
-		"sprite": "laser-blue-5.png",
-		"yMaxSpeed": 5,
-		"xMaxSpeed": 10,
-		"yAcceleration": 2.5,
-		"xAcceleration": 5,
-		"cost": 500		
-	},
-	{
-		"name": "Ion Engine",
-		"sprite": "laser-blue-5.png",
-		"yMaxSpeed": 10,
-		"xMaxSpeed": 5,
-		"yAcceleration": 5,
-		"xAcceleration": 2.5,
-		"cost": 750
-	}
-]
+{
+	"types": [
+		{
+			"type": "laser",
+			"name": "Laser",
+			"sprite": "star-blue",
+			"fireSound": "laser",
+			"impactSound": "laser",
+			"shieldDamage": 70,
+			"armorDamage": 40,
+			"rateOfFire": 60,
+			"projectileSpeed": 70,
+			"acceleration": 70,
+			"projectileSize": 20,
+			"blastRadius": 10,
+			"efficiency": 80
+		},
+		{
+			"type": "cannon",
+			"name": "Cannon",
+			"sprite": "star-blue",
+			"fireSound": "laser",
+			"impactSound": "explosion",
+			"shieldDamage": 55,
+			"armorDamage": 65,
+			"rateOfFire": 45,
+			"projectileSpeed": 55,
+			"acceleration": 55,
+			"projectileSize": 40,
+			"blastRadius": 30,
+			"efficiency": 50
+		},
+		{
+			"type": "beam",
+			"name": "Beam",
+			"sprite": "laser-blue",
+			"fireSound": "laser",
+			"impactSound": "laser",
+			"shieldDamage": 35,
+			"armorDamage": 25,
+			"rateOfFire": 100,
+			"projectileSpeed": 100,
+			"acceleration": 100,
+			"projectileSize": 30,
+			"blastRadius": 0,
+			"efficiency": 15
+		},
+		{
+			"type": "missile",
+			"name": "Missile",
+			"sprite": "missile-2",
+			"fireSound": "explosion",
+			"impactSound": "explosion",
+			"shieldDamage": 45,
+			"armorDamage": 75,
+			"rateOfFire": 35,
+			"projectileSpeed": 45,
+			"acceleration": 45,
+			"projectileSize": 50,
+			"blastRadius": 50,
+			"efficiency": 35
+		},
+		{
+			"type": "bomb",
+			"name": "Bomb",
+			"sprite": "missile",
+			"fireSound": "explosion2",
+			"impactSound": "explosion2",
+			"shieldDamage": 60,
+			"armorDamage": 100,
+			"rateOfFire": 15,
+			"projectileSpeed": 25,
+			"acceleration": 25,
+			"projectileSize": 20,
+			"blastRadius": 70,
+			"efficiency": 25
+		}
+	],
+	"bonuses": [
+		"Energized",
+		"Lethal",
+		"Swift",
+		"Pressurized",
+		"Accelerated",
+		"Enormous",
+		"Explosive",
+		"Economical"
+	],
+	"specials": [
+		"Charging",
+		"Draining",
+		"Leeching",
+		"Piercing",
+		"Homing"
+	]
+}

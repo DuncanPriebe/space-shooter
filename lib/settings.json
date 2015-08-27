@@ -7,5 +7,16 @@
 	"musicVolume": 0.2,
 	"audioPath": "aud/",
 	"imagePath": "img/",
-	"startingMoney": 1000
+	"startingMoney": 1000,
+	"statUpperBound": 200,
+	"rateOfFireUpperBound": 750,
+	"rateOfFireLowerBound": 35,
+	"speedUpperBound": 3,
+	"speedLowerBound": 0.2,
+	"accelerationUpperBound": 0.5,
+	"accelerationLowerBound": 0.1,
+	"sizeUpperBound": 0.05,
+	"sizeLowerBound": 0.025,
+	"blastRadiusUpperBound": 0.05,
+	"blastRadiusLowerBound": 0.25
 }
