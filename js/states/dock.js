@@ -3,7 +3,7 @@
 var dockState = {
     init: function(dock) {
         // Load current dock, otherwise load first dock
-        GameSystem.game.dock = dock || GameSystem.game.docks[0];
+        GameSystem.game.dock = dock || GameSystem.data.docks[0];
     },
 
     preload: function() {
@@ -12,34 +12,38 @@ var dockState = {
     },
 
     create: function() {
-        GameSystem.game.add.text(80, 80, GameSystem.game.dock.name, GameSystem.game.menu.fonts.title);
+        GameSystem.game.add.text(80, 80, GameSystem.game.dock.name, GameSystem.data.menu.fonts.title);
 
         // Create menu structure
         var mainMenu = new GameSystem.node("SPACE DOCK", "root");
             var missionMenu = mainMenu.addChild("MISSIONS");
-                for (var i in GameSystem.game.missions) {
-                    missionMenu.addChild(GameSystem.game.missions[i].name, "mission");
+                for (var i in GameSystem.data.missions) {
+                    missionMenu.addChild(GameSystem.data.missions[i].name, "mission");
                 }
             var vendorMenu = mainMenu.addChild("VENDORS");
                 for (var i in GameSystem.game.dock.vendors) {
                     vendorMenu.addChild(GameSystem.game.dock.vendors[i].name, "vendor");
+                }
+            var archiveMenu = mainMenu.addChild("DATA ARCHIVE");
+                for (var i in GameSystem.data.factions) {
+                    archiveMenu.addChild(GameSystem.data.factions[i].name, "faction");
                 }
             mainMenu.addChild("SAVE GAME");
             mainMenu.addChild("RESET GAME");
             mainMenu.addChild("ERASE DATA");
             mainMenu.addChild("QUIT");
 
-        GameSystem.game.menu.selected = mainMenu.getSelected(); // Set default selected menu
+        GameSystem.data.menu.selected = mainMenu.getSelected(); // Set default selected menu
         
-        GameSystem.game.menu.selected.update(); // Print the menu
+        GameSystem.data.menu.selected.update(); // Print the menu
 
         // Store assets in game variables
-        GameSystem.game.menu.audio.music = GameSystem.game.add.audio(GameSystem.game.menu.audio.music, GameSystem.game.menu.audio.musicVolume);
-        GameSystem.game.menu.audio.move = GameSystem.game.add.audio(GameSystem.game.menu.audio.moveSound, GameSystem.game.menu.audio.sfxVolume);
-        GameSystem.game.menu.audio.accept = GameSystem.game.add.audio(GameSystem.game.menu.audio.acceptSound, GameSystem.game.menu.audio.sfxVolume);
-        GameSystem.game.menu.audio.back = GameSystem.game.add.audio(GameSystem.game.menu.audio.backSound, GameSystem.game.menu.audio.sfxVolume);
+        GameSystem.data.menu.audio.music = GameSystem.game.add.audio(GameSystem.data.menu.audio.music, GameSystem.data.menu.audio.musicVolume);
+        GameSystem.data.menu.audio.move = GameSystem.game.add.audio(GameSystem.data.menu.audio.moveSound, GameSystem.data.menu.audio.sfxVolume);
+        GameSystem.data.menu.audio.accept = GameSystem.game.add.audio(GameSystem.data.menu.audio.acceptSound, GameSystem.data.menu.audio.sfxVolume);
+        GameSystem.data.menu.audio.back = GameSystem.game.add.audio(GameSystem.data.menu.audio.backSound, GameSystem.data.menu.audio.sfxVolume);
 
-        // GameSystem.game.menu.audio.music.play(); // Start music
+        // GameSystem.data.menu.audio.music.play(); // Start music
 
         // Add menu control keys
         var upKey = GameSystem.game.input.keyboard.addKey(Phaser.Keyboard.UP);
@@ -57,22 +61,22 @@ var dockState = {
     moveSelection: function(key) {
         switch (key.keyCode) {
             case 38: // Up arrow pressed
-                GameSystem.game.menu.selected = GameSystem.game.menu.selected.selectPrevious();
-                GameSystem.game.menu.audio.move.play();
+                GameSystem.data.menu.selected = GameSystem.data.menu.selected.selectPrevious();
+                GameSystem.data.menu.audio.move.play();
                 break;
             case 40: // Down arrow pressed
-                GameSystem.game.menu.selected = GameSystem.game.menu.selected.selectNext();
-                GameSystem.game.menu.audio.move.play();
+                GameSystem.data.menu.selected = GameSystem.data.menu.selected.selectNext();
+                GameSystem.data.menu.audio.move.play();
                 break;
             case 13: // Enter pressed
-                GameSystem.game.menu.selected = GameSystem.game.menu.selected.selectChild();
-                GameSystem.game.menu.audio.accept.play();
+                GameSystem.data.menu.selected = GameSystem.data.menu.selected.selectChild();
+                GameSystem.data.menu.audio.accept.play();
                 //GameSystem.game.state.start('play', true, false, missions[0], weapons, settings); // Start play state with parameters
                 break;
             case 8: // Backspace pressed
             case 27: // Escape pressed
-                GameSystem.game.menu.selected = GameSystem.game.menu.selected.selectParent();
-                GameSystem.game.menu.audio.back.play();
+                GameSystem.data.menu.selected = GameSystem.data.menu.selected.selectParent();
+                GameSystem.data.menu.audio.back.play();
                 break;
         }
     }

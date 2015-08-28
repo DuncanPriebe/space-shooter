@@ -111,30 +111,32 @@
 			"Tatius",
 			"Valerius"
 		],
-		"shipBonus": {
-			"name": "The Empire's"
-		},
-		"weaponBonus": {
-			"name": "Plasma",
-			"shieldDamage": 0,
-			"armorDamage": 0,
-			"rateOfFire": 0,
-			"projectileSpeed": 0,
-			"acceleration": 0,
-			"blastRadius": 0,
-			"efficiency": 0
-		},
-		"shieldBonus": {
-			"name": "Plasma"
-		},
-		"engineBonus": {
-			"name": "Plasma"
-		},
-		"generatorBonus": {
-			"name": "Plasma"
-		},
-		"moduleBonus": {
-			"name": "Plasma"
+		"itemName": "Plasma",
+		"bonuses": {
+			"ships": {
+				
+			},
+			"weapons": {
+				"shieldDamage": 0,
+				"armorDamage": 0,
+				"rateOfFire": 0,
+				"projectileSpeed": 0,
+				"acceleration": 0,
+				"blastRadius": 0,
+				"efficiency": 0
+			},
+			"shields": {
+				
+			},
+			"engines": {
+				
+			},
+			"generators": {
+				
+			},
+			"modules": {
+				
+			}
 		},
 		"currency": {
 			"name": "Credits",

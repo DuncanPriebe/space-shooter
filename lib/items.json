@@ -1,0 +1,207 @@
+{
+	"ships": {
+		"presets": [
+		]
+	},
+	"weapons": {
+		"presets": [
+			{
+				"type": "laser",
+				"name": "Laser",
+				"sprite": "star-blue",
+				"fireSound": "laser",
+				"impactSound": "laser",
+				"stats": {
+					"shieldDamage": 70,
+					"armorDamage": 40,
+					"rateOfFire": 60,
+					"projectileSpeed": 70,
+					"acceleration": 70,
+					"projectileSize": 20,
+					"blastRadius": 10,
+					"efficiency": 80
+				}
+			},
+			{
+				"type": "cannon",
+				"name": "Cannon",
+				"sprite": "star-blue",
+				"fireSound": "laser",
+				"impactSound": "explosion",
+				"stats": {
+					"shieldDamage": 55,
+					"armorDamage": 65,
+					"rateOfFire": 45,
+					"projectileSpeed": 55,
+					"acceleration": 55,
+					"projectileSize": 40,
+					"blastRadius": 30,
+					"efficiency": 50
+				}
+			},
+			{
+				"type": "beam",
+				"name": "Beam",
+				"sprite": "laser-blue",
+				"fireSound": "laser",
+				"impactSound": "laser",
+				"stats": {
+					"shieldDamage": 35,
+					"armorDamage": 25,
+					"rateOfFire": 100,
+					"projectileSpeed": 100,
+					"acceleration": 100,
+					"projectileSize": 30,
+					"blastRadius": 0,
+					"efficiency": 15
+				}
+			},
+			{
+				"type": "missile",
+				"name": "Missile",
+				"sprite": "missile-2",
+				"fireSound": "explosion",
+				"impactSound": "explosion",
+				"stats": {
+					"shieldDamage": 45,
+					"armorDamage": 75,
+					"rateOfFire": 35,
+					"projectileSpeed": 45,
+					"acceleration": 45,
+					"projectileSize": 50,
+					"blastRadius": 50,
+					"efficiency": 35
+				}
+			},
+			{
+				"type": "bomb",
+				"name": "Bomb",
+				"sprite": "missile",
+				"fireSound": "explosion2",
+				"impactSound": "explosion2",
+				"stats": {
+					"shieldDamage": 60,
+					"armorDamage": 100,
+					"rateOfFire": 15,
+					"projectileSpeed": 25,
+					"acceleration": 25,
+					"projectileSize": 20,
+					"blastRadius": 70,
+					"efficiency": 25
+				}
+			}
+		],
+		"bonusNames": [
+			"Energized",
+			"Lethal",
+			"Swift",
+			"Pressurized",
+			"Accelerated",
+			"Enormous",
+			"Explosive",
+			"Economical"
+		],
+		"specials": [
+			"Charging",
+			"Draining",
+			"Leeching",
+			"Piercing",
+			"Homing"
+		]
+	},
+	"shields": {
+		"presets": [
+		]
+	},
+	"engines": {
+		"presets": [
+		]
+	},
+	"generators": {
+		"presets": [
+		]
+	},
+	"modules": {
+		"presets": [
+		]
+	},
+	"rarities": [
+		{
+			"name": "Legendary",
+			"dropChance": 10,
+			"minStatBoost": 10,
+			"maxStatBoost": 20,
+			"minStatMultiplier": 20,
+			"maxStatMultiplier": 30,
+			"bonusChance": 25,
+			"specialChance": 25,
+			"color": "ae81ff"
+		},
+		{
+			"name": "Elite",
+			"dropChance": 15,
+			"minStatBoost": 13,
+			"maxStatBoost": 18,
+			"minStatMultiplier": 15,
+			"maxStatMultiplier": 25,
+			"bonusChance": 25,
+			"specialChance": 25,
+			"color": "efd950"
+		},
+		{
+			"name": "Exceptional",
+			"dropChance": 20,
+			"minStatBoost": 11,
+			"maxStatBoost": 16,
+			"minStatMultiplier": 10,
+			"maxStatMultiplier": 15,
+			"bonusChance": 25,
+			"specialChance": 25,
+			"color": "89e22e"
+		},
+		{
+			"name": "Superior",
+			"dropChance": 25,
+			"minStatBoost": 9,
+			"maxStatBoost": 14,
+			"minStatMultiplier": 5,
+			"maxStatMultiplier": 10,
+			"bonusChance": 25,
+			"specialChance": 25,
+			"color": "50d9ef"
+		},
+		{
+			"name": "Standard",
+			"dropChance": 80,
+			"minStatBoost": 7,
+			"maxStatBoost": 13,
+			"minStatMultiplier": 0,
+			"maxStatMultiplier": 0,
+			"bonusChance": 25,
+			"specialChance": 25,
+			"color": "ffffff"
+		},
+		{
+			"name": "Weak",
+			"dropChance": 90,
+			"minStatBoost": 1,
+			"maxStatBoost": 3,
+			"minStatMultiplier": -5,
+			"maxStatMultiplier": -10,
+			"bonusChance": 25,
+			"specialChance": 15,
+			"color": "c8c8c8"
+		},
+		{
+			"name": "Terrible",
+			"dropChance": 100,
+			"minStatBoost": 1,
+			"maxStatBoost": 2,
+			"minStatMultiplier": -10,
+			"maxStatMultiplier": -15,
+			"bonusChance": 25,
+			"specialChance": 10,
+			"color": "a1a1a1"
+		}
+	]
+}

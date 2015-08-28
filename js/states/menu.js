@@ -8,7 +8,7 @@ var menuState = {
     },
 
 	create: function() {
-        GameSystem.game.add.text(80, 80, GameSystem.game.menu.title + " v" + GameSystem.game.settings.version, GameSystem.game.menu.fonts.title);
+        GameSystem.game.add.text(80, 80, GameSystem.data.menu.title + " v" + GameSystem.data.settings.version, GameSystem.data.menu.fonts.title);
 
         // Create menu structure
         var mainMenu = new GameSystem.node("MAIN MENU", "root");
@@ -28,17 +28,17 @@ var menuState = {
                     resolutionMenu.addChild("480 X 360");
             mainMenu.addChild("QUIT");
 
-        GameSystem.game.menu.selected = mainMenu.getSelected(); // Set default selected menu
+        GameSystem.data.menu.selected = mainMenu.getSelected(); // Set default selected menu
         
-        GameSystem.game.menu.selected.update(); // Print the menu
+        GameSystem.data.menu.selected.update(); // Print the menu
 
         // Store assets in game variables
-        GameSystem.game.menu.audio.music = GameSystem.game.add.audio(GameSystem.game.menu.audio.music, GameSystem.game.menu.audio.musicVolume);
-        GameSystem.game.menu.audio.move = GameSystem.game.add.audio(GameSystem.game.menu.audio.moveSound, GameSystem.game.menu.audio.sfxVolume);
-        GameSystem.game.menu.audio.accept = GameSystem.game.add.audio(GameSystem.game.menu.audio.acceptSound, GameSystem.game.menu.audio.sfxVolume);
-        GameSystem.game.menu.audio.back = GameSystem.game.add.audio(GameSystem.game.menu.audio.backSound, GameSystem.game.menu.audio.sfxVolume);
+        GameSystem.data.menu.audio.music = GameSystem.game.add.audio(GameSystem.data.menu.audio.music, GameSystem.data.menu.audio.musicVolume);
+        GameSystem.data.menu.audio.move = GameSystem.game.add.audio(GameSystem.data.menu.audio.moveSound, GameSystem.data.menu.audio.sfxVolume);
+        GameSystem.data.menu.audio.accept = GameSystem.game.add.audio(GameSystem.data.menu.audio.acceptSound, GameSystem.data.menu.audio.sfxVolume);
+        GameSystem.data.menu.audio.back = GameSystem.game.add.audio(GameSystem.data.menu.audio.backSound, GameSystem.data.menu.audio.sfxVolume);
 
-        // GameSystem.game.menu.audio.music.play(); // Start music
+        // GameSystem.data.menu.audio.music.play(); // Start music
 
         // Add menu control keys
         var upKey = GameSystem.game.input.keyboard.addKey(Phaser.Keyboard.UP);
@@ -56,21 +56,21 @@ var menuState = {
     moveSelection: function(key) {
     	switch (key.keyCode) {
     		case 38: // Up arrow pressed
-                GameSystem.game.menu.selected = GameSystem.game.menu.selected.selectPrevious();
-                GameSystem.game.menu.audio.move.play();
+                GameSystem.data.menu.selected = GameSystem.data.menu.selected.selectPrevious();
+                GameSystem.data.menu.audio.move.play();
     			break;
     		case 40: // Down arrow pressed
-    			GameSystem.game.menu.selected = GameSystem.game.menu.selected.selectNext();
-                GameSystem.game.menu.audio.move.play();
+    			GameSystem.data.menu.selected = GameSystem.data.menu.selected.selectNext();
+                GameSystem.data.menu.audio.move.play();
     			break;
             case 13: // Enter pressed
-                GameSystem.game.menu.selected = GameSystem.game.menu.selected.selectChild();
-                GameSystem.game.menu.audio.accept.play();
+                GameSystem.data.menu.selected = GameSystem.data.menu.selected.selectChild();
+                GameSystem.data.menu.audio.accept.play();
                 break;
     		case 8: // Backspace pressed
             case 27: // Escape pressed
-                GameSystem.game.menu.selected = GameSystem.game.menu.selected.selectParent();
-                GameSystem.game.menu.audio.back.play();
+                GameSystem.data.menu.selected = GameSystem.data.menu.selected.selectParent();
+                GameSystem.data.menu.audio.back.play();
     			break;
     	}
     }

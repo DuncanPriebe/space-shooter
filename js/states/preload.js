@@ -11,32 +11,21 @@ var preloadState = {
         GameSystem.game.load.json('factions', 'lib/factions.json', true);
         GameSystem.game.load.json('docks', 'lib/docks.json', true);
         GameSystem.game.load.json('missions', 'lib/missions.json', true);
-        GameSystem.game.load.json('rarities', 'lib/rarities.json', true);
-        GameSystem.game.load.json('ships', 'lib/ships.json', true);
-        GameSystem.game.load.json('weapons', 'lib/weapons.json', true);
-        GameSystem.game.load.json('shields', 'lib/shields.json', true);
-        GameSystem.game.load.json('generators', 'lib/generators.json', true);
-        GameSystem.game.load.json('engines', 'lib/engines.json', true);
-        GameSystem.game.load.json('modules', 'lib/modules.json', true);
+        GameSystem.game.load.json('items', 'lib/items.json', true);
     },
 
     create: function() {
         //GameSystem.game.cache.destroy(); // Remove existing assets from cache (may be needed for testing)
+        GameSystem.data = {};
         
         // Store JSON data in memory
-        GameSystem.game.settings = GameSystem.game.cache.getJSON('settings');
-        GameSystem.game.assets = GameSystem.game.cache.getJSON('assets');
-        GameSystem.game.menu = GameSystem.game.cache.getJSON('menu');
-        GameSystem.game.factions = GameSystem.game.cache.getJSON('factions');
-        GameSystem.game.docks = GameSystem.game.cache.getJSON('docks');
-        GameSystem.game.missions = GameSystem.game.cache.getJSON('missions');
-        GameSystem.game.rarities = GameSystem.game.cache.getJSON('rarities');
-        GameSystem.game.ships = GameSystem.game.cache.getJSON('ships');
-        GameSystem.game.weapons = GameSystem.game.cache.getJSON('weapons');
-        GameSystem.game.shields = GameSystem.game.cache.getJSON('shields');
-        GameSystem.game.generators = GameSystem.game.cache.getJSON('generators');
-        GameSystem.game.engines = GameSystem.game.cache.getJSON('engines');
-        GameSystem.game.modules = GameSystem.game.cache.getJSON('modules');
+        GameSystem.data.settings = GameSystem.game.cache.getJSON('settings');
+        GameSystem.data.assets = GameSystem.game.cache.getJSON('assets');
+        GameSystem.data.menu = GameSystem.game.cache.getJSON('menu');
+        GameSystem.data.factions = GameSystem.game.cache.getJSON('factions');
+        GameSystem.data.docks = GameSystem.game.cache.getJSON('docks');
+        GameSystem.data.missions = GameSystem.game.cache.getJSON('missions');
+        GameSystem.data.items = GameSystem.game.cache.getJSON('items');
 
         GameSystem.game.state.start('menu');
     }

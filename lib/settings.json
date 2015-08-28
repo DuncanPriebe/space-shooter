@@ -9,7 +9,7 @@
 	"imagePath": "img/",
 	"startingMoney": 1000,
 	"statUpperBound": 200,
-	"rateOfFireUpperBound": 750,
+	"rateOfFireUpperBound": 2000,
 	"rateOfFireLowerBound": 35,
 	"speedUpperBound": 3,
 	"speedLowerBound": 0.2,

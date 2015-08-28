@@ -22,14 +22,14 @@ GameSystem.game.player = {};
 // Initialize game values
 GameSystem.initialize = function() {
     // Set upper and lower bounds for stats
-    GameSystem.game.settings.speedUpperBound *= GameSystem.game.world.height;
-    GameSystem.game.settings.speedLowerBound *= GameSystem.game.world.height;
-    GameSystem.game.settings.accelerationUpperBound *= GameSystem.game.world.height;
-    GameSystem.game.settings.accelerationLowerBound *= GameSystem.game.world.height;
-    GameSystem.game.settings.sizeUpperBound *= GameSystem.game.world.height;
-    GameSystem.game.settings.sizeLowerBound *= GameSystem.game.world.height;
-    GameSystem.game.settings.blastRadiusUpperBound *= GameSystem.game.world.height;
-    GameSystem.game.settings.blastRadiusLowerBound *= GameSystem.game.world.height;
+    GameSystem.data.settings.speedUpperBound *= GameSystem.game.world.height;
+    GameSystem.data.settings.speedLowerBound *= GameSystem.game.world.height;
+    GameSystem.data.settings.accelerationUpperBound *= GameSystem.game.world.height;
+    GameSystem.data.settings.accelerationLowerBound *= GameSystem.game.world.height;
+    GameSystem.data.settings.sizeUpperBound *= GameSystem.game.world.height;
+    GameSystem.data.settings.sizeLowerBound *= GameSystem.game.world.height;
+    GameSystem.data.settings.blastRadiusUpperBound *= GameSystem.game.world.height;
+    GameSystem.data.settings.blastRadiusLowerBound *= GameSystem.game.world.height;
 
     // Store all game projectiles (can't be done before state is loaded?)
     GameSystem.projectiles = GameSystem.game.add.group();
@@ -63,210 +63,106 @@ GameSystem.enemy = function(mission) {
     return enemy;
 }
 
-// Determine item rarity
-GameSystem.rarity = function(source) {
-    var chances = [];
+GameSystem.item = function(source, itemType, rarity) {
+    var item;
 
-    // Load rarity chances
-    for (var i in GameSystem.game.rarities) {
-        //var chance = source.level * GameSystem.game.rarities[i].dropChanceMultiplier + GameSystem.game.rarities[i].baseDropChance;
-
-        // Determine chance based on item rarity and source level
-        var rarity = GameSystem.game.rarities[i];
-        var chance = GameSystem.normalize(source.level, rarity.minDropChance, rarity.maxDropChance);
-        chances.push(chance);
-    }
-
-    var rarity;
-    
-    // Roll the dice
-    var random = GameSystem.game.rnd.integerInRange(0, 100);
-
-    // Check if we have a rare item
-    for (var i in chances) {
-        if (random < chances[i]) {
-            rarity = GameSystem.game.rarities[i]; // Load the rarity
-            break;
-        }
-    }
-
-    // Otherwise choose the most common rarity
-    if (typeof rarity == "undefined") {
-        rarity = GameSystem.game.rarities[GameSystem.game.rarities.length - 1];
-    }
-
-    // Set rarity multiplier
-    rarity.statMultiplier = GameSystem.game.rnd.integerInRange(rarity.minStatMultiplier, rarity.maxStatMultiplier);
-    rarity.statMultiplier = (rarity.statMultiplier + 100) / 100; // Chance to a decimal for easier math
-
-    return rarity;
-}
-
-// Determine if the item has a bonus based on rarity
-GameSystem.bonus = function(source, rarity, itemType) {
-    var bonus = {};
-    bonus.values = [];
-
-    // Store bonus names so we can add them when a stat is chosen
-    var bonusNames = [];
-    
-    // Load bonus stats
-    switch (itemType) {
-        case "ship":
-            bonusNames = GameSystem.game.ships.bonuses;
-            break;
-        case "weapon":
-            bonusNames = GameSystem.game.weapons.bonuses;
-            break;
-        case "shield":
-            bonusNames = GameSystem.game.shields.bonuses;
-            break;
-        case "engine":
-            bonusNames = GameSystem.game.engines.bonuses;
-            break;
-        case "generator":
-            bonusNames = GameSystem.game.generators.bonuses;
-            break;
-        case "module":
-            bonusNames = GameSystem.game.modules.bonuses;
-            break;
-    }
-
-    // Determine if we have a bonus
-    var random = GameSystem.game.rnd.integerInRange(0, 100);
-
-    if (random < rarity.bonusChance) { // We have a bonus
-
-        // Normalize stat bonus based on level and rarity
-        var bonusValue = GameSystem.normalize(source.level, rarity.minStatBoost, rarity.maxStatBoost);
-
-        // Choose a random stat to boost
-        var random = GameSystem.game.rnd.integerInRange(0, bonusNames.length - 1);
-        
-        for (var i in bonusNames) {
-            if (random == i) { // Boost the stat
-                bonus.values.push(bonusValue);
-                bonus.name = bonusNames[i];
-            } else { // Don't boost the rest
-                bonus.values.push(0);
+    // If unspecified, get a random type
+    var itemTemplate;
+    var itemTypes = Object.keys(GameSystem.data.items);
+    if (typeof itemType == "undefined") {
+        var random = GameSystem.game.rnd.integerInRange(0, itemTypes.length - 1);
+        itemTemplate = GameSystem.data.items[itemTypes[random]];
+    } else {
+        // Otherwise load type
+        for (var i in itemTypes) {
+            if (itemType == itemTypes[i]) {
+                itemTemplate = GameSystem.data.items[itemTypes[i]];
             }
         }
-    } else { // We don't have a bonus
-        // Fill the array with 0 values
-        for (var i in bonusNames) {
-            bonus.values.push(0);
-            bonus.name = null;
+    }
+    // Get random preset
+    var random = GameSystem.game.rnd.integerInRange(0, itemTemplate.presets.length - 1);
+    item = JSON.parse(JSON.stringify(itemTemplate.presets[random]));
+
+    item.level = source.level;
+
+    // If unspecified, get a random faction
+    if (typeof source.faction == "undefined") {
+        var random = GameSystem.game.rnd.integerInRange(0, GameSystem.data.factions.length - 1);
+        for (var i in GameSystem.data.factions) {
+            if (random == i) {
+                item.faction = GameSystem.data.factions[i];
+            }
+        }
+    } else {
+        // Otherwise load faction
+        item.faction = source.faction;
+    }
+
+    // If unspecified, get a random rarity
+    if (typeof rarity == "undefined") {
+        var random = GameSystem.game.rnd.integerInRange(0, 100);
+        for (var i in GameSystem.data.items.rarities) {
+            if (random <= GameSystem.data.items.rarities[i].dropChance) {
+                //console.log("Success! We rolled a " + random + " and we were looking for a " + GameSystem.data.items.rarities[i].dropChance + ", which means our item is " + GameSystem.data.items.rarities[i].name);
+                item.rarity = GameSystem.data.items.rarities[i];
+                break;
+            }
+        }
+    } else {
+        // Otherwise load rarity
+        for (var i in rarities) {
+            if (rarity == rarities[i]) {
+                item.rarity = GameSystem.data.items.rarities[i];
+            }
         }
     }
-    return bonus;
-}
 
-// Generate a random item based on source and type
-GameSystem.item = function(source, itemType, rarityIndex) {
-    // If we haven't defined the item type, choose one at random
-    if (typeof itemType == "undefined") {
-        var itemTypes = ["ship", "weapon", "shield", "engine", "generator", "module"];
-        var random = GameSystem.game.rnd.integerInRange(0, itemTypes.length - 1);
-        itemType = itemTypes[random];
-    }
-
-    var rarity;
-    
-    // If we haven't defined the rarity, choose one at random
-    if (typeof rarityIndex == "undefined") {
-        rarity = GameSystem.rarity(source);
+    // If we roll a bonus, choose a stat to boost
+    item.rarity.statBonuses = [];
+    var random = GameSystem.game.rnd.integerInRange(0, 100);    
+    if (random < item.rarity.bonusChance) {
+        var random = GameSystem.game.rnd.integerInRange(0, itemTemplate.bonusNames.length - 1);
+        for (var i in itemTemplate.bonusNames) {
+            if (random == i) {
+                item.rarity.statBonuses.push(GameSystem.game.rnd.integerInRange(item.rarity.minStatBoost, item.rarity.maxStatBoost));
+                item.rarity.bonusName = itemTemplate.bonusNames[i];
+            } else {
+                item.rarity.statBonuses.push(0);
+            }
+        }
     } else {
-        rarity = GameSystem.game.rarities[rarityIndex];
+        // Otherwise set all stats to 0
+        for (var i in itemTemplate.bonusNames) {
+            item.rarity.statBonuses.push(0);
+        }
+    }
+
+    // Check if we have a special (add later)
+
+    // Set item name
+    var name = item.name;
+    if (typeof item.rarity.bonusName == "undefined") {
+        item.name = item.rarity.name + " " + item.faction.itemName + " " + item.name;
+    } else {
+        item.name = item.rarity.name + " " + item.rarity.bonusName + " " + item.faction.itemName + " " + item.name;
+    }
+
+    // Update weapon states based on source level, rarity and bonus
+    var counter = 0;
+    for (var i in item.stats) {
+        var statMultiplier = (GameSystem.game.rnd.integerInRange(item.rarity.minStatMultiplier, item.rarity.maxStatMultiplier) + 100) / 100;
+        item.stats[i] = item.stats[i] * statMultiplier + item.rarity.statBonuses[counter];
+        counter++;
     }
     
-    // Set the bonus
-    var bonus = GameSystem.bonus(source, rarity, itemType);
-
-    // Create the item prefix
-    var prefix = (bonus.name) ? rarity.name + " " + bonus.name : rarity.name;
-    
-    var item = {};
-
-    // Load an item template and set stats
-    switch (itemType) {
-        case "ship":
-            // Copy weapon from random template
-            random = GameSystem.game.rnd.integerInRange(0, GameSystem.game.ships.types.length - 1);            
-            item = JSON.parse(JSON.stringify(GameSystem.game.ships.types[random]));
-
-            item.rarity = rarity.name;
-            item.faction = source.faction.name;
-            item.name = prefix + " " + source.faction.shipBonus.name + " " + item.type;
-            break;
-        case "weapon":
-            // Copy weapon from random template
-            random = GameSystem.game.rnd.integerInRange(0, GameSystem.game.weapons.types.length - 1);            
-            item = JSON.parse(JSON.stringify(GameSystem.game.weapons.types[random]));
-
-            item.rarity = rarity.name;
-            item.faction = source.faction.name;
-            item.name = prefix + " " + source.faction.weaponBonus.name + " " + item.type;
-            item.level = source.level;
-
-            // Boost damage so that low level weapons don't all deal 1 damage
-            var minDamage = 5;
-
-            // Update weapon states based on source level, rarity and bonus
-            item.shieldDamage = Math.ceil(((minDamage + item.level) * rarity.statMultiplier * item.shieldDamage * 0.01) + bonus.values[0]);
-            item.armorDamage = Math.ceil(((minDamage + item.level) * rarity.statMultiplier * item.armorDamage * 0.01) + bonus.values[1]);
-            item.rateOfFire = Math.ceil((rarity.statMultiplier * item.rateOfFire) + bonus.values[2]);
-            item.projectileSpeed = Math.ceil((rarity.statMultiplier * item.projectileSpeed) + bonus.values[3]);
-            item.acceleration = Math.ceil((rarity.statMultiplier * item.acceleration) + bonus.values[4]);
-            item.projectileSize = Math.ceil((rarity.statMultiplier * item.projectileSize) + bonus.values[5]);
-            item.blastRadius = Math.ceil((rarity.statMultiplier * item.blastRadius) + bonus.values[6]);
-            item.efficiency = Math.ceil((rarity.statMultiplier * item.efficiency) + bonus.values[7]);
-
-            return item;
-            break;
-        case "shield":
-            // Copy weapon from random template
-            random = GameSystem.game.rnd.integerInRange(0, GameSystem.game.shields.types.length - 1);            
-            item = JSON.parse(JSON.stringify(GameSystem.game.shields.types[random]));
-
-            item.rarity = rarity.name;
-            item.faction = source.faction.name;
-            item.name = prefix + " " + source.faction.shieldBonus.name + " " + item.type;
-            break;
-        case "engine":
-            // Copy weapon from random template
-            random = GameSystem.game.rnd.integerInRange(0, GameSystem.game.engines.types.length - 1);            
-            item = JSON.parse(JSON.stringify(GameSystem.game.shields.types[random]));
-
-            item.rarity = rarity.name;
-            item.faction = source.faction.name;
-            item.name = prefix + " " + source.faction.shieldBonus.name + " " + item.type;
-            break;
-        case "generator":
-            // Copy weapon from random template
-            random = GameSystem.game.rnd.integerInRange(0, GameSystem.game.generators.types.length - 1);            
-            item = JSON.parse(JSON.stringify(GameSystem.game.generators.types[random]));
-
-            item.rarity = rarity.name;
-            item.faction = source.faction.name;
-            item.name = prefix + " " + source.faction.generatorBonus.name + " " + item.type;
-            break;
-        case "module":
-            // Copy weapon from random template
-            random = GameSystem.game.rnd.integerInRange(0, GameSystem.game.modules.types.length - 1);            
-            item = JSON.parse(JSON.stringify(GameSystem.game.modules.types[random]));
-
-            item.rarity = rarity.name;
-            item.faction = source.faction.name;
-            item.name = prefix + " " + source.faction.moduleBonus.name + " " + item.type;
-            break;
-    }
     return item;
 }
 
 // Create a projectile
 GameSystem.projectile = function(weapon, x, y) {
     // Play the sound of the weapon firing
-    var fireSound = GameSystem.game.add.audio(weapon.fireSound, GameSystem.game.settings.sfxVolume);
+    var fireSound = GameSystem.game.add.audio(weapon.fireSound, GameSystem.data.settings.sfxVolume);
     fireSound.play();
 
     // Create the projectile
@@ -281,8 +177,8 @@ GameSystem.projectile = function(weapon, x, y) {
     projectile.fireSound = weapon.fireSound;
     projectile.impactSound = weapon.impactSound;
     projectile.type = weapon.type;
-    projectile.shieldDamage = weapon.shieldDamage;
-    projectile.armorDamage = weapon.armorDamage;
+    projectile.shieldDamage = weapon.stats.shieldDamage;
+    projectile.armorDamage = weapon.stats.armorDamage;
 
     // Still need to write these...
     //projectile.duration = weapon.duration;
@@ -291,10 +187,10 @@ GameSystem.projectile = function(weapon, x, y) {
     // Normalize values that are based on screen size or time
     var height = GameSystem.game.world.height;
 
-    projectile.maxSpeed = GameSystem.normalize(weapon.projectileSpeed, GameSystem.game.settings.speedLowerBound, GameSystem.game.settings.speedUpperBound, 1, GameSystem.game.settings.statUpperBound);
-    projectile.acceleration = GameSystem.normalize(weapon.acceleration, GameSystem.game.settings.accelerationLowerBound, GameSystem.game.settings.accelerationUpperBound, 1, GameSystem.game.settings.statUpperBound);
-    projectile.size = GameSystem.normalize(weapon.projectileSize, GameSystem.game.settings.sizeLowerBound, GameSystem.game.settings.sizeUpperBound, 1, GameSystem.game.settings.statUpperBound);
-    projectile.blastRadius = GameSystem.normalize(weapon.blastRadius, GameSystem.game.settings.blastRadiusLowerBound, GameSystem.game.settings.blastRadiusUpperBound, 1, GameSystem.game.settings.upperBound);
+    projectile.maxSpeed = GameSystem.normalize(weapon.stats.projectileSpeed, GameSystem.data.settings.speedLowerBound, GameSystem.data.settings.speedUpperBound, 1, GameSystem.data.settings.statUpperBound);
+    projectile.acceleration = GameSystem.normalize(weapon.stats.acceleration, GameSystem.data.settings.accelerationLowerBound, GameSystem.data.settings.accelerationUpperBound, 1, GameSystem.data.settings.statUpperBound);
+    projectile.size = GameSystem.normalize(weapon.stats.projectileSize, GameSystem.data.settings.sizeLowerBound, GameSystem.data.settings.sizeUpperBound, 1, GameSystem.data.settings.statUpperBound);
+    projectile.blastRadius = GameSystem.normalize(weapon.stats.blastRadius, GameSystem.data.settings.blastRadiusLowerBound, GameSystem.data.settings.blastRadiusUpperBound, 1, GameSystem.data.settings.upperBound);
 
     // Give the projectile a starting velocity (probably not useful, unless acceleration is revamped)
     //projectile.body.velocity.y = -projectile.maxSpeed;
@@ -338,7 +234,7 @@ GameSystem.checkProjectileReady = function(weapon) {
     // If the weapon timer has expired or we haven't fired yet
     if (GameSystem.game.time.now > weapon.time || typeof weapon.time == "undefined") {
         // Set the timer and give the go-ahead to fire
-        var delay = GameSystem.normalize(GameSystem.game.settings.statUpperBound - weapon.rateOfFire, 35, 750, 1, GameSystem.game.settings.statUpperBound);
+        var delay = GameSystem.normalize(GameSystem.data.settings.statUpperBound - weapon.stats.rateOfFire, 35, 750, 1, GameSystem.data.settings.statUpperBound);
         weapon.time = GameSystem.game.time.now + delay;
         return true;
     }
@@ -492,10 +388,10 @@ GameSystem.node.prototype.update = function() {
 
 	var siblings = this.getSiblings();
 
-	GameSystem.game.text.push(GameSystem.game.add.text(80, 150, this.parent.name, GameSystem.game.menu.fonts.menu)); // Add the current menu name
+	GameSystem.game.text.push(GameSystem.game.add.text(80, 150, this.parent.name, GameSystem.data.menu.fonts.menu)); // Add the current menu name
 
 	for (var i in siblings) {
-		var font = (siblings[i].selected) ? GameSystem.game.menu.fonts.selected : GameSystem.game.menu.fonts.unselected;
+		var font = (siblings[i].selected) ? GameSystem.data.menu.fonts.selected : GameSystem.data.menu.fonts.unselected;
 		GameSystem.game.text.push(GameSystem.game.add.text(80, i * 30 + 200, siblings[i].name, font)); // Add menu children names
 	}
 }
@@ -506,9 +402,9 @@ GameSystem.node.prototype.execute = function() {
 
     if (this.type == "mission") { // We're launching a mission
         var mission;
-        for (var i in GameSystem.game.missions) {
-            if (this.name == GameSystem.game.missions[i].name) {
-                mission = GameSystem.game.missions[i];
+        for (var i in GameSystem.data.missions) {
+            if (this.name == GameSystem.data.missions[i].name) {
+                mission = GameSystem.data.missions[i];
             }
         }
         GameSystem.game.state.start("play", true, false, mission);
@@ -516,7 +412,7 @@ GameSystem.node.prototype.execute = function() {
         switch (this.name) {
             case "NEW GAME": // Start new game
                 GameSystem.storage.reset();
-                GameSystem.game.state.start("dock", true, false, GameSystem.game.docks[0]);
+                GameSystem.game.state.start("dock", true, false, GameSystem.data.docks[0]);
                 break;
             case "CONTINUE": // Continue game
                 GameSystem.storage.load();
@@ -544,7 +440,7 @@ GameSystem.node.prototype.execute = function() {
 // Load state assets
 GameSystem.loadStateAssets = function(stateKey) {
     // Determine which state we're in
-    var state = GameSystem.game.assets[stateKey];
+    var state = GameSystem.data.assets[stateKey];
 
     // Need to add checks to see if the asset is already loaded (because states use the same assets and we go back and forth between states)
 
@@ -555,14 +451,14 @@ GameSystem.loadStateAssets = function(stateKey) {
                 if (key == "sprites") { // We're loading video
                     for (var i in state[data].sprites) {
                         if (state[data].sprites[i].sheet == true) { // We have an animation
-                            GameSystem.game.load.spritesheet(state[data].sprites[i].key, GameSystem.game.settings.imagePath + state[data].sprites[i].file, state[data].sprites[i].width, state[data].sprites[i].height);
+                            GameSystem.game.load.spritesheet(state[data].sprites[i].key, GameSystem.data.settings.imagePath + state[data].sprites[i].file, state[data].sprites[i].width, state[data].sprites[i].height);
                         } else { // We have a single image
-                            GameSystem.game.load.image(state[data].sprites[i].key, GameSystem.game.settings.imagePath + state[data].sprites[i].file);    
+                            GameSystem.game.load.image(state[data].sprites[i].key, GameSystem.data.settings.imagePath + state[data].sprites[i].file);    
                         }
                     }     
                 } else if (key == "audio") { // We're loading audio
                     for (var i in state[data].audio) {
-                        GameSystem.game.load.audio(state[data].audio[i].key, GameSystem.game.settings.audioPath + state[data].audio[i].file);
+                        GameSystem.game.load.audio(state[data].audio[i].key, GameSystem.data.settings.audioPath + state[data].audio[i].file);
                     }
                 }
             }
@@ -580,7 +476,7 @@ GameSystem.storage.load = function() {
     // Verify web storage and existing data
     if (typeof Storage !== "undefined") {
         // Load data from web storage
-        gameData = localStorage.getItem(GameSystem.game.settings.webStorageName);
+        gameData = localStorage.getItem(GameSystem.data.settings.webStorageName);
 
         if (gameData !== null) { // Need to test for valid game data (and same version of game)
             console.log("Loading game data from web storage.");
@@ -613,7 +509,7 @@ GameSystem.storage.save = function() {
         };
 
         // Put data into web storage
-        localStorage.setItem(GameSystem.game.settings.webStorageName, JSON.stringify(gameData));
+        localStorage.setItem(GameSystem.data.settings.webStorageName, JSON.stringify(gameData));
     } else {
         console.log("Web storage not supported. Unable to load game data.");
     }
@@ -630,8 +526,8 @@ GameSystem.storage.reset = function() {
     GameSystem.game.player.generator = {};
     GameSystem.game.player.engine = {};
     GameSystem.game.player.modules = [];
-    GameSystem.game.player.dock = GameSystem.game.docks[0];
-    GameSystem.game.player.money = GameSystem.game.settings.startingMoney;
+    GameSystem.game.player.dock = GameSystem.data.docks[0];
+    GameSystem.game.player.money = GameSystem.data.settings.startingMoney;
 }
 
 // Reset data in web storage
@@ -639,7 +535,7 @@ GameSystem.storage.reset = function() {
 GameSystem.storage.erase = function() {
     console.log("Erasing web storage.");
     if (typeof Storage !== "undefined") { // Verify web storage support
-        localStorage.removeItem(GameSystem.game.settings.webStorageName); // Delete data in web storage
+        localStorage.removeItem(GameSystem.data.settings.webStorageName); // Delete data in web storage
 
         // Store game data as a stringified object
         var gameData = {
@@ -651,10 +547,10 @@ GameSystem.storage.erase = function() {
             'engine': {},
             'modules': [],
             'dock': {},
-            'money': GameSystem.game.settings.startingMoney
+            'money': GameSystem.data.settings.startingMoney
         };
 
-        localStorage.setItem(GameSystem.game.settings.webStorageName, JSON.stringify(gameData)); // Put data into web storage
+        localStorage.setItem(GameSystem.data.settings.webStorageName, JSON.stringify(gameData)); // Put data into web storage
 
         GameSystem.storage.reset();
     } else {
