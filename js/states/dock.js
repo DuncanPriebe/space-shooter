@@ -1,9 +1,10 @@
 'use strict';
 
 var dockState = {
-    init: function(dock) {
+    init: function(world) {
         // Load current dock, otherwise load first dock
-        GameSystem.game.dock = dock || GameSystem.data.docks[0];
+        world.faction = GameSystem.getWorldFaction(world);
+        GameSystem.game.player.world = world;
     },
 
     preload: function() {
@@ -12,21 +13,22 @@ var dockState = {
     },
 
     create: function() {
-        GameSystem.game.add.text(80, 80, GameSystem.game.dock.name, GameSystem.data.menu.fonts.title);
+        //GameSystem.game.add.text(80, 80, GameSystem.game.dock.name, GameSystem.data.menu.fonts.title);
+        GameSystem.game.add.text(80, 80, GameSystem.game.player.world.name, GameSystem.data.menu.fonts.title);
 
         // Create menu structure
-        var mainMenu = new GameSystem.node("SPACE DOCK", "root");
-            var missionMenu = mainMenu.addChild("MISSIONS");
-                for (var i in GameSystem.data.missions) {
-                    missionMenu.addChild(GameSystem.data.missions[i].name, "mission");
-                }
+        var mainMenu = new GameSystem.node("SPACE DOCK");
+            mainMenu.addChild(GameSystem.game.player.world.name + " Station", GameSystem.game.player.world, "mission");
+
             var vendorMenu = mainMenu.addChild("VENDORS");
-                for (var i in GameSystem.game.dock.vendors) {
-                    vendorMenu.addChild(GameSystem.game.dock.vendors[i].name, "vendor");
+                var weaponVendor = new GameSystem.vendor(GameSystem.game.player.world);
+                var weaponVendorMenu = vendorMenu.addChild(weaponVendor.name);
+                for (var i in weaponVendor.items) {
+                    weaponVendorMenu.addChild(weaponVendor.items[i].name, weaponVendor.items[i], "weapon");
                 }
             var archiveMenu = mainMenu.addChild("DATA ARCHIVE");
                 for (var i in GameSystem.data.factions) {
-                    archiveMenu.addChild(GameSystem.data.factions[i].name, "faction");
+                    archiveMenu.addChild(GameSystem.data.factions[i].name);
                 }
             mainMenu.addChild("SAVE GAME");
             mainMenu.addChild("RESET GAME");

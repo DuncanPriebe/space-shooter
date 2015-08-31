@@ -1,0 +1,325 @@
+[
+	{
+		"faction": "empire",
+		"name": "Lorium",
+		"surface": "forest",
+		"level": 1
+	},
+	{
+		"faction": "empire",
+		"name": "Genoa",
+		"surface": "ocean",
+		"level": 10
+	},
+	{
+		"faction": "empire",
+		"name": "Corinth",
+		"surface": "city",
+		"level": 20
+	},
+	{
+		"faction": "empire",
+		"name": "Tarsus",
+		"surface": "ocean",
+		"level": 30
+	},
+	{
+		"faction": "empire",
+		"name": "Athens",
+		"surface": "city",
+		"level": 40
+	},
+	{
+		"faction": "empire",
+		"name": "Ephesus",
+		"surface": "forest",
+		"level": 50
+	},
+	{
+		"faction": "empire",
+		"name": "Pergamum",
+		"surface": "desert",
+		"level": 60
+	},
+	{
+		"faction": "empire",
+		"name": "Carthage",
+		"surface": "ice",
+		"level": 70
+	},
+	{
+		"faction": "empire",
+		"name": "Antioch",
+		"surface": "lava",
+		"level": 80
+	},
+	{
+		"faction": "empire",
+		"name": "Alexandria",
+		"surface": "city",
+		"level": 90
+	},
+	{
+		"faction": "empire",
+		"name": "Rome",
+		"surface": "city",
+		"level": 100
+	},
+	{
+		"faction": "rebel",
+		"name": "Kal Orda",
+		"surface": "desert",
+		"level": 1
+	},
+	{
+		"faction": "rebel",
+		"name": "Kal Orfa",
+		"surface": "ice",
+		"level": 10
+	},
+	{
+		"faction": "rebel",
+		"name": "Kal Orga",
+		"surface": "lava",
+		"level": 20
+	},
+	{
+		"faction": "rebel",
+		"name": "Kal Orja",
+		"surface": "city",
+		"level": 30
+	},
+	{
+		"faction": "rebel",
+		"name": "Kal Orka",
+		"surface": "desert",
+		"level": 40
+	},
+	{
+		"faction": "rebel",
+		"name": "Kal Orma",
+		"surface": "city",
+		"level": 50
+	},			
+	{
+		"faction": "rebel",
+		"name": "Kal Orna",
+		"surface": "forest",
+		"level": 60
+	},
+	{
+		"faction": "rebel",
+		"name": "Kal Orta",
+		"surface": "ocean",
+		"level": 70
+	},
+	{
+		"faction": "rebel",
+		"name": "Kal Orva",
+		"surface": "forest",
+		"level": 80
+	},
+	{
+		"faction": "rebel",
+		"name": "Kal Orza",
+		"surface": "desert",
+		"level": 100
+	},
+	{
+		"faction": "preserver",
+		"name": "Mrrr'Pa Ta",
+		"surface": "forest",
+		"level": 1
+	},
+	{
+		"faction": "preserver",
+		"name": "Mrrr'Pa Zo",
+		"surface": "ocean",
+		"level": 10
+	},
+	{
+		"faction": "preserver",
+		"name": "Brrr'Ko Ta",
+		"surface": "forest",
+		"level": 20
+	},
+	{
+		"faction": "preserver",
+		"name": "Brrr'Ko Zot",
+		"surface": "desert",
+		"level": 30
+	},
+	{
+		"faction": "preserver",
+		"name": "Krrr'Po Ta",
+		"surface": "forest",
+		"level": 40
+	},
+	{
+		"faction": "preserver",
+		"name": "Trrr'Ta Jot",
+		"surface": "ice",
+		"level": 50
+	},
+	{
+		"faction": "preserver",
+		"name": "Trrr'Ta Zo",
+		"surface": "ocean",
+		"level": 60
+	},
+	{
+		"faction": "preserver",
+		"name": "Lrrr'Po Ta",
+		"surface": "forest",
+		"level": 70
+	},
+	{
+		"faction": "preserver",
+		"name": "Lrrr'Po Jo",
+		"surface": "lava",
+		"level": 80
+	},
+	{
+		"faction": "preserver",
+		"name": "Zrrr'Ka Zot",
+		"surface": "desert",
+		"level": 90
+	},
+	{
+		"faction": "preserver",
+		"name": "Zrrr'Ka Ta",
+		"surface": "forest",
+		"level": 100
+	},
+	{
+		"faction": "freelancer",
+		"name": "Hub #9913",
+		"surface": "city",
+		"level": 1
+	},
+	{
+		"faction": "freelancer",
+		"name": "Hub #8771",
+		"surface": "city",
+		"level": 10
+	},
+	{
+		"faction": "freelancer",
+		"name": "Hub #7290",
+		"surface": "city",
+		"level": 20
+	},
+	{
+		"faction": "freelancer",
+		"name": "Hub #6834",
+		"surface": "city",
+		"level": 30
+	},
+	{
+		"faction": "freelancer",
+		"name": "Hub #5525",
+		"surface": "city",
+		"level": 40
+	},
+	{
+		"faction": "freelancer",
+		"name": "Hub #4918",
+		"surface": "city",
+		"level": 50
+	},
+	{
+		"faction": "freelancer",
+		"name": "Hub #3039",
+		"surface": "city",
+		"level": 60
+	},
+	{
+		"faction": "freelancer",
+		"name": "Hub #2471",
+		"surface": "city",
+		"level": 70
+	},
+	{
+		"name": "Hub #1665",
+		"surface": "city",
+		"level": 80
+	},
+	{
+		"faction": "freelancer",
+		"name": "Hub #240",
+		"surface": "city",
+		"level": 90
+	},
+	{
+		"faction": "freelancer",
+		"name": "Hub #1",
+		"surface": "city",
+		"level": 100
+	},
+	{
+		"faction": "freelancer",
+		"name": "Skin",
+		"surface": "lava",
+		"level": 1
+	},
+	{
+		"faction": "freelancer",
+		"name": "Finger",
+		"surface": "desert",
+		"level": 10
+	},
+	{
+		"faction": "freelancer",
+		"name": "Tooth",
+		"surface": "ice",
+		"level": 20
+	},
+	{
+		"faction": "eclipse",
+		"name": "Ear",
+		"surface": "lava",
+		"level": 30
+	},
+	{
+		"faction": "eclipse",
+		"name": "Eye",
+		"surface": "desert",
+		"level": 40
+	},
+	{
+		"faction": "eclipse",
+		"name": "Arm",
+		"surface": "lava",
+		"level": 50
+	},
+	{
+		"faction": "eclipse",
+		"name": "Spine",
+		"surface": "ice",
+		"level": 60
+	},
+	{
+		"faction": "eclipse",
+		"name": "Tongue",
+		"surface": "lava",
+		"level": 70
+	},
+	{
+		"faction": "eclipse",
+		"name": "Bone",
+		"surface": "desert",
+		"level": 80
+	},
+	{
+		"faction": "eclipse",
+		"name": "Brain",
+		"surface": "ice",
+		"level": 90
+	},
+	{
+		"faction": "eclipse",
+		"name": "Heart",
+		"surface": "lava",
+		"level": 100
+	}
+]

@@ -2,7 +2,7 @@
 	{
 		"key": "empire",
 		"name": "The Empire",
-		"color": "ae81ff",
+		"color": "50d9ef",
 		"worlds": [
 			{
 				"name": "Lorium",
@@ -90,7 +90,7 @@
 			"Vinicia",
 			"Vinicius"
 		],
-		"firstNames": [
+		"lastNames": [
 			"Aelius",
 			"Cassius",
 			"Claudius",
@@ -111,7 +111,6 @@
 			"Tatius",
 			"Valerius"
 		],
-		"itemName": "Plasma",
 		"bonuses": {
 			"ships": {
 				
@@ -144,7 +143,7 @@
 		}
 	},
 	{		
-		"key": "revolt",
+		"key": "rebel",
 		"name": "The Revolt",
 		"color": "efd950",
 		"worlds": [
@@ -234,7 +233,7 @@
 			"Cham",
 			"Zod"
 		],
-		"firstNames": [
+		"lastNames": [
 			"Orda",
 			"Orfa",
 			"Orga",
@@ -392,7 +391,7 @@
 	{
 		"key": "freelancer",
 		"name": "The Freelancers",
-		"fontColor": "ffffff",
+		"color": "ffffff",
 		"worlds": [
 			{
 				"name": "Hub #9913",
@@ -490,7 +489,7 @@
 	{
 		"key": "eclipse",
 		"name": "The Eclipse",
-		"color": "000000",
+		"color": "ae81ff",
 		"worlds": [
 			{
 				"name": "Skin",

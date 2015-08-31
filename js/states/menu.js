@@ -11,7 +11,7 @@ var menuState = {
         GameSystem.game.add.text(80, 80, GameSystem.data.menu.title + " v" + GameSystem.data.settings.version, GameSystem.data.menu.fonts.title);
 
         // Create menu structure
-        var mainMenu = new GameSystem.node("MAIN MENU", "root");
+        var mainMenu = new GameSystem.node("MAIN MENU", {}, "root");
             mainMenu.addChild("NEW GAME");
             mainMenu.addChild("CONTINUE");
             var controlMenu = mainMenu.addChild("CONTROLS");

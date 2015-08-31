@@ -19,6 +19,9 @@ var GameSystem = new Phaser.Plugin(GameObject, Phaser.PluginManager);
 // Store player data
 GameSystem.game.player = {};
 
+// Store all text on the screen (so it can be cleared)
+GameSystem.game.text = new Array();
+
 // Initialize game values
 GameSystem.initialize = function() {
     // Set upper and lower bounds for stats
@@ -63,6 +66,44 @@ GameSystem.enemy = function(mission) {
     return enemy;
 }
 
+// Associate workd with faction based on keys
+GameSystem.getWorldFaction = function(world) {
+    var faction;
+    var found = false;
+    for (var i in GameSystem.data.factions) {
+        if (GameSystem.data.factions[i].key == world.faction) {
+            faction = GameSystem.data.factions[i];
+            found = true;
+        }
+    }
+    if (!found) {
+        faction = GameSystem.data.factions[0];
+    }
+    return faction;
+}
+
+// Create a vendor
+GameSystem.vendor = function(world, itemType) {
+    var vendor = {};
+    vendor.faction = world.faction;
+    vendor.level = world.level;
+
+    // Choose a name at random
+    var random = GameSystem.game.rnd.integerInRange(0, vendor.faction.firstNames.length - 1);
+    var firstName = vendor.faction.firstNames[random];
+    random = GameSystem.game.rnd.integerInRange(0, vendor.faction.lastNames.length - 1);
+    var lastName = vendor.faction.lastNames[random];
+
+    vendor.name = firstName + " " + lastName;
+
+    vendor.items = [];
+    for (var i = 0; i < 5; i++) {
+        vendor.items.push(new GameSystem.item(vendor, "weapons"));
+    }
+    return vendor;
+}
+
+// Create an item
 GameSystem.item = function(source, itemType, rarity) {
     var item;
 
@@ -143,16 +184,18 @@ GameSystem.item = function(source, itemType, rarity) {
     // Set item name
     var name = item.name;
     if (typeof item.rarity.bonusName == "undefined") {
-        item.name = item.rarity.name + " " + item.faction.itemName + " " + item.name;
+        item.name = item.rarity.name + " " + item.name + " of " + item.faction.name;
     } else {
-        item.name = item.rarity.name + " " + item.rarity.bonusName + " " + item.faction.itemName + " " + item.name;
+        item.name = item.rarity.name + " " + item.rarity.bonusName + " " + item.name + " of " + item.faction.name;
     }
+
+
 
     // Update weapon states based on source level, rarity and bonus
     var counter = 0;
     for (var i in item.stats) {
         var statMultiplier = (GameSystem.game.rnd.integerInRange(item.rarity.minStatMultiplier, item.rarity.maxStatMultiplier) + 100) / 100;
-        item.stats[i] = item.stats[i] * statMultiplier + item.rarity.statBonuses[counter];
+        item.stats[i] = item.stats[i] * statMultiplier + item.rarity.statBonuses[counter] + item.level * GameSystem.data.items.levelMultiplier;
         counter++;
     }
     
@@ -167,6 +210,12 @@ GameSystem.projectile = function(weapon, x, y) {
 
     // Create the projectile
     var projectile = GameSystem.projectiles.create(x, y, weapon.sprite);
+    
+    // Set projectile color based on faction
+    var tintColor = "0x" + weapon.faction.color;
+    projectile.tint = tintColor;
+
+    // Create the object and enable physics
     GameSystem.game.physics.enable(projectile, GameSystem.game.Physics);
     //projectile.physics = GameSystem.game.Physics;
     projectile.anchor.setTo(0.5, 0.5);
@@ -192,7 +241,7 @@ GameSystem.projectile = function(weapon, x, y) {
     projectile.size = GameSystem.normalize(weapon.stats.projectileSize, GameSystem.data.settings.sizeLowerBound, GameSystem.data.settings.sizeUpperBound, 1, GameSystem.data.settings.statUpperBound);
     projectile.blastRadius = GameSystem.normalize(weapon.stats.blastRadius, GameSystem.data.settings.blastRadiusLowerBound, GameSystem.data.settings.blastRadiusUpperBound, 1, GameSystem.data.settings.upperBound);
 
-    // Give the projectile a starting velocity (probably not useful, unless acceleration is revamped)
+    // Give the projectile a starting velocity (probably not useful unless acceleration system is changed)
     //projectile.body.velocity.y = -projectile.maxSpeed;
     return projectile;
 }
@@ -260,15 +309,13 @@ GameSystem.fireSecondary = function(shooter) {
     }
 }
 
-// Store all text on the screen (so it can be cleared)
-GameSystem.game.text = new Array();
-
 // Define class for creating menu structure
-GameSystem.node = function(name, type, selected) {
+GameSystem.node = function(name, pointer, type) {
     this.name = name || "node"; // The name to be displayed
-    this.type = type || "node"; // The type of node (for executing node command)
+    this.pointer = pointer || {}; // The object linked to the node
+    this.type = type || "leaf"; // The type of node (for executing node command)    
+    this.selected = false;
     this.parent = {};
-    this.selected = selected || false;
     this.children = [];
 }
 
@@ -296,8 +343,8 @@ GameSystem.node.prototype.getSelected = function() {
 }
 
 // Add a child node
-GameSystem.node.prototype.addChild = function(name, type) {
-    var child = new GameSystem.node(name, type);
+GameSystem.node.prototype.addChild = function(name, pointer, type) {
+    var child = new GameSystem.node(name, pointer, type);
     this.children.push(child);
     child.parent = this;
     
@@ -388,7 +435,8 @@ GameSystem.node.prototype.update = function() {
 
 	var siblings = this.getSiblings();
 
-	GameSystem.game.text.push(GameSystem.game.add.text(80, 150, this.parent.name, GameSystem.data.menu.fonts.menu)); // Add the current menu name
+    // Add the current menu name
+	GameSystem.game.text.push(GameSystem.game.add.text(80, 150, this.parent.name, GameSystem.data.menu.fonts.menu));
 
 	for (var i in siblings) {
 		var font = (siblings[i].selected) ? GameSystem.data.menu.fonts.selected : GameSystem.data.menu.fonts.unselected;
@@ -398,24 +446,23 @@ GameSystem.node.prototype.update = function() {
 
 // Execute node command
 GameSystem.node.prototype.execute = function() {
-	//console.log("Selected: " + this.name + ", Type: " + this.type);
-
-    if (this.type == "mission") { // We're launching a mission
-        var mission;
-        for (var i in GameSystem.data.missions) {
-            if (this.name == GameSystem.data.missions[i].name) {
-                mission = GameSystem.data.missions[i];
-            }
-        }
-        GameSystem.game.state.start("play", true, false, mission);
-    } else { // We're doing something else
-        switch (this.name) {
+	// First see if we are doing something with an object referenced by the node 
+    switch (this.type) {
+        case "mission":
+            GameSystem.game.state.start("play", true, false, this.pointer);
+            break;
+        case "weapon":
+            console.log(this.pointer);
+        // Otherwise execute special instructions
+        default:
+            switch (this.name) {
             case "NEW GAME": // Start new game
                 GameSystem.storage.reset();
-                GameSystem.game.state.start("dock", true, false, GameSystem.data.docks[0]);
+                GameSystem.game.state.start("dock", true, false, GameSystem.data.worlds[0]);
                 break;
             case "CONTINUE": // Continue game
                 GameSystem.storage.load();
+                GameSystem.game.state.start("dock", true, false, GameSystem.game.player.world, 0);
                 break;
             case "SAVE GAME": // Save game
                 GameSystem.storage.save();
@@ -483,6 +530,8 @@ GameSystem.storage.load = function() {
             
             // Parse data into an object
             gameData = JSON.parse(gameData);
+            GameSystem.game.player = gameData;
+            //console.log(gameData);
         } else {
             console.log("Nonexistant or corrupt game data in web storage. Unable to load game data.");
         }
@@ -497,6 +546,7 @@ GameSystem.storage.save = function() {
     if (typeof Storage !== "undefined") { // Verify web storage support
 
         // Store current game data as a stringified object
+        /*
         var gameData = {
             'ship': GameSystem.game.player.ship,
             'weapons': GameSystem.game.player.weapons,
@@ -507,6 +557,9 @@ GameSystem.storage.save = function() {
             'dock': GameSystem.game.player.dock,
             'money': GameSystem.game.player.money
         };
+        */
+
+        var gameData = GameSystem.game.player;
 
         // Put data into web storage
         localStorage.setItem(GameSystem.data.settings.webStorageName, JSON.stringify(gameData));

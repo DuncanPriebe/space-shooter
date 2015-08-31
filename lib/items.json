@@ -1,4 +1,5 @@
 {
+	"levelMultiplier": 0.2,
 	"ships": {
 		"presets": [
 		]
@@ -127,8 +128,19 @@
 	},
 	"rarities": [
 		{
+			"name": "Bizarre",
+			"dropChance": 2,
+			"minStatBoost": -20,
+			"maxStatBoost": 30,
+			"minStatMultiplier": -30,
+			"maxStatMultiplier": 40,
+			"bonusChance": 25,
+			"specialChance": 25,
+			"color": "edf950"
+		},
+		{
 			"name": "Legendary",
-			"dropChance": 10,
+			"dropChance": 4,
 			"minStatBoost": 10,
 			"maxStatBoost": 20,
 			"minStatMultiplier": 20,
@@ -139,7 +151,7 @@
 		},
 		{
 			"name": "Elite",
-			"dropChance": 15,
+			"dropChance": 8,
 			"minStatBoost": 13,
 			"maxStatBoost": 18,
 			"minStatMultiplier": 15,
@@ -150,7 +162,7 @@
 		},
 		{
 			"name": "Exceptional",
-			"dropChance": 20,
+			"dropChance": 16,
 			"minStatBoost": 11,
 			"maxStatBoost": 16,
 			"minStatMultiplier": 10,
@@ -161,7 +173,7 @@
 		},
 		{
 			"name": "Superior",
-			"dropChance": 25,
+			"dropChance": 28,
 			"minStatBoost": 9,
 			"maxStatBoost": 14,
 			"minStatMultiplier": 5,
@@ -172,7 +184,7 @@
 		},
 		{
 			"name": "Standard",
-			"dropChance": 80,
+			"dropChance": 76,
 			"minStatBoost": 7,
 			"maxStatBoost": 13,
 			"minStatMultiplier": 0,
@@ -183,9 +195,9 @@
 		},
 		{
 			"name": "Weak",
-			"dropChance": 90,
-			"minStatBoost": 1,
-			"maxStatBoost": 3,
+			"dropChance": 88,
+			"minStatBoost": 5,
+			"maxStatBoost": 11,
 			"minStatMultiplier": -5,
 			"maxStatMultiplier": -10,
 			"bonusChance": 25,
@@ -194,13 +206,24 @@
 		},
 		{
 			"name": "Terrible",
-			"dropChance": 100,
-			"minStatBoost": 1,
-			"maxStatBoost": 2,
+			"dropChance": 96,
+			"minStatBoost": 3,
+			"maxStatBoost": 9,
 			"minStatMultiplier": -10,
 			"maxStatMultiplier": -15,
 			"bonusChance": 25,
 			"specialChance": 10,
+			"color": "a1a1a1"
+		},
+		{
+			"name": "Broken",
+			"dropChance": 100,
+			"minStatBoost": 0,
+			"maxStatBoost": 0,
+			"minStatMultiplier": -15,
+			"maxStatMultiplier": -20,
+			"bonusChance": 0,
+			"specialChance": 0,
 			"color": "a1a1a1"
 		}
 	]
