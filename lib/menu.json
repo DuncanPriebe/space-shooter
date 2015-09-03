@@ -1,29 +1,58 @@
 {
 	"title": "ZYRIAN",
 	"fonts": {
-		"title": {
+		"gameTitle": {
 			"font": "50px Courier",
 			"fill": "#bdaf89",
 			"fontStyle": "normal",
-			"fontWeight": "bold"
+			"fontWeight": "bold",
+			"wordWrap": true,
+			"wordWrapWidth": 0.8,
+			"xPosition": 0.1,
+			"yPosition": 0.1
 		},
-		"menu": {
+		"menuTitle": {
 			"font": "24px Courier",
 			"fill": "#e2892e",
 			"fontStyle": "normal",
-			"fontWeight": "bold"
+			"fontWeight": "bold",
+			"wordWrap": true,
+			"wordWrapWidth": 0.6,
+			"xPosition": 0.1,
+			"yPosition": 0.25
 		},
 		"selected": {
 			"font": "20px Courier",
 			"fill": "#ae81ff",
 			"fontStyle": "normal",
-			"fontWeight": "bold"
+			"fontWeight": "bold",
+			"wordWrap": true,
+			"wordWrapWidth": 0.6,
+			"xPosition": 0.1,
+			"yPosition": 0.35,
+			"ySpacing": 0.05
 		},
 		"unselected": {
 			"font": "20px Courier",
 			"fill": "#f8f8f2",
 			"fontStyle": "normal",
-			"fontWeight": "bold"
+			"fontWeight": "bold",
+			"wordWrap": true,
+			"wordWrapWidth": 0.6,
+			"xPosition": 0.1,
+			"yPosition": 0.35,
+			"ySpacing": 0.05
+		},
+		"help": {
+			"font": "12px Courier",
+			"fill": "#ffffff",
+			"fontStyle": "normal",
+			"fontWeight": "normal",
+			"wordWrap": true,
+			"wordWrapWidth": 0.4,
+			"xPosition": 0.4,
+			"yPosition": 0.35,
+			"ySpacing": 0.05
 		}
 	},
 	"audio": {

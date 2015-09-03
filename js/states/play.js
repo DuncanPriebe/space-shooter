@@ -3,10 +3,9 @@ var playState = {
 
     // Accept parameters from menu selection and store them in play state
     init: function(mission) {
-        console.log(mission);
         if (typeof mission == "undefined" || mission == null) {
             console.log("Mission data is corrupt or doesn't exist.");
-            GameSystem.game.state.start("dock", true, false, GameSystem.game.player.dock);
+            GameSystem.game.state.start("dock", true, false, GameSystem.playerEntity.worldIndex);
         } else {
             GameSystem.game.mission = mission;
         }
@@ -16,8 +15,9 @@ var playState = {
         // Load state assets
         GameSystem.loadStateAssets(this.key);
 
-        // Create pool of projectiles
-        GameSystem.initialize();
+        // Create pool of projectiles, enemies, etc.
+        GameSystem.initialize("bounds");
+        GameSystem.initialize("groups");
     },
 
     create: function() {
@@ -25,17 +25,13 @@ var playState = {
 
         // Load and setup mission
         GameSystem.game.stage.backgroundColor = GameSystem.game.mission.backgroundColor; // Set background color
-        //missionTime = GameObject.time.now + mission.timer; // Reset mission timer
+        //missionTime = GameObject.time.now + mission.timer; // Reset mission Create
 
-        // Setup player.sprite's ship
-        GameSystem.game.player.sprite = GameSystem.game.add.sprite(GameSystem.game.world.width / 2, GameSystem.game.world.height - 100, 'ship');
-        GameSystem.game.player.sprite.anchor.setTo(0.5, 0.5);
-        GameSystem.game.physics.enable(GameSystem.game.player.sprite, Phaser.Physics.ARCADE);
-        GameSystem.game.player.sprite.body.collideWorldBounds = true;
-        
-        // Add animation to player's ship
-        GameSystem.game.player.sprite.animations.add('fly', [0, 1], 20, true);
-        GameSystem.game.player.sprite.play('fly');
+        // timer enemies for testing
+        //var enemy = GameSystem.enemy(GameSystem.game.mission, "normal");
+        var miniBoss = GameSystem.enemy(GameSystem.game.mission, "miniBoss");
+
+        GameSystem.initializePlayer();
 
         // Add controls
         cursors = GameSystem.game.input.keyboard.createCursorKeys();
@@ -46,35 +42,8 @@ var playState = {
         muteKey = GameSystem.game.input.keyboard.addKey(Phaser.Keyboard.M);
         muteKey.onDown.add(this.muteToggle, this);
 
-        // Set default player weapon for testing
-        
-        GameSystem.game.player.primaryWeapons.push(new GameSystem.item({
-                level: 10,
-                faction: GameSystem.data.factions[0]
-        }, "weapons"));
-
-        GameSystem.game.player.secondaryWeapons.push(new GameSystem.item({
-                level: 10,
-                faction: GameSystem.data.factions[0]
-        }, "weapons"));
-        
-
-        //GameSystem.game.player.secondaryWeapons.push(new GameSystem.weapon({level: 10}));
 
         /*
-        // Setup projectiles
-        projectiles = GameSystem.game.add.group();
-        projectiles.enableBody = true;
-        projectiles.physicsBodyType = Phaser.Physics.ARCADE;
-        //projectiles.createMultiple(30, 'projectile');
-        
-        projectiles.createMultiple(30, GameObject.weapons[0].sprite);
-        projectiles.setAll('anchor.x', 0.5);
-        projectiles.setAll('anchor.y', 1);
-        projectiles.setAll('outOfBoundsKill', true);
-        projectiles.setAll('checkWorldBounds', true);
-
-        
         // Setup stars
         stars = GameObject.add.group();
         stars.enableBody = true;
@@ -132,30 +101,40 @@ var playState = {
         */
 
         // Stop the player.sprite's movement
-        GameSystem.game.player.sprite.body.velocity.x = 0;
+        GameSystem.playerSprite.body.velocity.x = 0;
 
         if (cursors.left.isDown) {
-            GameSystem.game.player.sprite.body.velocity.x = -250;
+            GameSystem.playerSprite.body.velocity.x = -250;
         } else if (cursors.right.isDown) {
-            GameSystem.game.player.sprite.body.velocity.x = 250;
+            GameSystem.playerSprite.body.velocity.x = 250;
         }
         
         if (firePrimaryButton.isDown && !fireSecondaryButton.isDown) {
-            GameSystem.firePrimary(GameSystem.game.player);
+            GameSystem.playerEntity.firePrimary(GameSystem.playerSprite);
+            //GameSystem.firePrimary(GameSystem.player);
         }
 
         if (fireSecondaryButton.isDown && !firePrimaryButton.isDown) {
-            GameSystem.fireSecondary(GameSystem.game.player);
+            GameSystem.playerEntity.fireSecondary(GameSystem.playerSprite);
+            //GameSystem.fireSecondary(GameSystem.player);
         }
 
         if (escapeButton.isDown) {
-            GameSystem.game.state.start('dock', true, false, GameSystem.game.player.dock);
+            GameSystem.game.state.start('dock', true, false, GameSystem.playerEntity.worldIndex);
         }
 
+        GameSystem.updateEnemies();
+
         // Make sure player and projectiles are above background sprites
-        GameSystem.game.player.sprite.bringToTop();
+        GameSystem.playerSprite.bringToTop();
 
         GameSystem.updateProjectiles();
+
+        GameSystem.game.physics.arcade.overlap(GameSystem.projectiles, GameSystem.enemies, GameSystem.enemyCollisionHandler, null, this);
+        GameSystem.game.physics.arcade.overlap(GameSystem.projectiles, GameSystem.playerSprite, GameSystem.playerCollisionHandler, null, this);
+
+        // If we want collisions with physics, use this:
+        //GameSystem.game.physics.arcade.collide(GameSystem.projectiles, GameSystem.playerSprite, GameSystem.collisionHandler, null, this);
 
         //this.makeStars();
     },
@@ -163,7 +142,7 @@ var playState = {
     render: function() {
         GameSystem.game.debug.text("FPS: " + GameSystem.game.time.suggestedFps, 5, 15); // Display debug text
 
-        GameSystem.game.debug.text("MONEY: " + GameSystem.monify((GameSystem.game.player.money)), 5, 590); // Display debug text
+        GameSystem.game.debug.text("MONEY: " + GameSystem.monify((GameSystem.playerEntity.money)), 5, 590); // Display debug text
     },
 
     makeStars: function() {
@@ -221,17 +200,6 @@ var playState = {
             starTime = GameObject.time.now + GameObject.rnd.integerInRange(starMinDelay, starMaxDelay);
         }
     },
-
-    collisionHandler: function(projectile, target) {
-        projectile.kill();
-        GameObject.add.tween(target).to( { alpha: 0 }, 100, Phaser.Easing.Linear.None, true);
-        target.kill();
-        if (!GameObject.mute) {
-            sfxExplosion.play();
-        }
-        //this.win();
-    },
-
     win: function() {
         music.stop();
         GameObject.state.start('win');

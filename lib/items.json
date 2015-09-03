@@ -1,7 +1,29 @@
 {
 	"levelMultiplier": 0.2,
+	"minValue": 1000,
 	"ships": {
 		"presets": [
+			{
+				"type": "ship",
+				"name": "Fighter",
+				"sprite": "ship",
+				"primaryWeaponSlots": 1,
+				"secondaryWeaponSlots": 1,
+				"moduleSlots": 1,
+				"stats": {
+					"Armor": 40,
+					"Maneuverability": 60
+				}
+			}
+		],
+		"bonusNames": [
+			"Durable",
+			"Swift"
+		],
+		"specials": [
+			"Direct",
+			"Cunning",
+			"Resourceful"
 		]
 	},
 	"weapons": {
@@ -13,14 +35,14 @@
 				"fireSound": "laser",
 				"impactSound": "laser",
 				"stats": {
-					"shieldDamage": 70,
-					"armorDamage": 40,
-					"rateOfFire": 60,
-					"projectileSpeed": 70,
-					"acceleration": 70,
-					"projectileSize": 20,
-					"blastRadius": 10,
-					"efficiency": 80
+					"Shield Damage": 70,
+					"Armor Damage": 40,
+					"Rate of Fire": 60,
+					"Projectile Speed": 70,
+					"Acceleration": 70,
+					"Projectile Size": 20,
+					"Blast Radius": 10,
+					"Efficiency": 80
 				}
 			},
 			{
@@ -30,14 +52,14 @@
 				"fireSound": "laser",
 				"impactSound": "explosion",
 				"stats": {
-					"shieldDamage": 55,
-					"armorDamage": 65,
-					"rateOfFire": 45,
-					"projectileSpeed": 55,
-					"acceleration": 55,
-					"projectileSize": 40,
-					"blastRadius": 30,
-					"efficiency": 50
+					"Shield Damage": 55,
+					"Armor Damage": 65,
+					"Rate of Fire": 45,
+					"Projectile Speed": 55,
+					"Acceleration": 55,
+					"Projectile Size": 40,
+					"Blast Radius": 30,
+					"Efficiency": 50
 				}
 			},
 			{
@@ -47,14 +69,14 @@
 				"fireSound": "laser",
 				"impactSound": "laser",
 				"stats": {
-					"shieldDamage": 35,
-					"armorDamage": 25,
-					"rateOfFire": 100,
-					"projectileSpeed": 100,
-					"acceleration": 100,
-					"projectileSize": 30,
-					"blastRadius": 0,
-					"efficiency": 15
+					"Shield Damage": 35,
+					"Armor Damage": 25,
+					"Rate of Fire": 100,
+					"Projectile Speed": 100,
+					"Acceleration": 100,
+					"Projectile Size": 30,
+					"Blast Radius": 0,
+					"Efficiency": 15
 				}
 			},
 			{
@@ -64,14 +86,14 @@
 				"fireSound": "explosion",
 				"impactSound": "explosion",
 				"stats": {
-					"shieldDamage": 45,
-					"armorDamage": 75,
-					"rateOfFire": 35,
-					"projectileSpeed": 45,
-					"acceleration": 45,
-					"projectileSize": 50,
-					"blastRadius": 50,
-					"efficiency": 35
+					"Shield Damage": 45,
+					"Armor Damage": 75,
+					"Rate of Fire": 35,
+					"Projectile Speed": 45,
+					"Acceleration": 45,
+					"Projectile Size": 50,
+					"Blast Radius": 50,
+					"Efficiency": 35
 				}
 			},
 			{
@@ -81,14 +103,14 @@
 				"fireSound": "explosion2",
 				"impactSound": "explosion2",
 				"stats": {
-					"shieldDamage": 60,
-					"armorDamage": 100,
-					"rateOfFire": 15,
-					"projectileSpeed": 25,
-					"acceleration": 25,
-					"projectileSize": 20,
-					"blastRadius": 70,
-					"efficiency": 25
+					"Shield Damage": 60,
+					"Armor Damage": 100,
+					"Rate of Fire": 15,
+					"Projectile Speed": 25,
+					"Acceleration": 25,
+					"Projectile Size": 20,
+					"Blast Radius": 70,
+					"Efficiency": 25
 				}
 			}
 		],
@@ -112,18 +134,93 @@
 	},
 	"shields": {
 		"presets": [
+			{
+				"type": "basic",
+				"name": "Basic Shield",
+				"sprite": "",
+				"stats": {
+					"Capacity": 30,
+					"Recharge Rate": 40,
+					"Recharge Delay": 30,
+					"Efficiency": 30
+				}
+			}
+		],
+		"bonusNames": [
+			"Strong",
+			"Recharging",
+			"Prompt",
+			"Efficient"
+		],
+		"specials": [
+			
 		]
 	},
 	"engines": {
 		"presets": [
+			{
+				"type": "basic",
+				"name": "Basic Engine",
+				"sprite": "",
+				"stats": {
+					"Vertical Acceleration": 30,
+					"Veritcal Maximum Speed": 30,
+					"Horizontal Acceleration": 30,
+					"Horizontal Maximum Speed": 30,
+					"Efficiency": 30
+				}
+			}
+		],
+		"bonusNames": [
+			"Boosted",
+			"Speedy",
+			"Thrusted",
+			"Thrusty"
+		],
+		"specials": [
+			
 		]
 	},
 	"generators": {
 		"presets": [
+			{
+				"type": "basic",
+				"name": "Basic Generator",
+				"sprite": "",
+				"stats": {
+					"Capacity": 30,
+					"Recharge Rate": 30,
+					"Recharge Delay": 30
+				}
+			}
+		],
+		"bonusNames": [
+			"Storing",
+			"Recharging",
+			"Prompt"
+		],
+		"specials": [
+			
 		]
 	},
 	"modules": {
 		"presets": [
+			{
+				"type": "rateOfFireBoost",
+				"name": "Rate of Fire Booster",
+				"sprite": "",
+				"stats": {
+					"Duration": 30,
+					"Bonus": 30
+				}
+			}
+		],
+		"bonusNames": [
+			"Enduring",
+			"Powerful"
+		],
+		"specials": [
+			
 		]
 	},
 	"rarities": [

@@ -3,6 +3,7 @@
 		"key": "empire",
 		"name": "The Empire",
 		"color": "50d9ef",
+		"description": "The Empire has ruled the galaxy for the last 1,000 years or so. They hate the Rebels, like the Preservers, and hate the Eclipse.",
 		"worlds": [
 			{
 				"name": "Lorium",
@@ -113,16 +114,18 @@
 		],
 		"bonuses": {
 			"ships": {
-				
+				"armor": -5,
+				"speed": 5
 			},
 			"weapons": {
-				"shieldDamage": 0,
-				"armorDamage": 0,
-				"rateOfFire": 0,
-				"projectileSpeed": 0,
-				"acceleration": 0,
+				"shieldDamage": 10,
+				"armorDamage": -10,
+				"rateOfFire": 10,
+				"projectileSpeed": 10,
+				"acceleration": -10,
+				"projectileSize": 0,
 				"blastRadius": 0,
-				"efficiency": 0
+				"efficiency": 10
 			},
 			"shields": {
 				
@@ -146,6 +149,7 @@
 		"key": "rebel",
 		"name": "The Revolt",
 		"color": "efd950",
+		"description": "The Rebels are fighting to conquer the corrupt Empire. They hate the Empire and the Preservers, but they like the Eclipse.",
 		"worlds": [
 			{
 				"name": "Kal Orda",
@@ -245,30 +249,33 @@
 			"Orva",
 			"Orza"
 		],
-		"shipBonus": {
-			"name": "The Revolt's"
-		},
-		"weaponBonus": {
-			"name": "Photon",
-			"shieldDamage": 0,
-			"armorDamage": 0,
-			"rateOfFire": 0,
-			"projectileSpeed": 0,
-			"acceleration": 0,
-			"blastRadius": 0,
-			"efficiency": 0
-		},
-		"shieldBonus": {
-			"name": "Photon"
-		},
-		"engineBonus": {
-			"name": "Photon"
-		},
-		"generatorBonus": {
-			"name": "Photon"
-		},
-		"moduleBonus": {
-			"name": "Photon"
+		"bonuses": {
+			"ships": {
+				"armor": 0,
+				"speed": 0
+			},
+			"weapons": {
+				"shieldDamage": 0,
+				"armorDamage": 0,
+				"rateOfFire": 0,
+				"projectileSpeed": 0,
+				"acceleration": 0,
+				"projectileSize": 0,
+				"blastRadius": 0,
+				"efficiency": 0
+			},
+			"shields": {
+				
+			},
+			"engines": {
+				
+			},
+			"generators": {
+				
+			},
+			"modules": {
+				
+			}
 		},
 		"currency": {
 			"name": "Crystal",
@@ -279,6 +286,7 @@
 		"key": "preserver",
 		"name": "The Preservers",
 		"color": "89e22e",
+		"description": "The Preservers seek to live in harmony with all things. For this reason, they hate the Rebels and the Eclipse, but they like the Empire.",
 		"worlds": [
 			{
 				"name": "Mrrr'Pa Ta",
@@ -358,30 +366,33 @@
 			"Do'Jo",
 			"Do'Jot"
 		],
-		"shipBonus": {
-			"name": "Preserver's"
-		},
-		"weaponBonus": {
-			"name": "Aurora",
-			"shieldDamage": 0,
-			"armorDamage": 0,
-			"rateOfFire": 0,
-			"projectileSpeed": 0,
-			"acceleration": 0,
-			"blastRadius": 0,
-			"efficiency": 0
-		},
-		"shieldBonus": {
-			"name": "Aurora"
-		},
-		"engineBonus": {
-			"name": "Aurora"
-		},
-		"generatorBonus": {
-			"name": "Aurora"
-		},
-		"moduleBonus": {
-			"name": "Aurora"
+		"bonuses": {
+			"ships": {
+				"armor": 0,
+				"speed": 0
+			},
+			"weapons": {
+				"shieldDamage": 0,
+				"armorDamage": 0,
+				"rateOfFire": 0,
+				"projectileSpeed": 0,
+				"acceleration": 0,
+				"projectileSize": 0,
+				"blastRadius": 0,
+				"efficiency": 0
+			},
+			"shields": {
+				
+			},
+			"engines": {
+				
+			},
+			"generators": {
+				
+			},
+			"modules": {
+				
+			}
 		},
 		"currency": {
 			"name": "Honor",
@@ -392,6 +403,7 @@
 		"key": "freelancer",
 		"name": "The Freelancers",
 		"color": "ffffff",
+		"description": "The Freelancers seek only to profit, no matter the situation. They like all of the other factions, but are fearful of The Eclipse.",
 		"worlds": [
 			{
 				"name": "Hub #9913",
@@ -456,30 +468,33 @@
 		"lastNames": [
 			"Boot"
 		],
-		"shipBonus": {
-			"name": "Freelancer's"
-		},
-		"weaponBonus": {
-			"name": "Ion",
-			"shieldDamage": 0,
-			"armorDamage": 0,
-			"rateOfFire": 0,
-			"projectileSpeed": 0,
-			"acceleration": 0,
-			"blastRadius": 0,
-			"efficiency": 0
-		},
-		"shieldBonus": {
-			"name": "Ion"
-		},
-		"engineBonus": {
-			"name": "Ion"
-		},
-		"generatorBonus": {
-			"name": "Ion"
-		},
-		"moduleBonus": {
-			"name": "Ion"
+		"bonuses": {
+			"ships": {
+				"armor": 0,
+				"speed": 0
+			},
+			"weapons": {
+				"shieldDamage": 0,
+				"armorDamage": 0,
+				"rateOfFire": 0,
+				"projectileSpeed": 0,
+				"acceleration": 0,
+				"projectileSize": 0,
+				"blastRadius": 0,
+				"efficiency": 0
+			},
+			"shields": {
+				
+			},
+			"engines": {
+				
+			},
+			"generators": {
+				
+			},
+			"modules": {
+				
+			}
 		},
 		"currency": {
 			"name": "Anything",
@@ -490,6 +505,7 @@
 		"key": "eclipse",
 		"name": "The Eclipse",
 		"color": "ae81ff",
+		"description": "The Eclipse seeks to eradicate all life in the galaxy. They hate all of the other factions, but they tolerate Rebels and Freelancers for now.",
 		"worlds": [
 			{
 				"name": "Skin",
@@ -573,30 +589,33 @@
 			"Shatterer",
 			"Exterminator"
 		],
-		"shipBonus": {
-			"name": "Eclipse"
-		},
-		"weaponBonus": {
-			"name": "Void",
-			"shieldDamage": 0,
-			"armorDamage": 0,
-			"rateOfFire": 0,
-			"projectileSpeed": 0,
-			"acceleration": 0,
-			"blastRadius": 0,
-			"efficiency": 0
-		},
-		"shieldBonus": {
-			"name": "Void"
-		},
-		"engineBonus": {
-			"name": "Void"
-		},
-		"generatorBonus": {
-			"name": "Void"
-		},
-		"moduleBonus": {
-			"name": "Void"
+		"bonuses": {
+			"ships": {
+				"armor": 0,
+				"speed": 0
+			},
+			"weapons": {
+				"shieldDamage": 0,
+				"armorDamage": 0,
+				"rateOfFire": 0,
+				"projectileSpeed": 0,
+				"acceleration": 0,
+				"projectileSize": 0,
+				"blastRadius": 0,
+				"efficiency": 0
+			},
+			"shields": {
+				
+			},
+			"engines": {
+				
+			},
+			"generators": {
+				
+			},
+			"modules": {
+				
+			}
 		},
 		"currency": {
 			"name": "Blood",

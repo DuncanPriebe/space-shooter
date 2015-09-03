@@ -1,10 +1,10 @@
 'use strict';
 
 var dockState = {
-    init: function(world) {
+    init: function(worldIndex) {
         // Load current dock, otherwise load first dock
-        world.faction = GameSystem.getWorldFaction(world);
-        GameSystem.game.player.world = world;
+        //world.faction = GameSystem.getWorldFaction(world);
+        GameSystem.currentWorld = new GameSystem.world(0);
     },
 
     preload: function() {
@@ -13,37 +13,40 @@ var dockState = {
     },
 
     create: function() {
-        //GameSystem.game.add.text(80, 80, GameSystem.game.dock.name, GameSystem.data.menu.fonts.title);
-        GameSystem.game.add.text(80, 80, GameSystem.game.player.world.name, GameSystem.data.menu.fonts.title);
+        GameSystem.game.add.text(GameSystem.data.menu.fonts.gameTitle.xPosition, GameSystem.data.menu.fonts.gameTitle.yPosition, GameSystem.data.menu.title + " v" + GameSystem.data.settings.version, GameSystem.data.menu.fonts.gameTitle);
 
         // Create menu structure
-        var mainMenu = new GameSystem.node("SPACE DOCK");
-            mainMenu.addChild(GameSystem.game.player.world.name + " Station", GameSystem.game.player.world, "mission");
+        var mainMenu = new GameSystem.node("SPACE DOCK", {}, "root");
+            mainMenu.addChild(GameSystem.currentWorld.name.toUpperCase() + " Station".toUpperCase(), GameSystem.currentWorld, "mission");
 
             var vendorMenu = mainMenu.addChild("VENDORS");
-                var weaponVendor = new GameSystem.vendor(GameSystem.game.player.world);
-                var weaponVendorMenu = vendorMenu.addChild(weaponVendor.name);
+                var weaponVendor = new GameSystem.vendor(GameSystem.currentWorld, "weapons");
+                var weaponVendorMenu = vendorMenu.addChild(weaponVendor.name.toUpperCase(), weaponVendor, "vendor");
                 for (var i in weaponVendor.items) {
-                    weaponVendorMenu.addChild(weaponVendor.items[i].name, weaponVendor.items[i], "weapon");
+                    weaponVendorMenu.addChild(weaponVendor.items[i].name.toUpperCase(), weaponVendor.items[i], "item");
                 }
+                    weaponVendorMenu.addChild("DONE");
+
+                vendorMenu.addChild("DONE");
             var archiveMenu = mainMenu.addChild("DATA ARCHIVE");
                 for (var i in GameSystem.data.factions) {
-                    archiveMenu.addChild(GameSystem.data.factions[i].name);
+                    archiveMenu.addChild(GameSystem.data.factions[i].name.toUpperCase(), GameSystem.data.factions[i], "faction");
                 }
+                archiveMenu.addChild("DONE");
             mainMenu.addChild("SAVE GAME");
             mainMenu.addChild("RESET GAME");
             mainMenu.addChild("ERASE DATA");
             mainMenu.addChild("QUIT");
 
-        GameSystem.data.menu.selected = mainMenu.getSelected(); // Set default selected menu
+        GameSystem.menu.selected = mainMenu.getSelected(); // Set default selected menu
         
-        GameSystem.data.menu.selected.update(); // Print the menu
+        GameSystem.menu.selected.update(); // Print the menu
 
         // Store assets in game variables
-        GameSystem.data.menu.audio.music = GameSystem.game.add.audio(GameSystem.data.menu.audio.music, GameSystem.data.menu.audio.musicVolume);
-        GameSystem.data.menu.audio.move = GameSystem.game.add.audio(GameSystem.data.menu.audio.moveSound, GameSystem.data.menu.audio.sfxVolume);
-        GameSystem.data.menu.audio.accept = GameSystem.game.add.audio(GameSystem.data.menu.audio.acceptSound, GameSystem.data.menu.audio.sfxVolume);
-        GameSystem.data.menu.audio.back = GameSystem.game.add.audio(GameSystem.data.menu.audio.backSound, GameSystem.data.menu.audio.sfxVolume);
+        GameSystem.menu.audio.music = GameSystem.game.add.audio(GameSystem.data.menu.audio.music, GameSystem.data.menu.audio.musicVolume);
+        GameSystem.menu.audio.move = GameSystem.game.add.audio(GameSystem.data.menu.audio.moveSound, GameSystem.data.menu.audio.sfxVolume);
+        GameSystem.menu.audio.accept = GameSystem.game.add.audio(GameSystem.data.menu.audio.acceptSound, GameSystem.data.menu.audio.sfxVolume);
+        GameSystem.menu.audio.back = GameSystem.game.add.audio(GameSystem.data.menu.audio.backSound, GameSystem.data.menu.audio.sfxVolume);
 
         // GameSystem.data.menu.audio.music.play(); // Start music
 
@@ -63,22 +66,22 @@ var dockState = {
     moveSelection: function(key) {
         switch (key.keyCode) {
             case 38: // Up arrow pressed
-                GameSystem.data.menu.selected = GameSystem.data.menu.selected.selectPrevious();
-                GameSystem.data.menu.audio.move.play();
+                GameSystem.menu.selected = GameSystem.menu.selected.selectPrevious();
+                GameSystem.menu.audio.move.play();
                 break;
             case 40: // Down arrow pressed
-                GameSystem.data.menu.selected = GameSystem.data.menu.selected.selectNext();
-                GameSystem.data.menu.audio.move.play();
+                GameSystem.menu.selected = GameSystem.menu.selected.selectNext();
+                GameSystem.menu.audio.move.play();
                 break;
             case 13: // Enter pressed
-                GameSystem.data.menu.selected = GameSystem.data.menu.selected.selectChild();
-                GameSystem.data.menu.audio.accept.play();
+                GameSystem.menu.selected = GameSystem.menu.selected.selectChild();
+                GameSystem.menu.audio.accept.play();
                 //GameSystem.game.state.start('play', true, false, missions[0], weapons, settings); // Start play state with parameters
                 break;
             case 8: // Backspace pressed
             case 27: // Escape pressed
-                GameSystem.data.menu.selected = GameSystem.data.menu.selected.selectParent();
-                GameSystem.data.menu.audio.back.play();
+                GameSystem.menu.selected = GameSystem.menu.selected.selectParent();
+                GameSystem.menu.audio.back.play();
                 break;
         }
     }
