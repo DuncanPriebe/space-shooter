@@ -82,7 +82,7 @@
 			{
 				"type": "missile",
 				"name": "Missile",
-				"sprite": "missile-2",
+				"sprite": "missile",
 				"fireSound": "explosion",
 				"impactSound": "explosion",
 				"stats": {
@@ -91,7 +91,7 @@
 					"Rate of Fire": 35,
 					"Projectile Speed": 45,
 					"Acceleration": 45,
-					"Projectile Size": 50,
+					"Projectile Size": 40,
 					"Blast Radius": 50,
 					"Efficiency": 35
 				}
@@ -99,7 +99,7 @@
 			{
 				"type": "bomb",
 				"name": "Bomb",
-				"sprite": "missile",
+				"sprite": "bomb",
 				"fireSound": "explosion2",
 				"impactSound": "explosion2",
 				"stats": {
@@ -108,7 +108,7 @@
 					"Rate of Fire": 15,
 					"Projectile Speed": 25,
 					"Acceleration": 25,
-					"Projectile Size": 20,
+					"Projectile Size": 50,
 					"Blast Radius": 70,
 					"Efficiency": 25
 				}

@@ -9,6 +9,7 @@
 	"imagePath": "img/",
 	"startingMoney": 10000,
 	"enemyDamageMultiplier": 0.1,
+	"firingDelay": 50,
 	"statUpperBound": 200,
 	"rateOfFireUpperBound": 2000,
 	"rateOfFireLowerBound": 35,
@@ -18,6 +19,6 @@
 	"accelerationLowerBound": 0.3,
 	"sizeUpperBound": 0.05,
 	"sizeLowerBound": 0.025,
-	"blastRadiusUpperBound": 0.05,
-	"blastRadiusLowerBound": 0.25
+	"blastRadiusUpperBound": 5.0,
+	"blastRadiusLowerBound": 0.5
 }

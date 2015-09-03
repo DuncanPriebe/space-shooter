@@ -71,11 +71,11 @@
 				},
 				{
 					"key": "missile",
-					"file": "missile.png"
+					"file": "missile-small.png"
 				},
 				{
-					"key": "missile-2",
-					"file": "missile-2.png"
+					"key": "bomb",
+					"file": "missile-big.png"
 				},
 				{
 					"key": "star-red",

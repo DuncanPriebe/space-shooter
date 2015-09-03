@@ -3,7 +3,14 @@
 		"faction": "empire",
 		"name": "Lorium",
 		"surface": "forest",
-		"level": 1
+		"level": 1,
+		"mission": {
+			"faction": "rebel",
+			"name": "Lorium Rebel Fleet",
+			"backgroundColor": "0x110011",
+			"enemies": [
+			]
+		}
 	},
 	{
 		"faction": "empire",

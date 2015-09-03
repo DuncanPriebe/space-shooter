@@ -44,8 +44,10 @@ GameSystem.initialize = function(content) {
                 GameSystem.data.settings.accelerationLowerBound *= GameSystem.game.world.height;
                 GameSystem.data.settings.sizeUpperBound *= GameSystem.game.world.height;
                 GameSystem.data.settings.sizeLowerBound *= GameSystem.game.world.height;
-                GameSystem.data.settings.blastRadiusUpperBound *= GameSystem.game.world.height;
-                GameSystem.data.settings.blastRadiusLowerBound *= GameSystem.game.world.height;
+                
+                // May not need due to sprite scaling
+                //GameSystem.data.settings.blastRadiusUpperBound *= GameSystem.game.world.height;
+                //GameSystem.data.settings.blastRadiusLowerBound *= GameSystem.game.world.height;
 
                 GameSystem.initializedBounds = true;
             }    
@@ -55,6 +57,7 @@ GameSystem.initialize = function(content) {
             if (!GameSystem.initializedGroups) {
                 GameSystem.projectiles = GameSystem.game.add.group();
                 GameSystem.enemies = GameSystem.game.add.group();
+                GameSystem.explosions = GameSystem.game.add.group();
 
                 GameSystem.initializedGroups = true;
             }
@@ -92,6 +95,23 @@ GameSystem.world = function(index) {
         world.faction = GameSystem.data.factions[0];
     }
     return world;  
+}
+
+// Create a mission
+GameSystem.mission = function(world) {
+    var found = false;
+    var mission = world.mission;
+    mission.level = world.level;
+    for (var i in GameSystem.data.factions) {
+        if (GameSystem.data.factions[i].key == mission.faction) {
+            mission.faction = GameSystem.data.factions[i];
+            found = true;
+        }
+    }
+    if (!found) {
+        mission.faction = GameSystem.data.factions[0];
+    }
+    return mission;
 }
 
 // Create a vendor
@@ -137,22 +157,30 @@ GameSystem.entity = function(source, rarity) {
 }
 
 // Fire primary weapons
-GameSystem.entity.prototype.firePrimary = function(sprite) {
-    for (var i in this.primaryWeapons) {
-        // Check if weapon is ready for firing
-       if (GameSystem.checkProjectileReady(this.primaryWeapons[i])) {
-            GameSystem.projectile(this.primaryWeapons[i], sprite);
+GameSystem.entity.prototype.firePrimary = function(entity) {
+    // First check if we've fired secondary weapons recently
+    if (typeof entity.weaponSecondaryTime == "undefined" || GameSystem.game.time.now > entity.weaponSecondaryTime) {
+        // Attempt to fire all primary weapons
+        for (var i in this.primaryWeapons) {
+            if (GameSystem.checkProjectileReady(this.primaryWeapons[i])) {
+                GameSystem.projectile(this.primaryWeapons[i], entity);
+            }
         }
+        entity.weaponSecondaryTime = GameSystem.game.time.now + GameSystem.data.settings.firingDelay;
     }
 }
 
 // Fire secondary weapons
-GameSystem.entity.prototype.fireSecondary = function(sprite) {
-    for (var i in this.secondaryWeapons) {
-        // Check if weapon is ready for firing
-        if (GameSystem.checkProjectileReady(this.secondaryWeapons[i])) {
-           GameSystem.projectile(this.secondaryWeapons[i], sprite);
+GameSystem.entity.prototype.fireSecondary = function(entity) {
+    // First check if we've fired secondary weapons recently
+    if (typeof entity.weaponPrimaryTime == "undefined" || GameSystem.game.time.now > entity.weaponPrimaryTime) {
+        // Attempt to fire all secondary weapons
+        for (var i in this.secondaryWeapons) {
+            if (GameSystem.checkProjectileReady(this.secondaryWeapons[i])) {
+                GameSystem.projectile(this.secondaryWeapons[i], entity);
+            }
         }
+        entity.weaponSecondaryTime = GameSystem.game.time.now + GameSystem.data.settings.firingDelay;
     }
 }
 
@@ -176,6 +204,11 @@ GameSystem.initializePlayer = function() {
     // Add animation to player's ship
     GameSystem.playerSprite.animations.add('fly', [0, 1], 20, true);
     GameSystem.playerSprite.play('fly');
+}
+
+// Create enemies based on mission
+GameSystem.enemyFactory = function(mission) {
+
 }
 
 // Create an enemy
@@ -206,7 +239,6 @@ GameSystem.enemy = function(mission, type) {
             enemy.scale.setTo(2, 2);
             break;
     }
-    
     return enemy;
 }
 
@@ -219,9 +251,6 @@ GameSystem.updateAI = function(enemy) {
 GameSystem.updateEnemies = function() {
     // For each enemy, update its AI
     GameSystem.enemies.forEachExists(GameSystem.updateAI, this, true);
-
-    // Make sure enemies are on top of other sprites
-    GameSystem.game.world.bringToTop(GameSystem.enemies);
 }
 
 // Create a projectile
@@ -253,7 +282,7 @@ GameSystem.projectile = function(weapon, ship) {
     // Set projectile attributes and stats
     projectile.fireSound = weapon.fireSound;
     projectile.impactSound = weapon.impactSound;
-    projectile.type = weapon.type;
+    projectile.weapon = weapon.type;
 
     for (var i in weapon.stats) {
         projectile[i] = weapon.stats[i];
@@ -262,20 +291,54 @@ GameSystem.projectile = function(weapon, ship) {
     // Normalize values that are based on screen size or time
     var height = GameSystem.game.world.height;
 
+    projectile["Shield Damage"] = weapon.stats["Shield Damage"];
+    projectile["Armor Damage"] = weapon.stats["Armor Damage"];
     projectile["Maximum Speed"] = GameSystem.normalize(weapon.stats["Projectile Speed"], GameSystem.data.settings.speedLowerBound, GameSystem.data.settings.speedUpperBound, 1, GameSystem.data.settings.statUpperBound);
-    projectile.acceleration = GameSystem.normalize(weapon.stats.acceleration, GameSystem.data.settings.accelerationLowerBound, GameSystem.data.settings.accelerationUpperBound, 1, GameSystem.data.settings.statUpperBound);
-    //projectile.size = GameSystem.normalize(weapon.stats["Projectile Size"], GameSystem.data.settings.sizeLowerBound, GameSystem.data.settings.sizeUpperBound, 1, GameSystem.data.settings.statUpperBound);
-    projectile.size = GameSystem.normalize(weapon.stats["Projectile Size"], 0, 100, 0, GameSystem.data.settings.statUpperBound) * 0.05;
-    projectile["Blast Radius"] = GameSystem.normalize(weapon.stats["Blast Radius"], GameSystem.data.settings.blastRadiusLowerBound, GameSystem.data.settings.blastRadiusUpperBound, 1, GameSystem.data.settings.upperBound);
+    projectile.acceleration = GameSystem.normalize(weapon.stats.Acceleration, GameSystem.data.settings.accelerationLowerBound, GameSystem.data.settings.accelerationUpperBound, 1, GameSystem.data.settings.statUpperBound);
 
+    // Remove magic number!!!
+    projectile.size = GameSystem.normalize(weapon.stats["Projectile Size"], 0, 100, 0, GameSystem.data.settings.statUpperBound) * 0.05;
+
+    projectile["Blast Radius"] = GameSystem.normalize(weapon.stats["Blast Radius"], GameSystem.data.settings.blastRadiusLowerBound, GameSystem.data.settings.blastRadiusUpperBound, 1, GameSystem.data.settings.statUpperBound);
+    
     // Set projectile size based on ship size and weapon stat
-    projectile.scale.setTo(ship.scale.x * projectile.size, ship.scale.y * projectile.size);
+    projectile.scale.setTo(projectile.size, projectile.size);
 
     // Give the projectile a starting velocity (probably not useful unless acceleration system is changed)
     //projectile.body.velocity.y = -projectile.maxSpeed;
     return projectile;
 }
 
+// Create an explosion
+GameSystem.explode = function(source) {
+    var front = GameSystem.getFront(source);
+    var explosion = GameSystem.explosions.create(front.x, front.y, "star-red");
+    explosion.tint = source.tint;
+    explosion.owner = source.owner || source;
+    explosion["Shield Damage"] = source["Shield Damage"] || 0;
+    explosion["Armor Damage"] = source["Armor Damage"] || 0;
+    
+    // Set explosion size based on projectile or ship
+    if (source["Blast Radius"] != "undefined") {
+        explosion.scale.setTo(source["Blast Radius"], source["Blast Radius"]);
+    } else {
+        explosion.scale.setTo(source.scale.x, source.scale.y);
+    }
+    
+    // Enable physics
+    GameSystem.game.physics.enable(explosion, GameSystem.game.Physics);
+    explosion.outOfBoundsKill = true;
+    explosion.checkWorldBounds = true;
+    explosion.anchor.setTo(0.5, 0.5);
+
+    // Set duration of explosion
+    explosion.lifespan = 50;
+
+    // Kill the projectile
+    source.kill();
+}
+
+// Update projectile movement, check for collisions, etc.
 GameSystem.updateProjectiles = function() {
     // First check if we've reached max distance or duration, that way we kill the projectile as soon as possible
     // Apparently Phaser sprites have a timer we can use to kill projectiles and stuff
@@ -284,9 +347,6 @@ GameSystem.updateProjectiles = function() {
 
     // Update projectile movement, animations, etc.
     GameSystem.projectiles.forEachExists(GameSystem.checkProjectileSpeed, this);
-
-    // Make sure projectiles are on top of other sprites
-    GameSystem.game.world.bringToTop(GameSystem.projectiles);
 }
 
 GameSystem.checkProjectileSpeed = function(projectile) {
@@ -342,9 +402,7 @@ GameSystem.enemyCollisionHandler = function(projectile, target) {
         //console.log("Projectile hit owner");
     } else {
         //console.log("Projectile hit target");
-        projectile.kill();
-        
-        
+        GameSystem.explode(projectile);
         //GameSystem.game.add.tween(target).to( { alpha: 0 }, 100, Phaser.Easing.Linear.None, true);
     }
 }
@@ -355,9 +413,16 @@ GameSystem.playerCollisionHandler = function(player, projectile) {
     if (projectile.owner == player) {
         //console.log("Projectile hit owner");
     } else {
-        //console.log("Projectile hit target");
-        projectile.kill();
+        GameSystem.explode(projectile);
     }
+}
+
+// Get the front and center point of the sprite
+GameSystem.getFront = function(sprite) {
+    var x = sprite.x + Math.cos(sprite.rotation - (90 * Math.PI / 180)) * sprite.width / 2;
+    var y = sprite.y + Math.sin(sprite.rotation - (90 * Math.PI / 180)) * sprite.height / 2;
+    var front = new Phaser.Point(x, y);
+    return front;
 }
 
 // Create an item

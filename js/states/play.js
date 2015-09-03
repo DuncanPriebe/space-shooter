@@ -30,6 +30,7 @@ var playState = {
         // timer enemies for testing
         //var enemy = GameSystem.enemy(GameSystem.game.mission, "normal");
         var miniBoss = GameSystem.enemy(GameSystem.game.mission, "miniBoss");
+        miniBoss.angle = 185;
 
         GameSystem.initializePlayer();
 
@@ -41,7 +42,6 @@ var playState = {
 
         muteKey = GameSystem.game.input.keyboard.addKey(Phaser.Keyboard.M);
         muteKey.onDown.add(this.muteToggle, this);
-
 
         /*
         // Setup stars
@@ -125,8 +125,11 @@ var playState = {
 
         GameSystem.updateEnemies();
 
-        // Make sure player and projectiles are above background sprites
+        // Make sure player, enemies and projectiles are above background sprites
         GameSystem.playerSprite.bringToTop();
+        GameSystem.game.world.bringToTop(GameSystem.enemies);
+        GameSystem.game.world.bringToTop(GameSystem.projectiles);
+        GameSystem.game.world.bringToTop(GameSystem.explosions);
 
         GameSystem.updateProjectiles();
 
