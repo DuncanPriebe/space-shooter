@@ -102,24 +102,49 @@ var playState = {
         */
 
         // Stop the player.sprite's movement
-        GameSystem.playerSprite.body.velocity.x = 0;
+        //GameSystem.playerSprite.body.velocity.x = 0;
 
+        // If the player is holding left, move left
         if (cursors.left.isDown) {
-            GameSystem.playerSprite.body.velocity.x = -250;
-        } else if (cursors.right.isDown) {
-            GameSystem.playerSprite.body.velocity.x = 250;
+            GameSystem.playerEntity.move(GameSystem.playerSprite, "left");
+        } 
+
+        // If the player is holding right, move right
+        if (cursors.right.isDown) {
+            GameSystem.playerEntity.move(GameSystem.playerSprite, "right");
+        }
+
+        // If the player isn't holding left or right, then slow horizontal movement
+        if (!cursors.left.isDown && !cursors.right.isDown) {
+            GameSystem.playerEntity.move(GameSystem.playerSprite, "stopHorizontal");
+        }
+
+        // If the player is holding up, move up
+        if (cursors.up.isDown) {
+            GameSystem.playerEntity.move(GameSystem.playerSprite, "forward");
+        } 
+
+        // If the player is holding down, move down
+        if (cursors.down.isDown) {
+            GameSystem.playerEntity.move(GameSystem.playerSprite, "backward");
+        }
+
+        // If the player isn't holding up or down, then slow vertical movement
+        if (!cursors.up.isDown && !cursors.down.isDown) {
+            GameSystem.playerEntity.move(GameSystem.playerSprite, "stopVertical");
         }
         
+        // If the player is holding the primary fire button, fire primary weapons
         if (firePrimaryButton.isDown && !fireSecondaryButton.isDown) {
             GameSystem.playerEntity.firePrimary(GameSystem.playerSprite);
-            //GameSystem.firePrimary(GameSystem.player);
         }
 
+        // If the player is holding the secondary fire button, fire secondary weapons
         if (fireSecondaryButton.isDown && !firePrimaryButton.isDown) {
             GameSystem.playerEntity.fireSecondary(GameSystem.playerSprite);
-            //GameSystem.fireSecondary(GameSystem.player);
         }
 
+        // If the player presses escape, bring up the pause menu (or go back to space dock)
         if (escapeButton.isDown) {
             GameSystem.game.state.start('dock', true, false, GameSystem.playerEntity.worldIndex);
         }

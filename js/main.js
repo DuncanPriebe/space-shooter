@@ -38,10 +38,14 @@ GameSystem.initialize = function(content) {
         case "bounds":
             // Set upper and lower bounds for sprites based on screen size
             if (!GameSystem.initializedBounds) {
-                GameSystem.data.settings.speedUpperBound *= GameSystem.game.world.height;
-                GameSystem.data.settings.speedLowerBound *= GameSystem.game.world.height;
-                GameSystem.data.settings.accelerationUpperBound *= GameSystem.game.world.height;
-                GameSystem.data.settings.accelerationLowerBound *= GameSystem.game.world.height;
+                GameSystem.data.settings.projectileSpeedUpperBound *= GameSystem.game.world.height;
+                GameSystem.data.settings.projectileSpeedLowerBound *= GameSystem.game.world.height;
+                GameSystem.data.settings.projectileAccelerationUpperBound *= GameSystem.game.world.height;
+                GameSystem.data.settings.projectileAccelerationLowerBound *= GameSystem.game.world.height;
+                GameSystem.data.settings.engineSpeedUpperBound *= GameSystem.game.world.height;
+                GameSystem.data.settings.engineSpeedLowerBound *= GameSystem.game.world.height;
+                GameSystem.data.settings.engineAccelerationUpperBound *= GameSystem.game.world.height;
+                GameSystem.data.settings.engineAccelerationLowerBound *= GameSystem.game.world.height;
                 GameSystem.data.settings.sizeUpperBound *= GameSystem.game.world.height;
                 GameSystem.data.settings.sizeLowerBound *= GameSystem.game.world.height;
                 
@@ -175,8 +179,8 @@ GameSystem.mission = function(world, randomFlag) {
 
     // Set stats based on mission type
     mission.enemiesRemaning = GameSystem.game.rnd.integerInRange(missionPreset.minEnemyCount, missionPreset.enemyCountMultiplier * mission.level);
-    mission.minEnemyDelay = missionPreset.enemyDelayMultiplier * mission.level * 1000;
     mission.maxEnemyDelay = missionPreset.maxEnemyDelay * 1000;
+    mission.minEnemyDelay = mission.maxEnemyDelay - missionPreset.enemyDelayMultiplier * mission.level * 1000;
     mission.bossesRemaining = GameSystem.game.rnd.integerInRange(missionPreset.minBossCount, missionPreset.bossCountMultiplier * mission.level);
     mission.duration = GameSystem.game.rnd.integerInRange(missionPreset.minDuration, missionPreset.durationMultiplier * mission.level);
 
@@ -192,6 +196,8 @@ GameSystem.mission = function(world, randomFlag) {
     mission.clusterFlag = false;
     mission.clusterTime = 0;
     mission.clusterEnemiesRemaining = 0;
+    mission.clusterEnemyPreset;
+    mission.clusterSpawnX = -1; // Set to negative one so that we know to reset it
 
     // Set first enemy delay
     mission.enemyTime = GameSystem.game.time.now + mission.maxEnemyDelay;
@@ -225,28 +231,26 @@ GameSystem.enemyFactory = function(mission) {
     // Create an enemy, cluster, or boss
     // Now check if we're in the middle of spawning a cluster
     if (mission.clusterFlag) {
-        // Need to somehow load the same enemy for the entire cluster...
+        if (GameSystem.game.time.now > mission.clusterTime) {
+            // Need to somehow load the same enemy for the entire cluster...
 
-        // Choose a spawn location
-        var spawnX = GameSystem.game.rnd.integerInRange(0, GameSystem.game.world.width);
-        var spawnY = 50;
+            // Choose a spawn location
+            if (mission.clusterSpawnX == -1) {
+                mission.clusterSpawnX = GameSystem.game.rnd.integerInRange(0, GameSystem.game.world.width);    
+            }
+            var spawnY = 50;
+            
+            var clusterEnemy = GameSystem.enemy(mission, mission.clusterEnemyType.name, mission.clusterSpawnX, spawnY);
 
-        //var projectile = GameSystem.projectiles.create(ship.x, ship.y, weapon.sprite);
+            mission.clusterTime = GameSystem.game.time.now + mission.clusterDelay;
+            mission.clusterEnemiesRemaining--;
+            if (mission.clusterEnemiesRemaining == 0) {
+                mission.clusterFlag = false;
+                mission.clusterSpawnX = -1; // Return to negative value for reset
 
-        //var clusterEnemy = GameSystem.enemy(mission, "miniboss");
-
-        //mission.clusterEnemy = GameSystem.enemies.create(spawnX, spawnY, enemy.sprite);
-        var miniBoss = GameSystem.enemy(mission, "miniBoss", spawnX, spawnY);
-
-        
-
-        mission.clusterTime = GameSystem.game.time.now + mission.clusterDelay;
-        mission.clusterEnemiesRemaning--;
-        if (mission.clusterEnemiesRemaining == 0) {
-            mission.clusterFlag = false;
-
-            // Reset mission enemy timer
-            mission.enemyTime = GameSystem.game.time.now + GameSystem.game.rnd.integerInRange(mission.minEnemyDelay, mission.maxEnemyDelay);
+                // Reset mission enemy timer
+                mission.enemyTime = GameSystem.game.time.now + GameSystem.game.rnd.integerInRange(mission.minEnemyDelay, mission.maxEnemyDelay);
+            }
         }
     } else if (GameSystem.game.time.now > mission.enemyTime) { // Otherwise check if it's time to make an enemy
         var enemyType;
@@ -262,27 +266,30 @@ GameSystem.enemyFactory = function(mission) {
         var random = GameSystem.game.rnd.integerInRange(0, 100);
         if (random <= enemyType.clusterChance) {
             mission.clusterFlag = true;
-            mission.clusterEnemiesRemaining = GameSystem.game.rnd.integerInRange(enemyType.minClusterSize, enemyType.clusterSizeMultiplier * mission.level);
+            mission.clusterEnemiesRemaining = GameSystem.game.rnd.integerInRange(enemyType.minClusterSize, enemyType.minClusterSize + enemyType.clusterSizeMultiplier * mission.level);
             mission.clusterDelay = enemyType.clusterDelay;
-        }
-
-        // Choose a spawn location
-        var spawnX = GameSystem.game.rnd.integerInRange(0, GameSystem.game.world.width);
-        var spawnY = 50;
-
-        // Spawn the enemy
-        var enemy = GameSystem.enemy(mission, "miniBoss", spawnX, spawnY);
-        console.log(enemy);
-
-        // Track number of bosses or enemies spawned
-        if (enemyType.name == "boss") {
-            mission.bossesSpawned++;    
+            mission.clusterEnemyType = enemyType;
+            console.log("Spawning a cluster of " + mission.clusterEnemiesRemaining + " " + enemyType.name + "s.");
         } else {
-            mission.enemiesSpawned++;
-        }
+            // Choose a spawn location
+            var spawnX = GameSystem.game.rnd.integerInRange(0, GameSystem.game.world.width);
+            var spawnY = 50;
 
-        // Reset mission enemy timer
-        mission.enemyTime = GameSystem.game.time.now + GameSystem.game.rnd.integerInRange(mission.minEnemyDelay, mission.maxEnemyDelay);
+            // Spawn the enemy
+            var enemy = GameSystem.enemy(mission, enemyType.name, spawnX, spawnY);
+            //console.log(enemy);
+
+            // Track number of bosses or enemies spawned
+            if (enemyType.name == "boss") {
+                mission.bossesSpawned++;    
+            } else {
+                mission.enemiesSpawned++;
+            }
+
+            // Reset mission enemy timer
+            mission.enemyTime = GameSystem.game.time.now + GameSystem.game.rnd.integerInRange(mission.minEnemyDelay, mission.maxEnemyDelay);
+            console.log("Spawning one " + enemyType.name + ".");    
+        }
     }
 }
 
@@ -301,8 +308,8 @@ GameSystem.enemy = function(mission, preset, spawnX, spawnY) {
     enemy.tint = tintColor;
     GameSystem.game.physics.enable(enemy, GameSystem.game.Physics);
     enemy.anchor.setTo(0.5, 0.5);
-    enemy.outOfBoundsKill = true;
-    enemy.checkWorldBounds = true;
+    //enemy.outOfBoundsKill = true;
+    //enemy.checkWorldBounds = true;
 
     // Modify the entity stats based on enemy preset
     for (var i in entity.primaryWeapons) {
@@ -315,7 +322,6 @@ GameSystem.enemy = function(mission, preset, spawnX, spawnY) {
         for (var i in GameSystem.data.enemies.presets) {
             if (preset == GameSystem.data.enemies.presets[i].name) {
                 enemyPreset = GameSystem.data.enemies.presets[i];
-                console.log(enemyPreset);
                 break;
             }
         }
@@ -325,7 +331,6 @@ GameSystem.enemy = function(mission, preset, spawnX, spawnY) {
     if (typeof enemyPreset == "undefined") {
         var random = GameSystem.game.rnd.integerInRange(0, GameSystem.data.enemies.presets.length - 1);
         enemyPreset = GameSystem.data.enemies.presets[random];
-        console.log(enemyPreset);
     }
     
     enemy.scale.setTo(enemyPreset.scale, enemyPreset.scale);
@@ -381,6 +386,79 @@ GameSystem.entity.prototype.fireSecondary = function(sprite) {
     }
 }
 
+// Move a ship
+GameSystem.entity.prototype.move = function(sprite, direction) {
+    switch (direction) {
+        case "forward":
+            if (sprite.body.velocity.y > -sprite["Maximum Vertical Speed"]) {
+                var newSpeed = sprite.body.velocity.y + -sprite["Vertical Acceleration"];
+                if (newSpeed < -sprite["Maximum Vertical Speed"]) {
+                    newSpeed = -sprite["Maximum Vertical Speed"];
+                }
+                sprite.body.velocity.y = newSpeed;
+            }
+            break;
+        case "backward":
+            if (sprite.body.velocity.y < sprite["Maximum Vertical Speed"]) {
+                var newSpeed = sprite.body.velocity.y + sprite["Vertical Acceleration"];
+                if (newSpeed > sprite["Maximum Vertical Speed"]) {
+                    newSpeed = sprite["Maximum Vertical Speed"];
+                }
+                sprite.body.velocity.y = newSpeed;
+            }
+            break;
+        case "stopVertical":
+            if (sprite.body.velocity.y > 0) {
+                var newSpeed = sprite.body.velocity.y + -sprite["Vertical Acceleration"] * GameSystem.data.settings.brakeRatio;
+                if (newSpeed < 0) {
+                    newSpeed = 0;
+                }
+                sprite.body.velocity.y = newSpeed;
+            } else if (sprite.body.velocity.y < 0) {
+                var newSpeed = sprite.body.velocity.y + sprite["Vertical Acceleration"] * GameSystem.data.settings.brakeRatio;
+                if (newSpeed > 0) {
+                    newSpeed = 0;
+                }
+                sprite.body.velocity.y = newSpeed;
+            }
+            break;
+        case "left":
+            if (sprite.body.velocity.x > -sprite["Maximum Horizontal Speed"]) {
+                var newSpeed = sprite.body.velocity.x + -sprite["Horizontal Acceleration"];
+                if (newSpeed < -sprite["Maximum Horizontal Speed"]) {
+                    newSpeed = -sprite["Maximum Horizontal Speed"];
+                }
+                sprite.body.velocity.x = newSpeed;
+            }
+            break;
+        case "right":
+            if (sprite.body.velocity.x < sprite["Maximum Horizontal Speed"]) {
+                var newSpeed = sprite.body.velocity.x + sprite["Horizontal Acceleration"];
+                if (newSpeed > sprite["Maximum Horizontal Speed"]) {
+                    newSpeed = sprite["Maximum Horizontal Speed"];
+                }
+                sprite.body.velocity.x = newSpeed;
+            }
+            break;
+        case "stopHorizontal":
+            if (sprite.body.velocity.x > 0) {
+                var newSpeed = sprite.body.velocity.x + -sprite["Horizontal Acceleration"] * GameSystem.data.settings.brakeRatio;
+                if (newSpeed < 0) {
+                    newSpeed = 0;
+                }
+                sprite.body.velocity.x = newSpeed;
+            } else if (sprite.body.velocity.x < 0) {
+                var newSpeed = sprite.body.velocity.x + sprite["Horizontal Acceleration"] * GameSystem.data.settings.brakeRatio;
+                if (newSpeed > 0) {
+                    newSpeed = 0;
+                }
+                sprite.body.velocity.x = newSpeed;
+            }
+            break;
+    }
+    
+}
+
 // Initialize the player
 GameSystem.initializePlayer = function() {
     GameSystem.playerEntity = new GameSystem.entity({
@@ -401,6 +479,15 @@ GameSystem.initializePlayer = function() {
     // Add animation to player's ship
     GameSystem.playerSprite.animations.add('fly', [0, 1], 20, true);
     GameSystem.playerSprite.play('fly');
+
+    GameSystem.playerSprite["Maximum Vertical Speed"] = GameSystem.normalize(GameSystem.playerEntity.engine.stats["Maximum Vertical Speed"], GameSystem.data.settings.engineSpeedLowerBound, GameSystem.data.settings.engineSpeedUpperBound, 1, GameSystem.data.settings.statUpperBound);
+    GameSystem.playerSprite["Vertical Acceleration"] = GameSystem.normalize(GameSystem.playerEntity.engine.stats["Vertical Acceleration"], GameSystem.data.settings.engineAccelerationLowerBound, GameSystem.data.settings.engineAccelerationUpperBound, 1, GameSystem.data.settings.statUpperBound);
+    GameSystem.playerSprite["Maximum Horizontal Speed"] = GameSystem.normalize(GameSystem.playerEntity.engine.stats["Maximum Horizontal Speed"], GameSystem.data.settings.engineSpeedLowerBound, GameSystem.data.settings.engineSpeedUpperBound, 1, GameSystem.data.settings.statUpperBound);
+    GameSystem.playerSprite["Horizontal Acceleration"] = GameSystem.normalize(GameSystem.playerEntity.engine.stats["Horizontal Acceleration"], GameSystem.data.settings.engineAccelerationLowerBound, GameSystem.data.settings.engineAccelerationUpperBound, 1, GameSystem.data.settings.statUpperBound);
+    //console.log("Maximum Vertical Speed " + GameSystem.playerSprite["Maximum Vertical Speed"]);
+    //console.log("Vertical Acceleration " + GameSystem.playerSprite["Vertical Acceleration"]);
+    //console.log("Maximum Horizontal Speed " + GameSystem.playerSprite["Maximum Horizontal Speed"]);
+    //console.log("Horizontal Acceleration " + GameSystem.playerSprite["Horizontal Acceleration"]);
 }
 
 // Make the enemies do stuff
@@ -454,8 +541,8 @@ GameSystem.projectile = function(weapon, ship) {
 
     projectile["Shield Damage"] = weapon.stats["Shield Damage"];
     projectile["Armor Damage"] = weapon.stats["Armor Damage"];
-    projectile["Maximum Speed"] = GameSystem.normalize(weapon.stats["Projectile Speed"], GameSystem.data.settings.speedLowerBound, GameSystem.data.settings.speedUpperBound, 1, GameSystem.data.settings.statUpperBound);
-    projectile.acceleration = GameSystem.normalize(weapon.stats.Acceleration, GameSystem.data.settings.accelerationLowerBound, GameSystem.data.settings.accelerationUpperBound, 1, GameSystem.data.settings.statUpperBound);
+    projectile["Maximum Speed"] = GameSystem.normalize(weapon.stats["Projectile Speed"], GameSystem.data.settings.projectileSpeedLowerBound, GameSystem.data.settings.projectileSpeedUpperBound, 1, GameSystem.data.settings.statUpperBound);
+    projectile.acceleration = GameSystem.normalize(weapon.stats.Acceleration, GameSystem.data.settings.projectileAccelerationLowerBound, GameSystem.data.settings.projectileAccelerationUpperBound, 1, GameSystem.data.settings.statUpperBound);
 
     // Remove magic number!!!
     projectile.size = GameSystem.normalize(weapon.stats["Projectile Size"], 0, 100, 0, GameSystem.data.settings.statUpperBound) * 0.05;

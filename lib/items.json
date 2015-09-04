@@ -139,7 +139,7 @@
 			{
 				"type": "basic",
 				"name": "Basic Shield",
-				"sprite": "",
+				"sprite": "laser",
 				"stats": {
 					"Capacity": 30,
 					"Recharge Rate": 40,
@@ -163,12 +163,12 @@
 			{
 				"type": "basic",
 				"name": "Basic Engine",
-				"sprite": "",
+				"sprite": "laser",
 				"stats": {
 					"Vertical Acceleration": 30,
-					"Veritcal Maximum Speed": 30,
+					"Maximum Vertical Speed": 30,
 					"Horizontal Acceleration": 30,
-					"Horizontal Maximum Speed": 30,
+					"Maximum Horizontal Speed": 30,
 					"Efficiency": 30
 				}
 			}
@@ -188,7 +188,7 @@
 			{
 				"type": "basic",
 				"name": "Basic Generator",
-				"sprite": "",
+				"sprite": "laser",
 				"stats": {
 					"Capacity": 30,
 					"Recharge Rate": 30,
@@ -210,7 +210,7 @@
 			{
 				"type": "rateOfFireBoost",
 				"name": "Rate of Fire Booster",
-				"sprite": "",
+				"sprite": "laser",
 				"stats": {
 					"Duration": 30,
 					"Bonus": 30

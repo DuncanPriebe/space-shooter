@@ -128,16 +128,26 @@
 				"efficiency": 10
 			},
 			"shields": {
-				
+				"Capacity": 0,
+				"Recharge Rate": 0,
+				"Recharge Delay": 0,
+				"Efficiency": 0
 			},
 			"engines": {
-				
+				"Vertical Acceleration": 0,
+				"Veritcal Maximum Speed": 0,
+				"Horizontal Acceleration": 0,
+				"Horizontal Maximum Speed": 0,
+				"Efficiency": 0
 			},
 			"generators": {
-				
+				"Capacity": 0,
+				"Recharge Rate": 0,
+				"Recharge Delay": 0
 			},
 			"modules": {
-				
+				"Duration": 0,
+				"Bonus": 0
 			}
 		},
 		"currency": {
@@ -265,16 +275,26 @@
 				"efficiency": 0
 			},
 			"shields": {
-				
+				"Capacity": 0,
+				"Recharge Rate": 0,
+				"Recharge Delay": 0,
+				"Efficiency": 0
 			},
 			"engines": {
-				
+				"Vertical Acceleration": 0,
+				"Veritcal Maximum Speed": 0,
+				"Horizontal Acceleration": 0,
+				"Horizontal Maximum Speed": 0,
+				"Efficiency": 0
 			},
 			"generators": {
-				
+				"Capacity": 0,
+				"Recharge Rate": 0,
+				"Recharge Delay": 0
 			},
 			"modules": {
-				
+				"Duration": 0,
+				"Bonus": 0
 			}
 		},
 		"currency": {
@@ -382,16 +402,26 @@
 				"efficiency": 0
 			},
 			"shields": {
-				
+				"Capacity": 0,
+				"Recharge Rate": 0,
+				"Recharge Delay": 0,
+				"Efficiency": 0
 			},
 			"engines": {
-				
+				"Vertical Acceleration": 0,
+				"Veritcal Maximum Speed": 0,
+				"Horizontal Acceleration": 0,
+				"Horizontal Maximum Speed": 0,
+				"Efficiency": 0
 			},
 			"generators": {
-				
+				"Capacity": 0,
+				"Recharge Rate": 0,
+				"Recharge Delay": 0
 			},
 			"modules": {
-				
+				"Duration": 0,
+				"Bonus": 0
 			}
 		},
 		"currency": {
@@ -484,16 +514,26 @@
 				"efficiency": 0
 			},
 			"shields": {
-				
+				"Capacity": 0,
+				"Recharge Rate": 0,
+				"Recharge Delay": 0,
+				"Efficiency": 0
 			},
 			"engines": {
-				
+				"Vertical Acceleration": 0,
+				"Veritcal Maximum Speed": 0,
+				"Horizontal Acceleration": 0,
+				"Horizontal Maximum Speed": 0,
+				"Efficiency": 0
 			},
 			"generators": {
-				
+				"Capacity": 0,
+				"Recharge Rate": 0,
+				"Recharge Delay": 0
 			},
 			"modules": {
-				
+				"Duration": 0,
+				"Bonus": 0
 			}
 		},
 		"currency": {
@@ -605,16 +645,26 @@
 				"efficiency": 0
 			},
 			"shields": {
-				
+				"Capacity": 0,
+				"Recharge Rate": 0,
+				"Recharge Delay": 0,
+				"Efficiency": 0
 			},
 			"engines": {
-				
+				"Vertical Acceleration": 0,
+				"Veritcal Maximum Speed": 0,
+				"Horizontal Acceleration": 0,
+				"Horizontal Maximum Speed": 0,
+				"Efficiency": 0
 			},
 			"generators": {
-				
+				"Capacity": 0,
+				"Recharge Rate": 0,
+				"Recharge Delay": 0
 			},
 			"modules": {
-				
+				"Duration": 0,
+				"Bonus": 0
 			}
 		},
 		"currency": {
