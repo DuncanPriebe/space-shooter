@@ -1,4 +1,6 @@
 {
+	"bossDropChance": 100,
+	"enemyDropChance": 0.005,
 	"levelMultiplier": 0.2,
 	"minValue": 1000,
 	"ships": {

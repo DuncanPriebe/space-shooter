@@ -1,0 +1,82 @@
+{
+	"presets": [
+		{
+			"name": "killEnemies",
+			"prefix": "Destroy",
+			"suffix": "Fleet",
+			"minEnemyCount": 100,
+			"enemyCountMultiplier": 1,
+			"maxEnemyDelay": 1,
+			"enemyDelayMultiplier": 0.0075,
+			"minBossCount": 0,
+			"bossCountMultiplier": 0,
+			"minDuration": 0,
+			"durationMultiplier": 0
+		},
+		{
+			"name": "killBosses",
+			"prefix": "Assassinate",
+			"suffix": "General",
+			"minEnemyCount": 0,
+			"enemyCountMultiplier": 0,
+			"maxEnemyDelay": 1,
+			"enemyDelayMultiplier": 0.005,
+			"minBossCount": 1,
+			"bossCountMultiplier": 0.02,
+			"minDuration": 0,
+			"durationMultiplier": 0
+		},
+		{
+			"name": "surviveEnemies",
+			"prefix": "Escape",
+			"suffix": "Battalion",
+			"minEnemyCount": 100,
+			"enemyCountMultiplier": 1,
+			"maxEnemyDelay": 1,
+			"enemyDelayMultiplier": 0.0075,
+			"minBossCount": 0,
+			"bossCountMultiplier": 0,
+			"minDuration": 0,
+			"durationMultiplier": 0
+		},
+		{
+			"name": "surviveDuration",
+			"prefix": "Survive",
+			"suffix": "Until Rescued",
+			"minEnemyCount": 0,
+			"enemyCountMultiplier": 0,
+			"maxEnemyDelay": 1,
+			"enemyDelayMultiplier": 0.005,
+			"minBossCount": 0,
+			"bossCountMultiplier": 0,
+			"minDuration": 60,
+			"durationMultiplier": 1
+		},
+		{
+			"name": "escort",
+			"prefix": "Escort",
+			"suffix": "Vessel",
+			"minEnemyCount": 0,
+			"enemyCountMultiplier": 0,
+			"maxEnemyDelay": 1,
+			"enemyDelayMultiplier": 0.005,
+			"minBossCount": 0,
+			"bossCountMultiplier": 0,
+			"minDuration": 60,
+			"durationMultiplier": 1
+		},
+		{
+			"name": "rescue",
+			"prefix": "Rescue",
+			"suffix": "Prisoners",
+			"minEnemyCount": 0,
+			"enemyCountMultiplier": 0,
+			"maxEnemyDelay": 1,
+			"enemyDelayMultiplier": 0.005,
+			"minBossCount": 0,
+			"bossCountMultiplier": 0,
+			"minDuration": 60,
+			"durationMultiplier": 1	
+		}
+	]
+}

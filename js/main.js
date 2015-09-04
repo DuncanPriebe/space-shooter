@@ -98,42 +98,239 @@ GameSystem.world = function(index) {
 }
 
 // Create a mission
-GameSystem.mission = function(world) {
-    var found = false;
-    var mission = world.mission;
-    mission.level = world.level;
-    for (var i in GameSystem.data.factions) {
-        if (GameSystem.data.factions[i].key == mission.faction) {
-            mission.faction = GameSystem.data.factions[i];
-            found = true;
+GameSystem.mission = function(world, randomFlag) {
+    var mission = {};
+    var missionPreset;
+
+    // We're loading the mission from the world data
+    if (!randomFlag) {
+        mission = JSON.parse(JSON.stringify(world.mission));
+        mission.level = world.level;
+        mission.faction = world.faction;
+        for (var i in GameSystem.data.missions.presets) {
+            if (mission.preset == GameSystem.data.missions.presets[i].name) {
+                missionPreset = GameSystem.data.missions.presets[i];
+                break;
+            }
         }
+    } else {
+        // Choose a mission type at random
+        mission.level = world.level;
+        mission.faction = world.faction;
+        var random = GameSystem.game.rnd.integerInRange(0, GameSystem.data.missions.presets.length - 1);
+        missionPreset = GameSystem.data.missions.presets[random];
     }
-    if (!found) {
-        mission.faction = GameSystem.data.factions[0];
+    
+    // Check what type of mission we're playing and load settings
+    switch (missionPreset.name) {
+        case "killEnemies":
+            mission.checkEnemiesSpawned = false;
+            mission.checkEnemiesKilled = true;
+            mission.checkBossesKilled = false;
+            mission.checkDuration = false;
+            mission.checkAlliesKilled = false;
+            break;
+        case "killBosses":
+            mission.checkEnemiesSpawned = false;
+            mission.checkEnemiesKilled = false;
+            mission.checkBossesKilled = true;
+            mission.checkDuration = false;
+            mission.checkAlliesKilled = false;
+            break;
+        case "surviveEnemies":
+            mission.checkEnemyCount = false;
+            mission.checkEnemiesKilled = false;
+            mission.checkBossesKilled = false;
+            mission.checkDuration = true;
+            mission.checkAlliesKilled = false;
+            break;
+        case "surviveDuration":
+            mission.checkEnemyCount = false;
+            mission.checkEnemiesKilled = false;
+            mission.checkBossesKilled = false;
+            mission.checkDuration = true;
+            mission.checkAlliesKilled = false;
+            break;
+        case "escort":
+            mission.checkEnemyCount = true;
+            mission.checkEnemiesKilled = false;
+            mission.checkBossesKilled = false;
+            mission.checkDuration = true;
+            mission.checkAlliesKilled = true;
+            break;
+        case "rescue":
+            mission.checkEnemyCount = true;
+            mission.checkEnemiesKilled = false;
+            mission.checkBossesKilled = false;
+            mission.checkDuration = false;
+            mission.checkAlliesKilled = true;
+            break;
     }
+
+    // Set the index to the first enemy
+    mission.enemiesSpawned = 0;
+    mission.enemiesKilled = 0;
+    mission.bossesSpawned = 0;
+    mission.bossesKilled = 0;
+
+    // Set stats based on mission type
+    mission.enemiesRemaning = GameSystem.game.rnd.integerInRange(missionPreset.minEnemyCount, missionPreset.enemyCountMultiplier * mission.level);
+    mission.minEnemyDelay = missionPreset.enemyDelayMultiplier * mission.level * 1000;
+    mission.maxEnemyDelay = missionPreset.maxEnemyDelay * 1000;
+    mission.bossesRemaining = GameSystem.game.rnd.integerInRange(missionPreset.minBossCount, missionPreset.bossCountMultiplier * mission.level);
+    mission.duration = GameSystem.game.rnd.integerInRange(missionPreset.minDuration, missionPreset.durationMultiplier * mission.level);
+
+    // Set mission Name
+    if (typeof mission.name == "undefined") {
+        mission.name = missionPreset.prefix + " " + mission.faction.name + " " + missionPreset.suffix;
+    }
+
+    // Set mission timer
+    mission.time = GameSystem.game.time.now + mission.duration * 1000;
+
+    // Set cluster flag and delay
+    mission.clusterFlag = false;
+    mission.clusterTime = 0;
+    mission.clusterEnemiesRemaining = 0;
+
+    // Set first enemy delay
+    mission.enemyTime = GameSystem.game.time.now + mission.maxEnemyDelay;
+    
     return mission;
 }
 
-// Create a vendor
-GameSystem.vendor = function(world, itemType) {
-    var vendor = {};
-    vendor.faction = world.faction;
-    vendor.level = world.level;
-    vendor.type = itemType;
+// Create enemies based on mission
+GameSystem.enemyFactory = function(mission) {
+    // Check if the mission is over
+    if (mission.checkEnemyCount) {  // Check if we're out of enemies
+        if (mission.enemiesSpawned > mission.enemiesRemaning) {
+            console.log("Mission is out of enemies.");
+        }
+    } 
+    if (mission.checkEnemiesKilled) { // Check if enemies are dead
+        if (mission.enemiesKilled >= mission.enemiesRemaning) {
+            console.log("All enemies are dead.");
+        }
+    } 
+    if (mission.checkBossesKilled) { // Check if boss(es) are dead
+        if (mission.bossesKilled >= mission.bossesRemaning) {
+            console.log("All bosses are dead.");
+        }
+    } 
+    if (mission.checkDuration) { // Check if time has run out
+        if (Game.time.now > mission.time) {
+            console.log("Mission timer has expired.");
+        }
+    } 
+    // Create an enemy, cluster, or boss
+    // Now check if we're in the middle of spawning a cluster
+    if (mission.clusterFlag) {
+        // Need to somehow load the same enemy for the entire cluster...
 
-    // Choose a name at random
-    var random = GameSystem.game.rnd.integerInRange(0, vendor.faction.firstNames.length - 1);
-    var firstName = vendor.faction.firstNames[random];
-    random = GameSystem.game.rnd.integerInRange(0, vendor.faction.lastNames.length - 1);
-    var lastName = vendor.faction.lastNames[random];
+        // Choose a spawn location
+        var spawnX = GameSystem.game.rnd.integerInRange(0, GameSystem.game.world.width);
+        var spawnY = 50;
 
-    vendor.name = firstName + " " + lastName;
+        //var projectile = GameSystem.projectiles.create(ship.x, ship.y, weapon.sprite);
 
-    vendor.items = [];
-    for (var i = 0; i < 5; i++) {
-        vendor.items.push(new GameSystem.item(vendor, vendor.type));
+        //var clusterEnemy = GameSystem.enemy(mission, "miniboss");
+
+        //mission.clusterEnemy = GameSystem.enemies.create(spawnX, spawnY, enemy.sprite);
+        var miniBoss = GameSystem.enemy(mission, "miniBoss", spawnX, spawnY);
+
+        
+
+        mission.clusterTime = GameSystem.game.time.now + mission.clusterDelay;
+        mission.clusterEnemiesRemaning--;
+        if (mission.clusterEnemiesRemaining == 0) {
+            mission.clusterFlag = false;
+
+            // Reset mission enemy timer
+            mission.enemyTime = GameSystem.game.time.now + GameSystem.game.rnd.integerInRange(mission.minEnemyDelay, mission.maxEnemyDelay);
+        }
+    } else if (GameSystem.game.time.now > mission.enemyTime) { // Otherwise check if it's time to make an enemy
+        var enemyType;
+        var random = GameSystem.game.rnd.integerInRange(0, 100);
+        for (var i in GameSystem.data.enemies.presets) {
+            if (random <= GameSystem.data.enemies.presets[i].spawnChance) {
+                enemyType = GameSystem.data.enemies.presets[i];
+                break;
+            }
+        }
+
+        // Check if we have a cluster of enemies and determine cluster size and delay
+        var random = GameSystem.game.rnd.integerInRange(0, 100);
+        if (random <= enemyType.clusterChance) {
+            mission.clusterFlag = true;
+            mission.clusterEnemiesRemaining = GameSystem.game.rnd.integerInRange(enemyType.minClusterSize, enemyType.clusterSizeMultiplier * mission.level);
+            mission.clusterDelay = enemyType.clusterDelay;
+        }
+
+        // Choose a spawn location
+        var spawnX = GameSystem.game.rnd.integerInRange(0, GameSystem.game.world.width);
+        var spawnY = 50;
+
+        // Spawn the enemy
+        var enemy = GameSystem.enemy(mission, "miniBoss", spawnX, spawnY);
+        console.log(enemy);
+
+        // Track number of bosses or enemies spawned
+        if (enemyType.name == "boss") {
+            mission.bossesSpawned++;    
+        } else {
+            mission.enemiesSpawned++;
+        }
+
+        // Reset mission enemy timer
+        mission.enemyTime = GameSystem.game.time.now + GameSystem.game.rnd.integerInRange(mission.minEnemyDelay, mission.maxEnemyDelay);
     }
-    return vendor;
+}
+
+// Create an enemy
+GameSystem.enemy = function(mission, preset, spawnX, spawnY) {
+    // Store the preset
+    var enemyPreset;
+
+    // Create the entity based on the mission
+    var entity = new GameSystem.entity(mission);
+
+    var enemy = GameSystem.enemies.create(spawnX, spawnY, entity.ship.sprite);
+    var tintColor = "0x" + entity.ship.tintColor;
+    enemy.entity = entity;
+    enemy.angle = 180;
+    enemy.tint = tintColor;
+    GameSystem.game.physics.enable(enemy, GameSystem.game.Physics);
+    enemy.anchor.setTo(0.5, 0.5);
+    enemy.outOfBoundsKill = true;
+    enemy.checkWorldBounds = true;
+
+    // Modify the entity stats based on enemy preset
+    for (var i in entity.primaryWeapons) {
+        entity.primaryWeapons[i].stats["Shield Damage"] *= GameSystem.data.settings.enemyDamageMultiplier;
+        entity.primaryWeapons[i].stats["Armor Damage"] *= GameSystem.data.settings.enemyDamageMultiplier;
+    }
+
+    // Load enemy preset or choose one at random
+    if (typeof preset != "undefined") {
+        for (var i in GameSystem.data.enemies.presets) {
+            if (preset == GameSystem.data.enemies.presets[i].name) {
+                enemyPreset = GameSystem.data.enemies.presets[i];
+                console.log(enemyPreset);
+                break;
+            }
+        }
+    }
+
+    // If we didnt' find one
+    if (typeof enemyPreset == "undefined") {
+        var random = GameSystem.game.rnd.integerInRange(0, GameSystem.data.enemies.presets.length - 1);
+        enemyPreset = GameSystem.data.enemies.presets[random];
+        console.log(enemyPreset);
+    }
+    
+    enemy.scale.setTo(enemyPreset.scale, enemyPreset.scale);
+    
+    return enemy;
 }
 
 // Create an entity with weapons, shield, etc.
@@ -157,30 +354,30 @@ GameSystem.entity = function(source, rarity) {
 }
 
 // Fire primary weapons
-GameSystem.entity.prototype.firePrimary = function(entity) {
+GameSystem.entity.prototype.firePrimary = function(sprite) {
     // First check if we've fired secondary weapons recently
-    if (typeof entity.weaponSecondaryTime == "undefined" || GameSystem.game.time.now > entity.weaponSecondaryTime) {
+    if (typeof this.weaponSecondaryTime == "undefined" || GameSystem.game.time.now > this.weaponSecondaryTime) {
         // Attempt to fire all primary weapons
         for (var i in this.primaryWeapons) {
             if (GameSystem.checkProjectileReady(this.primaryWeapons[i])) {
-                GameSystem.projectile(this.primaryWeapons[i], entity);
+                GameSystem.projectile(this.primaryWeapons[i], sprite);
             }
         }
-        entity.weaponSecondaryTime = GameSystem.game.time.now + GameSystem.data.settings.firingDelay;
+        this.weaponPrimaryTime = GameSystem.game.time.now + GameSystem.data.settings.firingDelay;
     }
 }
 
 // Fire secondary weapons
-GameSystem.entity.prototype.fireSecondary = function(entity) {
+GameSystem.entity.prototype.fireSecondary = function(sprite) {
     // First check if we've fired secondary weapons recently
-    if (typeof entity.weaponPrimaryTime == "undefined" || GameSystem.game.time.now > entity.weaponPrimaryTime) {
+    if (typeof this.weaponPrimaryTime == "undefined" || GameSystem.game.time.now > this.weaponPrimaryTime) {
         // Attempt to fire all secondary weapons
         for (var i in this.secondaryWeapons) {
             if (GameSystem.checkProjectileReady(this.secondaryWeapons[i])) {
-                GameSystem.projectile(this.secondaryWeapons[i], entity);
+                GameSystem.projectile(this.secondaryWeapons[i], sprite);
             }
         }
-        entity.weaponSecondaryTime = GameSystem.game.time.now + GameSystem.data.settings.firingDelay;
+        this.weaponSecondaryTime = GameSystem.game.time.now + GameSystem.data.settings.firingDelay;
     }
 }
 
@@ -204,42 +401,6 @@ GameSystem.initializePlayer = function() {
     // Add animation to player's ship
     GameSystem.playerSprite.animations.add('fly', [0, 1], 20, true);
     GameSystem.playerSprite.play('fly');
-}
-
-// Create enemies based on mission
-GameSystem.enemyFactory = function(mission) {
-
-}
-
-// Create an enemy
-GameSystem.enemy = function(mission, type) {
-    // Create the entity based on the mission
-    var entity = new GameSystem.entity(mission);
-
-    var enemy = GameSystem.enemies.create(GameSystem.game.world.width / 2, 60, entity.ship.sprite);
-    var tintColor = "0x" + entity.ship.tintColor;
-    enemy.entity = entity;
-    enemy.angle = 180;
-    enemy.tint = tintColor;
-    GameSystem.game.physics.enable(enemy, GameSystem.game.Physics);
-    enemy.anchor.setTo(0.5, 0.5);
-    enemy.outOfBoundsKill = true;
-    enemy.checkWorldBounds = true;
-
-    // Modify the entity stats based on enemy type
-    for (var i in entity.primaryWeapons) {
-        entity.primaryWeapons[i].stats["Shield Damage"] *= GameSystem.data.settings.enemyDamageMultiplier;
-        entity.primaryWeapons[i].stats["Armor Damage"] *= GameSystem.data.settings.enemyDamageMultiplier;
-    }
-    switch (type) {
-        case "normal":
-            enemy.scale.setTo(0.5, 0.5);
-            break;
-        case "miniBoss":
-            enemy.scale.setTo(2, 2);
-            break;
-    }
-    return enemy;
 }
 
 // Make the enemies do stuff
@@ -423,6 +584,28 @@ GameSystem.getFront = function(sprite) {
     var y = sprite.y + Math.sin(sprite.rotation - (90 * Math.PI / 180)) * sprite.height / 2;
     var front = new Phaser.Point(x, y);
     return front;
+}
+
+// Create a vendor
+GameSystem.vendor = function(world, itemType) {
+    var vendor = {};
+    vendor.faction = world.faction;
+    vendor.level = world.level;
+    vendor.type = itemType;
+
+    // Choose a name at random
+    var random = GameSystem.game.rnd.integerInRange(0, vendor.faction.firstNames.length - 1);
+    var firstName = vendor.faction.firstNames[random];
+    random = GameSystem.game.rnd.integerInRange(0, vendor.faction.lastNames.length - 1);
+    var lastName = vendor.faction.lastNames[random];
+
+    vendor.name = firstName + " " + lastName;
+
+    vendor.items = [];
+    for (var i = 0; i < 5; i++) {
+        vendor.items.push(new GameSystem.item(vendor, vendor.type));
+    }
+    return vendor;
 }
 
 // Create an item
@@ -697,8 +880,9 @@ GameSystem.node.prototype.update = function() {
     switch (this.type) {
         case "vendor": 
             var font = GameSystem.data.menu.fonts.help;
-            font.fill = "#" + this.pointer.tintColor;
-            GameSystem.game.text.push(GameSystem.game.add.text(GameSystem.data.menu.fonts.help.xPosition, GameSystem.data.menu.fonts.help.xPosition, this.pointer.type.toUpperCase() + " VENDOR", font));
+            //font.fill = "#" + this.pointer.tintColor;
+            font.fill = "#" + this.pointer.faction.color;
+            GameSystem.game.text.push(GameSystem.game.add.text(GameSystem.data.menu.fonts.help.xPosition, GameSystem.data.menu.fonts.help.yPosition, this.pointer.type.toUpperCase() + " VENDOR", font));
             break;
         case "item":
         case "ship":
@@ -965,6 +1149,17 @@ GameSystem.storage.erase = function() {
         console.log("Web storage not supported. No need to erase data.");
     }
 }
+
+// Copy an object
+GameSystem.clone = function (original, context, key) {
+    for (key in context)
+        if (context.hasOwnProperty(key))
+            if (Object.prototype.toString.call(context[key]) === '[object Object]')
+                original[key] = GameSystem.clone(original[key] || {}, context[key]);
+            else
+                original[key] = context[key];
+    return original;
+};
 
 // Convert a value to money
 GameSystem.monify = function(n, c, d, t) {

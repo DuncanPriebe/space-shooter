@@ -2,8 +2,6 @@
 
 var dockState = {
     init: function(worldIndex) {
-        // Load current dock, otherwise load first dock
-        //world.faction = GameSystem.getWorldFaction(world);
         GameSystem.currentWorld = new GameSystem.world(0);
         GameSystem.currentWorld.mission = GameSystem.mission(GameSystem.currentWorld);
     },
@@ -19,6 +17,10 @@ var dockState = {
         // Create menu structure
         var mainMenu = new GameSystem.node("SPACE DOCK", {}, "root");
             mainMenu.addChild(GameSystem.currentWorld.mission.name.toUpperCase(), GameSystem.currentWorld.mission, "mission");
+            var missionMenu = mainMenu.addChild("OPTIONAL MISSIONS");
+                var mission = GameSystem.mission(GameSystem.currentWorld, true);
+                missionMenu.addChild(mission.name.toUpperCase(), mission, "mission");
+
 
             var vendorMenu = mainMenu.addChild("VENDORS");
                 var weaponVendor = new GameSystem.vendor(GameSystem.currentWorld, "weapons");

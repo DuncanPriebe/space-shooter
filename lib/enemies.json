@@ -1,0 +1,88 @@
+{
+	"presets": [
+		{
+			"name": "boss",
+			"spawnChance": 1,
+			"damageMultiplier": 0.4,
+			"healthMultiplier": 10,
+			"scale": 2,
+			"clusterChance": 0,
+			"minClusterSize": 0,
+			"clusterSizeMultiplier": 0,
+			"clusterDelay": 0,
+			"AI": "boss"
+		},
+		{
+			"name": "miniBoss",
+			"spawnChance": 3,
+			"damageMultiplier": 0.3,
+			"healthMultiplier": 5,
+			"scale": 1.5,
+			"clusterChance": 0,
+			"minClusterSize": 0,
+			"clusterSizeMultiplier": 0,
+			"clusterDelay": 0,
+			"AI": "boss"
+		},
+		{
+			"name": "freighter",
+			"spawnChance": 6,
+			"damageMultiplier": 0.1,
+			"healthMultiplier": 7.5,
+			"scale": 1.75,
+			"clusterChance": 0,
+			"minClusterSize": 0,
+			"clusterSizeMultiplier": 0,
+			"clusterDelay": 0,
+			"AI": "flyby"
+		},
+		{
+			"name": "bomber",
+			"spawnChance": 20,
+			"damageMultiplier": 0.75,
+			"healthMultiplier": 2,
+			"scale": 1.25,
+			"clusterChance": 25,
+			"minClusterSize": 2,
+			"clusterSizeMultiplier": 0.03,
+			"clusterDelay": 500,
+			"AI": "shootOnce"
+		},
+		{
+			"name": "kamikaze",
+			"spawnChance": 40,
+			"damageMultiplier": 0.15,
+			"healthMultiplier": 0.75,
+			"scale": 0.75,
+			"clusterChance": 25,
+			"minClusterSize": 2,
+			"clusterSizeMultiplier": 0.03,
+			"clusterDelay": 350,
+			"AI": "kamikaze"
+		},
+		{
+			"name": "fighter",
+			"spawnChance": 60,
+			"damageMultiplier": 0.2,
+			"healthMultiplier": 1.5,
+			"scale": 1,
+			"clusterChance": 25,
+			"minClusterSize": 2,
+			"clusterSizeMultiplier": 0.03,
+			"clusterDelay": 250,
+			"AI": "shootLots"
+		},
+		{
+			"name": "scout",
+			"spawnChance": 100,
+			"damageMultiplier": 0.1,
+			"healthMultiplier": 0.5,
+			"scale": 0.5,
+			"clusterChance": 75,
+			"minClusterSize": 3,
+			"clusterSizeMultiplier": 0.07,
+			"clusterDelay": 150,
+			"AI": "flyby"
+		}
+	]
+}

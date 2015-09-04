@@ -9,7 +9,7 @@
 	"imagePath": "img/",
 	"startingMoney": 10000,
 	"enemyDamageMultiplier": 0.1,
-	"firingDelay": 50,
+	"firingDelay": 100,
 	"statUpperBound": 200,
 	"rateOfFireUpperBound": 2000,
 	"rateOfFireLowerBound": 35,

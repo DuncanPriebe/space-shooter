@@ -7,7 +7,7 @@ var playState = {
             console.log("Mission data is corrupt or doesn't exist.");
             GameSystem.game.state.start("dock", true, false, GameSystem.playerEntity.worldIndex);
         } else {
-            GameSystem.game.mission = mission;
+            GameSystem.currentMission = mission;
         }
     },
 
@@ -24,13 +24,14 @@ var playState = {
         //player = zyrian; // Gotta figure out how to organize game/player data...
 
         // Load and setup mission
-        GameSystem.game.stage.backgroundColor = GameSystem.game.mission.backgroundColor; // Set background color
+        //GameSystem.game.stage.backgroundColor = GameSystem.game.mission.backgroundColor; // Set background color
+
         //missionTime = GameObject.time.now + mission.timer; // Reset mission Create
 
-        // timer enemies for testing
+        // create enemies for testing
         //var enemy = GameSystem.enemy(GameSystem.game.mission, "normal");
-        var miniBoss = GameSystem.enemy(GameSystem.game.mission, "miniBoss");
-        miniBoss.angle = 185;
+        //var miniBoss = GameSystem.enemy(GameSystem.game.mission, "miniBoss");
+        //miniBoss.angle = 185;
 
         GameSystem.initializePlayer();
 
@@ -122,6 +123,8 @@ var playState = {
         if (escapeButton.isDown) {
             GameSystem.game.state.start('dock', true, false, GameSystem.playerEntity.worldIndex);
         }
+
+        GameSystem.enemyFactory(GameSystem.currentMission);
 
         GameSystem.updateEnemies();
 
