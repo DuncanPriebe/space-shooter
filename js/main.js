@@ -513,9 +513,57 @@ GameSystem.initializePlayer = function() {
 
 // Make the enemies do stuff
 GameSystem.updateAI = function(enemy) {
-    enemy.entity.firePrimary(enemy);
+    
+    // Set scout AI
     if (enemy.preset == "scout") {
+        //enemy.entity.firePrimary(enemy);
         enemy.entity.move(enemy, "forward");
+    }
+
+    // Set fighter AI
+    if (enemy.preset == "fighter") {
+        enemy.entity.firePrimary(enemy);
+        if (GameSystem.playerSprite.body.y - enemy.body.y < GameSystem.game.world.height / 2) {
+            enemy.entity.move(enemy, "backward");
+        } else {
+            enemy.entity.move(enemy, "forward");
+        }
+        if (enemy.body.x > GameSystem.playerSprite.body.x) {
+            enemy.entity.move(enemy, "right");
+        } else {
+            enemy.entity.move(enemy, "left");
+        }
+    }
+
+    // Set kamikazi AI
+    if (enemy.preset == "kamikazi") {
+        enemy.entity.move(enemy, "forward");
+        if (enemy.body.x > GameSystem.playerSprite.body.x) {
+            enemy.entity.move(enemy, "right");
+        } else {
+            enemy.entity.move(enemy, "left");
+        }
+    }
+
+    // Set kamikazi AI
+    if (enemy.preset == "kamikazi") {
+        enemy.entity.move(enemy, "forward");
+        if (enemy.body.x > GameSystem.playerSprite.body.x) {
+            enemy.entity.move(enemy, "right");
+        } else {
+            enemy.entity.move(enemy, "left");
+        }
+    }
+
+    // Set bomber AI
+    if (enemy.preset == "bomber") {
+        enemy.entity.firePrimary(enemy);
+        enemy.entity.move(enemy, "forward");
+    }
+
+    // Set miniBoss and boss AI
+    if (enemy.preset == "miniBoss" && enemy.preset == "boss") {
+        enemy.entity.firePrimary(enemy);
         if (enemy.body.x > GameSystem.playerSprite.body.x) {
             enemy.entity.move(enemy, "right");
         } else {
