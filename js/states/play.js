@@ -34,6 +34,7 @@ var playState = {
         //miniBoss.angle = 185;
 
         GameSystem.initializePlayer();
+        //GameSystem.playerSprite.angle = -25;
 
         // Add controls
         cursors = GameSystem.game.input.keyboard.createCursorKeys();
@@ -156,13 +157,14 @@ var playState = {
         // Make sure player, enemies and projectiles are above background sprites
         GameSystem.playerSprite.bringToTop();
         GameSystem.game.world.bringToTop(GameSystem.enemies);
-        GameSystem.game.world.bringToTop(GameSystem.projectiles);
+        GameSystem.game.world.bringToTop(GameSystem.playerProjectiles);
+        GameSystem.game.world.bringToTop(GameSystem.enemyProjectiles);
         GameSystem.game.world.bringToTop(GameSystem.explosions);
 
         GameSystem.updateProjectiles();
 
-        GameSystem.game.physics.arcade.overlap(GameSystem.projectiles, GameSystem.enemies, GameSystem.enemyCollisionHandler, null, this);
-        GameSystem.game.physics.arcade.overlap(GameSystem.projectiles, GameSystem.playerSprite, GameSystem.playerCollisionHandler, null, this);
+        GameSystem.game.physics.arcade.overlap(GameSystem.playerProjectiles, GameSystem.enemies, GameSystem.enemyCollisionHandler, null, this);
+        GameSystem.game.physics.arcade.overlap(GameSystem.enemyProjectiles, GameSystem.playerSprite, GameSystem.playerCollisionHandler, null, this);
 
         // If we want collisions with physics, use this:
         //GameSystem.game.physics.arcade.collide(GameSystem.projectiles, GameSystem.playerSprite, GameSystem.collisionHandler, null, this);

@@ -59,7 +59,8 @@ GameSystem.initialize = function(content) {
         case "groups": {
             // Create groups (must be done after preloading)
             if (!GameSystem.initializedGroups) {
-                GameSystem.projectiles = GameSystem.game.add.group();
+                GameSystem.playerProjectiles = GameSystem.game.add.group();
+                GameSystem.enemyProjectiles = GameSystem.game.add.group();
                 GameSystem.enemies = GameSystem.game.add.group();
                 GameSystem.explosions = GameSystem.game.add.group();
 
@@ -264,7 +265,7 @@ GameSystem.enemyFactory = function(mission) {
 
         // Check if we have a cluster of enemies and determine cluster size and delay
         var random = GameSystem.game.rnd.integerInRange(0, 100);
-        if (random <= enemyType.clusterChance) {
+        if (random < enemyType.clusterChance) {
             mission.clusterFlag = true;
             mission.clusterEnemiesRemaining = GameSystem.game.rnd.integerInRange(enemyType.minClusterSize, enemyType.minClusterSize + enemyType.clusterSizeMultiplier * mission.level);
             mission.clusterDelay = enemyType.clusterDelay;
@@ -304,6 +305,7 @@ GameSystem.enemy = function(mission, preset, spawnX, spawnY) {
     var enemy = GameSystem.enemies.create(spawnX, spawnY, entity.ship.sprite);
     var tintColor = "0x" + entity.ship.tintColor;
     enemy.entity = entity;
+    enemy.preset = preset;
     enemy.angle = 180;
     enemy.tint = tintColor;
     GameSystem.game.physics.enable(enemy, GameSystem.game.Physics);
@@ -333,6 +335,7 @@ GameSystem.enemy = function(mission, preset, spawnX, spawnY) {
         enemyPreset = GameSystem.data.enemies.presets[random];
     }
     
+    // Set enemy size based on type
     enemy.scale.setTo(enemyPreset.scale, enemyPreset.scale);
     
     return enemy;
@@ -388,26 +391,43 @@ GameSystem.entity.prototype.fireSecondary = function(sprite) {
 
 // Move a ship
 GameSystem.entity.prototype.move = function(sprite, direction) {
+    // Set movement information based on engine stats
+    sprite["Maximum Vertical Speed"] = GameSystem.normalize(this.engine.stats["Maximum Vertical Speed"], GameSystem.data.settings.engineSpeedLowerBound, GameSystem.data.settings.engineSpeedUpperBound, 1, GameSystem.data.settings.statUpperBound);
+    sprite["Vertical Acceleration"] = GameSystem.normalize(this.engine.stats["Vertical Acceleration"], GameSystem.data.settings.engineAccelerationLowerBound, GameSystem.data.settings.engineAccelerationUpperBound, 1, GameSystem.data.settings.statUpperBound);
+    sprite["Maximum Horizontal Speed"] = GameSystem.normalize(this.engine.stats["Maximum Horizontal Speed"], GameSystem.data.settings.engineSpeedLowerBound, GameSystem.data.settings.engineSpeedUpperBound, 1, GameSystem.data.settings.statUpperBound);
+    sprite["Horizontal Acceleration"] = GameSystem.normalize(this.engine.stats["Horizontal Acceleration"], GameSystem.data.settings.engineAccelerationLowerBound, GameSystem.data.settings.engineAccelerationUpperBound, 1, GameSystem.data.settings.statUpperBound);
+
+    // Check what direction we're moving
     switch (direction) {
         case "forward":
-            if (sprite.body.velocity.y > -sprite["Maximum Vertical Speed"]) {
-                var newSpeed = sprite.body.velocity.y + -sprite["Vertical Acceleration"];
-                if (newSpeed < -sprite["Maximum Vertical Speed"]) {
-                    newSpeed = -sprite["Maximum Vertical Speed"];
-                }
-                sprite.body.velocity.y = newSpeed;
-            }
+            // Existing x and y velocities
+            var oldSpeedX = sprite.body.velocity.x;
+            var oldSpeedY = sprite.body.velocity.y;
+
+            // New x and y velocities after being accelerated according to angle of sprite
+            var newSpeedX = sprite.body.velocity.x + Math.cos(sprite.rotation - 90 * Math.PI / 180) * sprite["Vertical Acceleration"];
+            var newSpeedY = sprite.body.velocity.y + Math.sin(sprite.rotation - 90 * Math.PI / 180) * sprite["Vertical Acceleration"];
+
+            //var newSpeed = Math.sqrt((Math.pow(newSpeedX, 2) + Math.pow(newSpeedY, 2)));
+            //console.log("Moving: " + direction + ", Velocity: " + newSpeedX + ", " + newSpeedY + ", NewSpeed: " + newSpeed);
+
+            sprite.body.velocity.x = newSpeedX;
+            sprite.body.velocity.y = newSpeedY;
+
+
             break;
         case "backward":
-            if (sprite.body.velocity.y < sprite["Maximum Vertical Speed"]) {
-                var newSpeed = sprite.body.velocity.y + sprite["Vertical Acceleration"];
-                if (newSpeed > sprite["Maximum Vertical Speed"]) {
-                    newSpeed = sprite["Maximum Vertical Speed"];
-                }
-                sprite.body.velocity.y = newSpeed;
-            }
+            var newSpeedX = sprite.body.velocity.x + Math.cos(sprite.rotation + 90 * Math.PI / 180) * sprite["Vertical Acceleration"];
+            var newSpeedY = sprite.body.velocity.y + Math.sin(sprite.rotation + 90 * Math.PI / 180) * sprite["Vertical Acceleration"];
+
+            //var newSpeed = Math.sqrt((Math.pow(newSpeedX, 2) + Math.pow(newSpeedY, 2)));
+            //console.log("Moving: " + direction + ", Velocity: " + newSpeedX + ", " + newSpeedY + ", NewSpeed: " + newSpeed);
+            
+            sprite.body.velocity.x = newSpeedX;
+            sprite.body.velocity.y = newSpeedY;
             break;
         case "stopVertical":
+            /*
             if (sprite.body.velocity.y > 0) {
                 var newSpeed = sprite.body.velocity.y + -sprite["Vertical Acceleration"] * GameSystem.data.settings.brakeRatio;
                 if (newSpeed < 0) {
@@ -421,26 +441,30 @@ GameSystem.entity.prototype.move = function(sprite, direction) {
                 }
                 sprite.body.velocity.y = newSpeed;
             }
+            */
             break;
         case "left":
-            if (sprite.body.velocity.x > -sprite["Maximum Horizontal Speed"]) {
-                var newSpeed = sprite.body.velocity.x + -sprite["Horizontal Acceleration"];
-                if (newSpeed < -sprite["Maximum Horizontal Speed"]) {
-                    newSpeed = -sprite["Maximum Horizontal Speed"];
-                }
-                sprite.body.velocity.x = newSpeed;
-            }
+            var newSpeedX = sprite.body.velocity.x + Math.cos(sprite.rotation - 180 * Math.PI / 180) * sprite["Horizontal Acceleration"];
+            var newSpeedY = sprite.body.velocity.y + Math.sin(sprite.rotation - 180 * Math.PI / 180) * sprite["Horizontal Acceleration"];
+
+            //var newSpeed = Math.sqrt((Math.pow(newSpeedX, 2) + Math.pow(newSpeedY, 2)));
+            //console.log("Moving: " + direction + ", Velocity: " + newSpeedX + ", " + newSpeedY + ", NewSpeed: " + newSpeed);
+            
+            sprite.body.velocity.x = newSpeedX;
+            sprite.body.velocity.y = newSpeedY;
             break;
         case "right":
-            if (sprite.body.velocity.x < sprite["Maximum Horizontal Speed"]) {
-                var newSpeed = sprite.body.velocity.x + sprite["Horizontal Acceleration"];
-                if (newSpeed > sprite["Maximum Horizontal Speed"]) {
-                    newSpeed = sprite["Maximum Horizontal Speed"];
-                }
-                sprite.body.velocity.x = newSpeed;
-            }
+            var newSpeedY = sprite.body.velocity.y + Math.sin(sprite.rotation + 0 * Math.PI / 180) * sprite["Horizontal Acceleration"];
+            var newSpeedX = sprite.body.velocity.x + Math.cos(sprite.rotation + 0 * Math.PI / 180) * sprite["Horizontal Acceleration"];
+
+            //var newSpeed = Math.sqrt((Math.pow(newSpeedX, 2) + Math.pow(newSpeedY, 2)));
+            //console.log("Moving: " + direction + ", Velocity: " + newSpeedX + ", " + newSpeedY + ", NewSpeed: " + newSpeed);
+            
+            sprite.body.velocity.x = newSpeedX;
+            sprite.body.velocity.y = newSpeedY;
             break;
         case "stopHorizontal":
+            /*
             if (sprite.body.velocity.x > 0) {
                 var newSpeed = sprite.body.velocity.x + -sprite["Horizontal Acceleration"] * GameSystem.data.settings.brakeRatio;
                 if (newSpeed < 0) {
@@ -454,9 +478,15 @@ GameSystem.entity.prototype.move = function(sprite, direction) {
                 }
                 sprite.body.velocity.x = newSpeed;
             }
+            */
             break;
     }
-    
+}
+
+// Return the vector based on speed and angle
+GameSystem.vector = function(velocityX, velocityY, angle) {
+    this.direction = Math.atan2(velocityY, velocityX) * 180 / Math.PI;
+    this.magnitude = Math.sqrt((Math.pow(velocityX, 2) + Math.pow(velocityY, 2)));
 }
 
 // Initialize the player
@@ -479,26 +509,34 @@ GameSystem.initializePlayer = function() {
     // Add animation to player's ship
     GameSystem.playerSprite.animations.add('fly', [0, 1], 20, true);
     GameSystem.playerSprite.play('fly');
-
-    GameSystem.playerSprite["Maximum Vertical Speed"] = GameSystem.normalize(GameSystem.playerEntity.engine.stats["Maximum Vertical Speed"], GameSystem.data.settings.engineSpeedLowerBound, GameSystem.data.settings.engineSpeedUpperBound, 1, GameSystem.data.settings.statUpperBound);
-    GameSystem.playerSprite["Vertical Acceleration"] = GameSystem.normalize(GameSystem.playerEntity.engine.stats["Vertical Acceleration"], GameSystem.data.settings.engineAccelerationLowerBound, GameSystem.data.settings.engineAccelerationUpperBound, 1, GameSystem.data.settings.statUpperBound);
-    GameSystem.playerSprite["Maximum Horizontal Speed"] = GameSystem.normalize(GameSystem.playerEntity.engine.stats["Maximum Horizontal Speed"], GameSystem.data.settings.engineSpeedLowerBound, GameSystem.data.settings.engineSpeedUpperBound, 1, GameSystem.data.settings.statUpperBound);
-    GameSystem.playerSprite["Horizontal Acceleration"] = GameSystem.normalize(GameSystem.playerEntity.engine.stats["Horizontal Acceleration"], GameSystem.data.settings.engineAccelerationLowerBound, GameSystem.data.settings.engineAccelerationUpperBound, 1, GameSystem.data.settings.statUpperBound);
-    //console.log("Maximum Vertical Speed " + GameSystem.playerSprite["Maximum Vertical Speed"]);
-    //console.log("Vertical Acceleration " + GameSystem.playerSprite["Vertical Acceleration"]);
-    //console.log("Maximum Horizontal Speed " + GameSystem.playerSprite["Maximum Horizontal Speed"]);
-    //console.log("Horizontal Acceleration " + GameSystem.playerSprite["Horizontal Acceleration"]);
 }
 
 // Make the enemies do stuff
 GameSystem.updateAI = function(enemy) {
     enemy.entity.firePrimary(enemy);
+    if (enemy.preset == "scout") {
+        enemy.entity.move(enemy, "forward");
+        if (enemy.body.x > GameSystem.playerSprite.body.x) {
+            enemy.entity.move(enemy, "right");
+        } else {
+            enemy.entity.move(enemy, "left");
+        }
+    }
+}
+
+
+// Check if the enemy has flown past the player and out of the screen
+GameSystem.checkBounds = function(sprite) {
+    if (sprite.y > GameSystem.game.world.height) {
+        sprite.destroy();
+    }
 }
 
 // Update enemies
 GameSystem.updateEnemies = function() {
     // For each enemy, update its AI
     GameSystem.enemies.forEachExists(GameSystem.updateAI, this, true);
+    GameSystem.enemies.forEachExists(GameSystem.checkBounds, this);
 }
 
 // Create a projectile
@@ -508,11 +546,16 @@ GameSystem.projectile = function(weapon, ship) {
     fireSound.play();
 
     // Create the projectile
-    var projectile = GameSystem.projectiles.create(ship.x, ship.y, weapon.sprite);
+    var projectile;
+    if (ship === GameSystem.playerSprite) {
+        projectile = GameSystem.playerProjectiles.create(ship.x, ship.y, weapon.sprite);
+    } else {
+        projectile = GameSystem.enemyProjectiles.create(ship.x, ship.y, weapon.sprite);
+    }
     
     // Set the angle
     projectile.angle = ship.angle;
-
+    
     // Set the onwer so we don't register collisions with the shooter
     projectile.owner = ship;
     
@@ -590,11 +633,14 @@ GameSystem.explode = function(source) {
 GameSystem.updateProjectiles = function() {
     // First check if we've reached max distance or duration, that way we kill the projectile as soon as possible
     // Apparently Phaser sprites have a timer we can use to kill projectiles and stuff
-    GameSystem.projectiles.forEachExists(GameSystem.checkProjectileDuration, this);
-    GameSystem.projectiles.forEachExists(GameSystem.checkProjectileDistance, this);
+    GameSystem.playerProjectiles.forEachExists(GameSystem.checkProjectileDuration, this);
+    GameSystem.playerProjectiles.forEachExists(GameSystem.checkProjectileDistance, this);
+    GameSystem.enemyProjectiles.forEachExists(GameSystem.checkProjectileDuration, this);
+    GameSystem.enemyProjectiles.forEachExists(GameSystem.checkProjectileDistance, this);
 
     // Update projectile movement, animations, etc.
-    GameSystem.projectiles.forEachExists(GameSystem.checkProjectileSpeed, this);
+    GameSystem.playerProjectiles.forEachExists(GameSystem.checkProjectileSpeed, this);
+    GameSystem.enemyProjectiles.forEachExists(GameSystem.checkProjectileSpeed, this);
 }
 
 GameSystem.checkProjectileSpeed = function(projectile) {
@@ -651,6 +697,7 @@ GameSystem.enemyCollisionHandler = function(projectile, target) {
     } else {
         //console.log("Projectile hit target");
         GameSystem.explode(projectile);
+        target.destroy();
         //GameSystem.game.add.tween(target).to( { alpha: 0 }, 100, Phaser.Easing.Linear.None, true);
     }
 }

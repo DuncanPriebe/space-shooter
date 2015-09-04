@@ -19,7 +19,7 @@
 	"projectileAccelerationLowerBound": 0.3,
 	"engineSpeedUpperBound": 1,
 	"engineSpeedLowerBound": 0.05,
-	"engineAccelerationUpperBound": 0.05,
+	"engineAccelerationUpperBound": 0.02,
 	"engineAccelerationLowerBound": 0.01,
 	"brakeRatio": 0.5,
 	"sizeUpperBound": 0.05,
