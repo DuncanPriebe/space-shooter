@@ -1,14 +1,8 @@
 'use strict';
 
-// Shouldn't use global variables...
-var projectileTimer = 0;
-var projectileSpeed = 400;
-
-// Shouldn't use global variables...
-var starTime = 0;
-var starMinDelay = 300;
-var starMaxDelay = 500;
-var starSpeed = 150;
+/*-----------------------------------------------------------------------
+                    Preloading and Initialization
+-----------------------------------------------------------------------*/
 
  // Create the game object to store objects in the game
 var GameObject = new Phaser.Game(800, 600, Phaser.CANVAS, 'game');
@@ -58,14 +52,20 @@ GameSystem.initialize = function(content) {
             break;
         case "groups": {
             // Create groups (must be done after preloading)
-            if (!GameSystem.initializedGroups) {
+            //if (!GameSystem.initializedGroups) {
                 GameSystem.playerProjectiles = GameSystem.game.add.group();
                 GameSystem.enemyProjectiles = GameSystem.game.add.group();
                 GameSystem.enemies = GameSystem.game.add.group();
                 GameSystem.explosions = GameSystem.game.add.group();
 
-                GameSystem.initializedGroups = true;
-            }
+                GameSystem.playerProjectiles.z = 3;
+                GameSystem.enemyProjectiles.z = 3;
+                GameSystem.enemies.z = 5;
+                GameSystem.explosions.z = 4;
+
+
+                //GameSystem.initializedGroups = true;
+            //}
         }
         case "fonts": {
             // Set text width based on screen size
@@ -78,28 +78,183 @@ GameSystem.initialize = function(content) {
                         GameSystem.data.menu.fonts[i].ySpacing *= GameSystem.game.world.height;
                     }
                 }
-
                 GameSystem.initializedFonts = true;
             }        
         }
     }
 }
 
+// Initialize the player
+GameSystem.initializePlayer = function() {
+    GameSystem.playerEntity = new GameSystem.entity({
+        level: 1,
+        faction: GameSystem.data.factions[3]
+    }, GameSystem.data.items.rarities[3]);
+
+    GameSystem.playerEntity.worldIndex = 0;
+
+    GameSystem.playerSprite = GameSystem.game.add.sprite(GameSystem.game.world.width / 2, GameSystem.game.world.height - 100, GameSystem.playerEntity.ship.sprite);
+    GameSystem.playerSprite.anchor.setTo(0.5, 0.5);
+    GameSystem.game.physics.enable(GameSystem.playerSprite, Phaser.Physics.ARCADE);
+    GameSystem.playerSprite.body.collideWorldBounds = true;
+    
+    var tintColor = "0x" + GameSystem.playerEntity.ship.tintColor;
+    GameSystem.playerSprite.tint = tintColor;
+
+    // Add animation to player's ship
+    GameSystem.playerSprite.animations.add('fly', [0, 1], 20, true);
+    GameSystem.playerSprite.play('fly');
+}
+
+// Load state assets
+GameSystem.loadStateAssets = function(stateKey) {
+    // Determine which state we're in
+    var state = GameSystem.data.assets[stateKey];
+
+    // Need to add checks to see if the asset is already loaded (because states use the same assets and we go back and forth between states)
+
+    // Load assets
+    for (var data in state) {
+        for (var key in state[data]) {
+            if (state[data].hasOwnProperty(key)) {
+                if (key == "sprites") { // We're loading video
+                    for (var i in state[data].sprites) {
+                        if (state[data].sprites[i].sheet == true) { // We have an animation
+                            GameSystem.game.load.spritesheet(state[data].sprites[i].key, GameSystem.data.settings.imagePath + state[data].sprites[i].file, state[data].sprites[i].width, state[data].sprites[i].height);
+                        } else { // We have a single image
+                            GameSystem.game.load.image(state[data].sprites[i].key, GameSystem.data.settings.imagePath + state[data].sprites[i].file);    
+                        }
+                    }     
+                } else if (key == "audio") { // We're loading audio
+                    for (var i in state[data].audio) {
+                        GameSystem.game.load.audio(state[data].audio[i].key, GameSystem.data.settings.audioPath + state[data].audio[i].file);
+                    }
+                }
+            }
+        }
+    }
+}
+
+/*-----------------------------------------------------------------------
+                            Saving and Loading
+-----------------------------------------------------------------------*/
+
+// Load data from web storage
+GameSystem.storage.load = function() {
+    var gameData;
+
+    // Verify web storage and existing data
+    if (typeof Storage !== "undefined") {
+        // Load data from web storage
+        gameData = localStorage.getItem(GameSystem.data.settings.webStorageName);
+
+        if (gameData !== null) { // Need to test for valid game data (and same version of game)
+            console.log("Loading game data from web storage.");
+            
+            // Parse data into an object
+            gameData = JSON.parse(gameData);
+            GameSystem.playerEntity = gameData;
+        } else {
+            console.log("Nonexistant or corrupt game data in web storage. Unable to load game data.");
+        }
+    } else {
+        console.log("Web storage not supported. Unable to load game data.");
+    }
+}
+
+// Save data to web storage
+GameSystem.storage.save = function() {
+    console.log("Saving game data to web storage.");
+    if (typeof Storage !== "undefined") { // Verify web storage support
+        var gameData = GameSystem.playerEntity;
+
+        // Put data into web storage
+        localStorage.setItem(GameSystem.data.settings.webStorageName, JSON.stringify(gameData));
+    } else {
+        console.log("Web storage not supported. Unable to load game data.");
+    }
+}
+
+// Reset data in memory
+GameSystem.storage.reset = function() {
+    console.log("Resetting game data in memory.");
+    //GameSystem.player = {};
+    GameSystem.playerEntity = {};
+    GameSystem.playerEntity.worldIndex = 0;
+    GameSystem.playerEntity.ship = {};
+    GameSystem.playerEntity.primaryWeapons = [];
+    GameSystem.playerEntity.secondaryWeapons = [];
+    GameSystem.playerEntity.shield = {};
+    GameSystem.playerEntity.generator = {};
+    GameSystem.playerEntity.engine = {};
+    GameSystem.playerEntity.modules = [];
+    GameSystem.playerEntity.money = GameSystem.data.settings.startingMoney;
+
+    GameSystem.playerEntity = new GameSystem.entity({
+        level: 1,
+        faction: GameSystem.data.factions[3]
+    }, GameSystem.data.items.rarities[3]);
+}
+
+// Reset data in web storage
+// Probably don't need this function because the only time you 'erase' web storage is by overriding it with a new game (saving)
+GameSystem.storage.erase = function() {
+    console.log("Erasing web storage.");
+    if (typeof Storage !== "undefined") { // Verify web storage support
+        localStorage.removeItem(GameSystem.data.settings.webStorageName); // Delete data in web storage
+        GameSystem.storage.reset();
+        GameSystem.storage.save();
+    } else {
+        console.log("Web storage not supported. No need to erase data.");
+    }
+}
+
+// Copy an object
+GameSystem.clone = function (original, context, key) {
+    for (key in context)
+        if (context.hasOwnProperty(key))
+            if (Object.prototype.toString.call(context[key]) === '[object Object]')
+                original[key] = GameSystem.clone(original[key] || {}, context[key]);
+            else
+                original[key] = context[key];
+    return original;
+};
+
+/*-----------------------------------------------------------------------
+                      Worlds, Factions and Missions
+-----------------------------------------------------------------------*/
+
 // Create a world
 GameSystem.world = function(index) {
     var world = JSON.parse(JSON.stringify(GameSystem.data.worlds[index]));
     world.index = index;
-    var found = false;
-    for (var i in GameSystem.data.factions) {
-        if (GameSystem.data.factions[i].key == world.faction) {
-            world.faction = GameSystem.data.factions[i];
-            found = true;
+    world.faction = GameSystem.faction(world.faction);
+    return world;  
+}
+
+// Get a faction based on name
+GameSystem.faction = function(name, set) {
+    // Check if we have specified the set of faction names to choose from
+    if (typeof set == "undefined") {
+        set = [];
+        for (var i in GameSystem.data.factions) {
+            set.push(GameSystem.data.factions[i].key);
         }
     }
-    if (!found) {
-        world.faction = GameSystem.data.factions[0];
+
+    // If we wanted a random faction, pick a random name from the set and call the function
+    if (typeof name == "undefined" || name == "random") {
+        var random = GameSystem.game.rnd.integerInRange(0, set.length - 1);
+        //return GameSystem.faction(set[random], set);
+        name = set[random];
     }
-    return world;  
+
+    // Get the faction and return it
+    for (var i in GameSystem.data.factions) {
+        if (name == GameSystem.data.factions[i].key) {
+            return GameSystem.data.factions[i];
+        }
+    }
 }
 
 // Create a mission
@@ -206,14 +361,48 @@ GameSystem.mission = function(world, randomFlag) {
     return mission;
 }
 
+/*-----------------------------------------------------------------------
+                                Enemies
+-----------------------------------------------------------------------*/
+
+// Use polymorphism for different enemy types
+GameSystem.newEnemy = function() {
+    
+}
+
+GameSystem.newEnemy.prototype = {
+    AI: function() {
+        console.log("Enemy AI");
+    }
+}
+
+GameSystem.newScout = function() {
+    GameSystem.newEnemy.call(this);
+}
+
+GameSystem.newScout.prototype = Object.create(GameSystem.newEnemy.prototype);
+GameSystem.newScout.prototype.constructor = GameSystem.newScout;
+
+GameSystem.newScout.prototype = {
+    AI: function() {
+        console.log("Scout AI.");
+    }
+}
+
 // Create enemies based on mission
 GameSystem.enemyFactory = function(mission) {
+    // Set spawn y location
+    var spawnY = -40;
+
     // Check if the mission is over
+    /*
     if (mission.checkEnemyCount) {  // Check if we're out of enemies
         if (mission.enemiesSpawned > mission.enemiesRemaning) {
             console.log("Mission is out of enemies.");
         }
-    } 
+    }
+    */
+
     if (mission.checkEnemiesKilled) { // Check if enemies are dead
         if (mission.enemiesKilled >= mission.enemiesRemaning) {
             console.log("All enemies are dead.");
@@ -223,12 +412,16 @@ GameSystem.enemyFactory = function(mission) {
         if (mission.bossesKilled >= mission.bossesRemaning) {
             console.log("All bosses are dead.");
         }
-    } 
+    }
+
+    /*
     if (mission.checkDuration) { // Check if time has run out
-        if (Game.time.now > mission.time) {
+        if (GameSystem.game.time.now > mission.time) {
             console.log("Mission timer has expired.");
         }
-    } 
+    }
+    */
+
     // Create an enemy, cluster, or boss
     // Now check if we're in the middle of spawning a cluster
     if (mission.clusterFlag) {
@@ -239,7 +432,6 @@ GameSystem.enemyFactory = function(mission) {
             if (mission.clusterSpawnX == -1) {
                 mission.clusterSpawnX = GameSystem.game.rnd.integerInRange(0, GameSystem.game.world.width);    
             }
-            var spawnY = 50;
             
             var clusterEnemy = GameSystem.enemy(mission, mission.clusterEnemyType.name, mission.clusterSpawnX, spawnY);
 
@@ -274,7 +466,6 @@ GameSystem.enemyFactory = function(mission) {
         } else {
             // Choose a spawn location
             var spawnX = GameSystem.game.rnd.integerInRange(0, GameSystem.game.world.width);
-            var spawnY = 50;
 
             // Spawn the enemy
             var enemy = GameSystem.enemy(mission, enemyType.name, spawnX, spawnY);
@@ -340,6 +531,96 @@ GameSystem.enemy = function(mission, preset, spawnX, spawnY) {
     
     return enemy;
 }
+
+// Make the enemies do stuff
+GameSystem.updateAI = function(enemy) {
+    // Set scout AI
+    if (enemy.preset == "scout") {
+        enemy.entity.move(enemy, "forward");
+        if (enemy.body.x > GameSystem.playerSprite.body.x) {
+            enemy.entity.move(enemy, "right");
+        } else if (enemy.body.x < GameSystem.playerSprite.body.x) {
+            enemy.entity.move(enemy, "left");
+        }
+    }
+
+    // Set fighter AI
+    if (enemy.preset == "fighter") {
+        if (enemy.body.y > 0 && enemy.body.y < GameSystem.playerSprite.body.y) {
+            enemy.entity.firePrimary(enemy);
+        }
+        if (GameSystem.playerSprite.body.y - enemy.body.y < GameSystem.game.world.height / 2) {
+            enemy.entity.move(enemy, "backward");
+        } else {
+            enemy.entity.move(enemy, "forward");
+        }
+        if (enemy.body.x > GameSystem.playerSprite.body.x) {
+            enemy.entity.move(enemy, "right");
+        } else {
+            enemy.entity.move(enemy, "left");
+        }
+    }
+
+    // Set kamikaze AI
+    if (enemy.preset == "kamikaze") {
+        enemy.entity.move(enemy, "forward");
+        if (enemy.body.x > GameSystem.playerSprite.body.x) {
+            enemy.entity.move(enemy, "right");
+        } else {
+            enemy.entity.move(enemy, "left");
+        }
+    }
+
+    // Set bomber AI
+    if (enemy.preset == "bomber") {
+        if (enemy.body.y > 0) {
+            enemy.entity.firePrimary(enemy);
+        }
+        enemy.entity.move(enemy, "forward");
+    }
+
+    // Set freighter AI
+    if (enemy.preset == "freighter") {
+        enemy.entity.move(enemy, "forward");
+    }    
+
+    // Set miniBoss and boss AI
+    if (enemy.preset == "miniBoss" || enemy.preset == "boss") {
+        if (enemy.body.y > 0 && enemy.body.y < GameSystem.playerSprite.body.y) {
+            enemy.entity.firePrimary(enemy);
+            enemy.entity.fireSecondary(enemy);
+        }
+        if (enemy.body.y < 50) {
+            enemy.entity.move(enemy, "forward");
+        } else {
+            enemy.entity.move(enemy, "backward");
+        }
+        if (enemy.body.x > GameSystem.playerSprite.body.x) {
+            enemy.entity.move(enemy, "right");
+        } else {
+            enemy.entity.move(enemy, "left");
+        }
+    }
+}
+
+
+// Check if the enemy has flown past the player and out of the screen
+GameSystem.checkBounds = function(sprite) {
+    if (sprite.y > GameSystem.game.world.height) {
+        sprite.destroy();
+    }
+}
+
+// Update enemies
+GameSystem.updateEnemies = function() {
+    // For each enemy, update its AI
+    GameSystem.enemies.forEachExists(GameSystem.updateAI, this, true);
+    GameSystem.enemies.forEachExists(GameSystem.checkBounds, this);
+}
+
+/*-----------------------------------------------------------------------
+                          Sprites and Ships
+-----------------------------------------------------------------------*/
 
 // Create an entity with weapons, shield, etc.
 GameSystem.entity = function(source, rarity) {
@@ -427,7 +708,6 @@ GameSystem.entity.prototype.move = function(sprite, direction) {
             sprite.body.velocity.y = newSpeedY;
             break;
         case "stopVertical":
-            /*
             if (sprite.body.velocity.y > 0) {
                 var newSpeed = sprite.body.velocity.y + -sprite["Vertical Acceleration"] * GameSystem.data.settings.brakeRatio;
                 if (newSpeed < 0) {
@@ -441,7 +721,6 @@ GameSystem.entity.prototype.move = function(sprite, direction) {
                 }
                 sprite.body.velocity.y = newSpeed;
             }
-            */
             break;
         case "left":
             var newSpeedX = sprite.body.velocity.x + Math.cos(sprite.rotation - 180 * Math.PI / 180) * sprite["Horizontal Acceleration"];
@@ -464,7 +743,6 @@ GameSystem.entity.prototype.move = function(sprite, direction) {
             sprite.body.velocity.y = newSpeedY;
             break;
         case "stopHorizontal":
-            /*
             if (sprite.body.velocity.x > 0) {
                 var newSpeed = sprite.body.velocity.x + -sprite["Horizontal Acceleration"] * GameSystem.data.settings.brakeRatio;
                 if (newSpeed < 0) {
@@ -478,114 +756,13 @@ GameSystem.entity.prototype.move = function(sprite, direction) {
                 }
                 sprite.body.velocity.x = newSpeed;
             }
-            */
             break;
     }
 }
 
-// Return the vector based on speed and angle
-GameSystem.vector = function(velocityX, velocityY, angle) {
-    this.direction = Math.atan2(velocityY, velocityX) * 180 / Math.PI;
-    this.magnitude = Math.sqrt((Math.pow(velocityX, 2) + Math.pow(velocityY, 2)));
-}
-
-// Initialize the player
-GameSystem.initializePlayer = function() {
-    GameSystem.playerEntity = new GameSystem.entity({
-        level: 1,
-        faction: GameSystem.data.factions[3]
-    }, GameSystem.data.items.rarities[3]);
-
-    GameSystem.playerEntity.worldIndex = 0;
-
-    GameSystem.playerSprite = GameSystem.game.add.sprite(GameSystem.game.world.width / 2, GameSystem.game.world.height - 100, GameSystem.playerEntity.ship.sprite);
-    GameSystem.playerSprite.anchor.setTo(0.5, 0.5);
-    GameSystem.game.physics.enable(GameSystem.playerSprite, Phaser.Physics.ARCADE);
-    GameSystem.playerSprite.body.collideWorldBounds = true;
-    
-    var tintColor = "0x" + GameSystem.playerEntity.ship.tintColor;
-    GameSystem.playerSprite.tint = tintColor;
-
-    // Add animation to player's ship
-    GameSystem.playerSprite.animations.add('fly', [0, 1], 20, true);
-    GameSystem.playerSprite.play('fly');
-}
-
-// Make the enemies do stuff
-GameSystem.updateAI = function(enemy) {
-    
-    // Set scout AI
-    if (enemy.preset == "scout") {
-        //enemy.entity.firePrimary(enemy);
-        enemy.entity.move(enemy, "forward");
-    }
-
-    // Set fighter AI
-    if (enemy.preset == "fighter") {
-        enemy.entity.firePrimary(enemy);
-        if (GameSystem.playerSprite.body.y - enemy.body.y < GameSystem.game.world.height / 2) {
-            enemy.entity.move(enemy, "backward");
-        } else {
-            enemy.entity.move(enemy, "forward");
-        }
-        if (enemy.body.x > GameSystem.playerSprite.body.x) {
-            enemy.entity.move(enemy, "right");
-        } else {
-            enemy.entity.move(enemy, "left");
-        }
-    }
-
-    // Set kamikazi AI
-    if (enemy.preset == "kamikazi") {
-        enemy.entity.move(enemy, "forward");
-        if (enemy.body.x > GameSystem.playerSprite.body.x) {
-            enemy.entity.move(enemy, "right");
-        } else {
-            enemy.entity.move(enemy, "left");
-        }
-    }
-
-    // Set kamikazi AI
-    if (enemy.preset == "kamikazi") {
-        enemy.entity.move(enemy, "forward");
-        if (enemy.body.x > GameSystem.playerSprite.body.x) {
-            enemy.entity.move(enemy, "right");
-        } else {
-            enemy.entity.move(enemy, "left");
-        }
-    }
-
-    // Set bomber AI
-    if (enemy.preset == "bomber") {
-        enemy.entity.firePrimary(enemy);
-        enemy.entity.move(enemy, "forward");
-    }
-
-    // Set miniBoss and boss AI
-    if (enemy.preset == "miniBoss" && enemy.preset == "boss") {
-        enemy.entity.firePrimary(enemy);
-        if (enemy.body.x > GameSystem.playerSprite.body.x) {
-            enemy.entity.move(enemy, "right");
-        } else {
-            enemy.entity.move(enemy, "left");
-        }
-    }
-}
-
-
-// Check if the enemy has flown past the player and out of the screen
-GameSystem.checkBounds = function(sprite) {
-    if (sprite.y > GameSystem.game.world.height) {
-        sprite.destroy();
-    }
-}
-
-// Update enemies
-GameSystem.updateEnemies = function() {
-    // For each enemy, update its AI
-    GameSystem.enemies.forEachExists(GameSystem.updateAI, this, true);
-    GameSystem.enemies.forEachExists(GameSystem.checkBounds, this);
-}
+/*-----------------------------------------------------------------------
+                      Projectiles and Collisions
+-----------------------------------------------------------------------*/
 
 // Create a projectile
 GameSystem.projectile = function(weapon, ship) {
@@ -737,6 +914,10 @@ GameSystem.checkProjectileReady = function(weapon) {
     return false;
 }
 
+GameSystem.enemyExplosionCollisionHandler = function(explosion, target) {
+
+}
+
 // Handle projectile collisions with enemies
 GameSystem.enemyCollisionHandler = function(projectile, target) {
     // Check if we're colliding with the shooter
@@ -748,6 +929,10 @@ GameSystem.enemyCollisionHandler = function(projectile, target) {
         target.destroy();
         //GameSystem.game.add.tween(target).to( { alpha: 0 }, 100, Phaser.Easing.Linear.None, true);
     }
+}
+
+GameSystem.playerExplosionCollisionHandler = function(explosion, target) {
+
 }
 
 // Handle projectile collision with player
@@ -767,6 +952,10 @@ GameSystem.getFront = function(sprite) {
     var front = new Phaser.Point(x, y);
     return front;
 }
+
+/*-----------------------------------------------------------------------
+                          Items and Vendors
+-----------------------------------------------------------------------*/
 
 // Create a vendor
 GameSystem.vendor = function(world, itemType) {
@@ -908,6 +1097,10 @@ GameSystem.item = function(source, itemType, rarity) {
 
     return item;
 }
+
+/*-----------------------------------------------------------------------
+                          Menu Structure
+-----------------------------------------------------------------------*/
 
 // Define class for creating menu structure
 GameSystem.node = function(name, pointer, type) {
@@ -1150,6 +1343,10 @@ GameSystem.node.prototype.execute = function() {
     }
 }
 
+/*-----------------------------------------------------------------------
+                      Additional Screens and Menus
+-----------------------------------------------------------------------*/
+
 // Show player's ship
 GameSystem.viewShip = function(parent, action, item) {
     if (typeof action != "undefined" && typeof item == "undefined") {
@@ -1225,7 +1422,11 @@ GameSystem.clearMenu = function() {
     }
 }
 
-// Normalize values into useful bounds
+/*-----------------------------------------------------------------------
+                        Misc. Helper Functions
+-----------------------------------------------------------------------*/
+
+// Normalize values into game bounds
 GameSystem.normalize = function(value, lowerBound, upperBound, minValue, maxValue) {
     // If we aren't given values, normalize between 0 and 100
     minValue = (minValue) ? minValue : 0;
@@ -1233,115 +1434,11 @@ GameSystem.normalize = function(value, lowerBound, upperBound, minValue, maxValu
     return lowerBound + ((value - minValue) * (upperBound - lowerBound) / (maxValue - minValue));
 }
 
-// Load state assets
-GameSystem.loadStateAssets = function(stateKey) {
-    // Determine which state we're in
-    var state = GameSystem.data.assets[stateKey];
-
-    // Need to add checks to see if the asset is already loaded (because states use the same assets and we go back and forth between states)
-
-    // Load assets
-    for (var data in state) {
-        for (var key in state[data]) {
-            if (state[data].hasOwnProperty(key)) {
-                if (key == "sprites") { // We're loading video
-                    for (var i in state[data].sprites) {
-                        if (state[data].sprites[i].sheet == true) { // We have an animation
-                            GameSystem.game.load.spritesheet(state[data].sprites[i].key, GameSystem.data.settings.imagePath + state[data].sprites[i].file, state[data].sprites[i].width, state[data].sprites[i].height);
-                        } else { // We have a single image
-                            GameSystem.game.load.image(state[data].sprites[i].key, GameSystem.data.settings.imagePath + state[data].sprites[i].file);    
-                        }
-                    }     
-                } else if (key == "audio") { // We're loading audio
-                    for (var i in state[data].audio) {
-                        GameSystem.game.load.audio(state[data].audio[i].key, GameSystem.data.settings.audioPath + state[data].audio[i].file);
-                    }
-                }
-            }
-        }
-    }
+// Return the vector based on speed and angle
+GameSystem.vector = function(velocityX, velocityY, angle) {
+    this.direction = Math.atan2(velocityY, velocityX) * 180 / Math.PI;
+    this.magnitude = Math.sqrt((Math.pow(velocityX, 2) + Math.pow(velocityY, 2)));
 }
-
-// Load data from web storage
-GameSystem.storage.load = function() {
-    var gameData;
-
-    // Verify web storage and existing data
-    if (typeof Storage !== "undefined") {
-        // Load data from web storage
-        gameData = localStorage.getItem(GameSystem.data.settings.webStorageName);
-
-        if (gameData !== null) { // Need to test for valid game data (and same version of game)
-            console.log("Loading game data from web storage.");
-            
-            // Parse data into an object
-            gameData = JSON.parse(gameData);
-            GameSystem.playerEntity = gameData;
-        } else {
-            console.log("Nonexistant or corrupt game data in web storage. Unable to load game data.");
-        }
-    } else {
-        console.log("Web storage not supported. Unable to load game data.");
-    }
-}
-
-// Save data to web storage
-GameSystem.storage.save = function() {
-    console.log("Saving game data to web storage.");
-    if (typeof Storage !== "undefined") { // Verify web storage support
-        var gameData = GameSystem.playerEntity;
-
-        // Put data into web storage
-        localStorage.setItem(GameSystem.data.settings.webStorageName, JSON.stringify(gameData));
-    } else {
-        console.log("Web storage not supported. Unable to load game data.");
-    }
-}
-
-// Reset data in memory
-GameSystem.storage.reset = function() {
-    console.log("Resetting game data in memory.");
-    //GameSystem.player = {};
-    GameSystem.playerEntity = {};
-    GameSystem.playerEntity.worldIndex = 0;
-    GameSystem.playerEntity.ship = {};
-    GameSystem.playerEntity.primaryWeapons = [];
-    GameSystem.playerEntity.secondaryWeapons = [];
-    GameSystem.playerEntity.shield = {};
-    GameSystem.playerEntity.generator = {};
-    GameSystem.playerEntity.engine = {};
-    GameSystem.playerEntity.modules = [];
-    GameSystem.playerEntity.money = GameSystem.data.settings.startingMoney;
-
-    GameSystem.playerEntity = new GameSystem.entity({
-        level: 1,
-        faction: GameSystem.data.factions[3]
-    }, GameSystem.data.items.rarities[3]);
-}
-
-// Reset data in web storage
-// Probably don't need this function because the only time you 'erase' web storage is by overriding it with a new game (saving)
-GameSystem.storage.erase = function() {
-    console.log("Erasing web storage.");
-    if (typeof Storage !== "undefined") { // Verify web storage support
-        localStorage.removeItem(GameSystem.data.settings.webStorageName); // Delete data in web storage
-        GameSystem.storage.reset();
-        GameSystem.storage.save();
-    } else {
-        console.log("Web storage not supported. No need to erase data.");
-    }
-}
-
-// Copy an object
-GameSystem.clone = function (original, context, key) {
-    for (key in context)
-        if (context.hasOwnProperty(key))
-            if (Object.prototype.toString.call(context[key]) === '[object Object]')
-                original[key] = GameSystem.clone(original[key] || {}, context[key]);
-            else
-                original[key] = context[key];
-    return original;
-};
 
 // Convert a value to money
 GameSystem.monify = function(n, c, d, t) {
@@ -1353,6 +1450,10 @@ GameSystem.monify = function(n, c, d, t) {
         j = (j = i.length) > 3 ? j % 3 : 0;
    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 }
+
+/*-----------------------------------------------------------------------
+                     Add States & Start Game
+-----------------------------------------------------------------------*/
 
 GameSystem.game.state.add('boot', bootState);
 GameSystem.game.state.add('preload', preloadState);

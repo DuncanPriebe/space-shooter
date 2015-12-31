@@ -1,4 +1,5 @@
 'use strict';
+
 var preloadState = {
     preload: function() {
         // Display a message while the game loads

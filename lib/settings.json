@@ -24,6 +24,6 @@
 	"brakeRatio": 0.5,
 	"sizeUpperBound": 0.05,
 	"sizeLowerBound": 0.025,
-	"blastRadiusUpperBound": 5.0,
+	"blastRadiusUpperBound": 15.0,
 	"blastRadiusLowerBound": 0.5
 }

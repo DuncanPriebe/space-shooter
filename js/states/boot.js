@@ -1,4 +1,5 @@
 'use strict';
+
 var bootState = {
     create: function() {
         GameSystem.game.physics.startSystem(Phaser.Physics.ARCADE); // Start physics engine (move to play state?)

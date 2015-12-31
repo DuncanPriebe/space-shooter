@@ -156,10 +156,10 @@ var playState = {
 
         // Make sure player, enemies and projectiles are above background sprites
         GameSystem.playerSprite.bringToTop();
-        GameSystem.game.world.bringToTop(GameSystem.enemies);
-        GameSystem.game.world.bringToTop(GameSystem.playerProjectiles);
-        GameSystem.game.world.bringToTop(GameSystem.enemyProjectiles);
-        GameSystem.game.world.bringToTop(GameSystem.explosions);
+        //GameSystem.game.world.bringToTop(GameSystem.enemies);
+        //GameSystem.game.world.bringToTop(GameSystem.playerProjectiles);
+        //GameSystem.game.world.bringToTop(GameSystem.enemyProjectiles);
+        //GameSystem.game.world.bringToTop(GameSystem.explosions);
 
         GameSystem.updateProjectiles();
 
